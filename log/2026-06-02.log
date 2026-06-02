@@ -1,0 +1,17 @@
+[01:46:57] [INFO] VikingoController::ver
+[01:46:57] [INFO] SQL: SELECT * FROM guerreros
+[02:03:23] [INFO] VikingoController::alta (form)
+[02:03:30] [INFO] VikingoController::ver
+[02:03:30] [INFO] SQL: SELECT * FROM guerreros
+[02:03:41] [INFO] VikingoController::alta (form)
+[02:03:50] [INFO] VikingoController::alta (form)
+[02:03:54] [INFO] VikingoController::editar - id=23
+[02:03:54] [INFO] SQL: SELECT * FROM guerreros WHERE id = ? [23]
+[02:03:56] [INFO] VikingoController::editar - id=26
+[02:03:56] [INFO] SQL: SELECT * FROM guerreros WHERE id = ? [26]
+[02:04:13] [INFO] VikingoController::ver
+[02:04:13] [INFO] SQL: SELECT * FROM guerreros
+[02:04:31] [INFO] VikingoController::ver
+[02:04:31] [INFO] SQL: SELECT * FROM guerreros
+[02:04:34] [INFO] VikingoController::ver
+[02:04:34] [INFO] SQL: SELECT * FROM guerreros
