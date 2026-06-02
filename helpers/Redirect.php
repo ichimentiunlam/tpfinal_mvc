@@ -10,6 +10,6 @@ class Redirect
 
     public static function toIndex()
     {
-        self::to('/');
+        self::to('/1C-2026/tpfinal_mvc/vikingo/ver');
     }
 }
