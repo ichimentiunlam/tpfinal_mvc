@@ -3,232 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control - Aldea Vikinga</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Open+Sans:wght@400;600&display=swap"
-          rel="stylesheet">
+    <title>Arcade de Preguntas - Challenge Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- ESTILOS GENERALES Y FONDO --- */
         body {
-            font-family: 'Open Sans', sans-serif; /* Fuente legible para textos */
-            background-color: #1a1a1a;
-            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #2b2d42 0%, #1b1d2a 45%, #0f1119 100%);
+            color: #ececec;
             margin: 0;
             padding: 0;
-            /* IMAGEN DE FONDO: Trama de escudos sutil */
-            /* He usado un placeholder que simula madera oscura con textura */
-            background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
-            background-repeat: repeat;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08) 2px, transparent 2px),
+                              radial-gradient(circle at 80% 40%, rgba(255,255,255,0.06) 2px, transparent 2px);
+            background-size: 120px 120px;
         }
 
-        h1, h2, th, .btn-add {
-            font-family: 'Cinzel', serif; /* Fuente épica para títulos */
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        h1, h2, .btn-submit, .btn-add {
+            font-family: 'Press Start 2P', cursive;
+            letter-spacing: 0.08em;
         }
 
-        /* --- CABECERA ÉPICA (HEADER) --- */
         header {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(26, 26, 26, 1)),
-            url('https://images.unsplash.com/photo-1578130325150-f70915a7702a?q=80&w=1600'); /* Placeholder Drakkar */
-            background-size: cover;
-            background-position: center;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 40%, #ffd368 100%);
+            color: #1b1d2a;
+            padding: 40px 20px 30px;
             text-align: center;
-            border-bottom: 3px solid #d4af37; /* Línea dorada */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 22%),
+                              radial-gradient(circle at bottom right, rgba(255,255,255,0.1), transparent 25%);
+            pointer-events: none;
         }
 
         header h1 {
-            color: #d4af37; /* Oro viejo */
-            font-size: 3.5em;
             margin: 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-size: 2.1rem;
+            color: #1b1d2a;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.18);
         }
 
         header p {
-            color: #fff;
-            font-size: 1.2em;
-            margin-top: 10px;
-            font-style: italic;
+            margin: 12px auto 24px;
+            max-width: 700px;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #2d2b48;
         }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            margin: -50px auto 50px auto; /* Sube un poco para pisar el header */
-            background: rgba(30, 30, 30, 0.95);
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            border: 1px solid #444;
-            position: relative; /* Para el z-index */
+        .main-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            z-index: 1;
+            position: relative;
         }
 
-        /* --- BOTÓN DE ALTA (RECLUTAR) --- */
-        .btn-add {
-            display: inline-block;
-            background-color: #c0392b; /* Rojo sangre fuerte */
-            color: white;
-            padding: 15px 30px;
+        .main-nav a {
+            color: #1b1d2a;
+            background: rgba(255,255,255,0.95);
             text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-bottom: 30px;
-            transition: 0.3s;
-            border: 2px solid #a93226;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            padding: 12px 18px;
+            border-radius: 999px;
+            border: 2px solid rgba(27,29,42,0.2);
+            font-size: 0.75rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .btn-add:hover {
-            background-color: #d4af37; /* Cambia a Oro al pasar el mouse */
-            color: #1a1a1a;
-            transform: translateY(-3px);
+        .main-nav a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.12);
         }
 
-        /* --- TABLA VIKINGA --- */
+        .user-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 12px 18px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.9);
+            color: #1b1d2a;
+            font-size: 0.8rem;
+            border: 2px dashed rgba(27,29,42,0.18);
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            width: min(95%, 1040px);
+            margin: -40px auto 50px;
+            background: rgba(16, 18, 34, 0.95);
+            padding: 32px;
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+            backdrop-filter: blur(5px);
+        }
+
+        .panel {
+            padding: 22px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
         table {
-            border-collapse: collapse;
             width: 100%;
-            background-color: #262626;
-            border: 2px solid #d4af37; /* Borde dorado tabla */
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            overflow: hidden;
         }
 
         th, td {
-            padding: 18px;
+            padding: 16px 18px;
             text-align: left;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
         th {
-            background-color: #333;
-            color: #d4af37;
-            font-size: 1.1em;
-            border-bottom: 2px solid #d4af37;
+            color: #f8f9ff;
+            background: rgba(255,255,255,0.08);
+            font-size: 0.85rem;
+            text-transform: uppercase;
         }
 
         tr:hover {
-            background-color: #333; /* Resalta fila */
+            background: rgba(255,255,255,0.06);
         }
 
-        /* Icono de fuerza (hacha) */
-        .fuerza-icon {
-            color: #d4af37;
-            margin-right: 5px;
-        }
-
-        /* --- BOTONES DE ACCIÓN DENTRO DE TABLA --- */
         .actions a {
             text-decoration: none;
-            font-weight: bold;
-            padding: 8px 15px;
-            border-radius: 3px;
-            margin-right: 5px;
-            font-size: 0.85em;
             display: inline-block;
-            transition: 0.2s;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            transition: transform 0.2s ease;
+        }
+
+        .actions a:hover {
+            transform: translateY(-1px);
         }
 
         .edit {
-            background-color: transparent;
-            color: #3498db;
-            border: 1px solid #3498db;
-        }
-
-        .edit:hover {
-            background-color: #3498db;
-            color: white;
+            background: #7b5cff;
+            color: #fff;
         }
 
         .delete {
-            background-color: transparent;
-            color: #e74c3c;
-            border: 1px solid #e74c3c;
+            background: #ff6b6b;
+            color: #fff;
         }
 
-        .delete:hover {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        /* --- FORMULARIOS --- */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            color: #d4af37;
-            font-weight: 600;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            font-size: 0.85em;
-            letter-spacing: 1px;
+            margin-bottom: 10px;
+            color: #cfd8ff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            background-color: #2a2a2a;
-            border: 1px solid #555;
-            border-radius: 4px;
-            color: #e0e0e0;
-            font-size: 1em;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
+            padding: 14px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: #f8f9ff;
+            font-size: 0.95rem;
+            outline: none;
         }
 
         .form-group input:focus {
-            outline: none;
-            border-color: #d4af37;
+            border-color: #7b5cff;
+            box-shadow: 0 0 0 4px rgba(123,92,255,0.12);
         }
 
         .btn-submit {
             width: 100%;
-            padding: 15px;
-            background-color: #c0392b;
-            color: white;
+            padding: 16px 18px;
+            background: linear-gradient(135deg, #7b5cff, #6c5ce7);
+            color: #fff;
             border: none;
-            border-radius: 5px;
-            font-family: 'Cinzel', serif;
-            font-size: 1em;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            border-radius: 18px;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
             cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .btn-submit:hover {
-            background-color: #d4af37;
-            color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 30px rgba(123,92,255,0.24);
+        }
+
+        .btn-add {
+            display: inline-block;
+            background-color: #6c5ce7;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            transition: 0.3s;
+            border: 2px solid rgba(255,255,255,0.12);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-add:hover {
+            background-color: #a29bfe;
+            color: #1b1d2a;
+            transform: translateY(-3px);
         }
 
         .back-link {
-            display: block;
-            text-align: center;
+            display: inline-block;
             margin-top: 20px;
-            color: #888;
+            color: #c9d6ff;
             text-decoration: none;
-            font-size: 0.9em;
-            transition: color 0.2s;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
 
         .back-link:hover {
-            color: #d4af37;
+            color: #ffffff;
         }
-
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Salón del Trono</h1>
-    <p>"AQUÍ SE FORJAN LAS LEYENDAS QUE CANTARÁN LOS SKALDOS"</p>
+    <h1>Arcade Challenge</h1>
+    <p>Bienvenido al centro de respuesta más divertido. Regístrate, valida tu correo y supera los retos.</p>
+    <nav class="main-nav">
+        <a href="/1C-2026/tpfinal_mvc/game/home">Inicio</a>
+        {{^loggedIn}}
+        <a href="/1C-2026/tpfinal_mvc/game/registro">Registro</a>
+        <a href="/1C-2026/tpfinal_mvc/game/login">Login</a>
+        {{/loggedIn}}
+        {{#loggedIn}}
+        <a href="/1C-2026/tpfinal_mvc/game/perfil">Mi perfil</a>
+        <a href="/1C-2026/tpfinal_mvc/game/quiz?q=0">Desafíos</a>
+        <a href="/1C-2026/tpfinal_mvc/game/logout">Salir</a>
+        {{/loggedIn}}
+    </nav>
+
+    {{#loggedIn}}
+    <div class="user-badge">
+        Hola, {{username}}. {{^validated}}Tu correo aún no está validado.{{/validated}}{{#validated}}Tu correo está validado.{{/validated}}
+    </div>
+    {{/loggedIn}}
 </header>

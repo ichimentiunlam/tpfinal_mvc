@@ -1,16 +1,20 @@
-create schema aldea_vikinga;
-use aldea_vikinga;
-create table aldea_vikinga.guerreros
-(
-    id        int auto_increment
-        primary key,
-    nombre    varchar(50)                           not null,
-    apodo     varchar(50)                           null,
-    clan      varchar(50)                           null,
-    fuerza    int       default 0                   null,
-    creado_en timestamp default current_timestamp() not null
-);
+create schema quiz_game;
+use quiz_game;
 
-INSERT INTO aldea_vikinga.guerreros (id, nombre, apodo, clan, fuerza, creado_en) VALUES (23, 'Aslaug', 'La Reina', 'Volsung', 82, '2026-04-28 21:52:34');
-INSERT INTO aldea_vikinga.guerreros (id, nombre, apodo, clan, fuerza, creado_en) VALUES (24, 'Harald', 'Cabellera Hermosa', 'Noruega', 94, '2026-04-28 21:52:34');
-INSERT INTO aldea_vikinga.guerreros (id, nombre, apodo, clan, fuerza, creado_en) VALUES (26, 'Astrid', 'La Valiente (casi)', 'Hedeby', 87, '2026-04-28 21:52:34');
+-- Tabla de usuarios registrados
+create table quiz_game.usuarios
+(
+    id            int auto_increment primary key,
+    nombre        varchar(100)                                 not null,
+    apellido      varchar(100)                                 not null,
+    anio_nacimiento int                                          not null,
+    sexo         enum('M', 'F', 'O')                             not null,
+    ciudad        varchar(100)                                 not null,
+    pais         varchar(100)                                 not null,
+    email         varchar(100) unique                       not null,
+    email_validado boolean      default false               not null,
+    password      varchar(255)                              not null,
+    usuario varchar(50) unique                       not null,
+    foto_perfil varchar(255)                              null,
+    fecha_registro timestamp    default current_timestamp()  not null
+);

@@ -1,0 +1,70 @@
+{{>header}}
+<div class="container">
+    <h2>Registro de jugador</h2>
+    {{#error}}
+    <div class="panel" style="background: rgba(255, 87, 34, 0.12); border-color: #ff6b6b; color: #ffd369; margin-bottom: 20px;">
+        {{error}}
+    </div>
+    {{/error}}
+    <form action="/1C-2026/tpfinal_mvc/game/procesarRegistro" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" value="{{nombre}}" placeholder="Ej: Juan" required>
+        </div>
+
+        <div class="form-group">
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" value="{{apellido}}" placeholder="Ej: Gamer" required>
+        </div>
+
+        <div class="form-group">
+            <label for="usuario">Usuario</label>
+            <input type="text" id="usuario" name="usuario" value="{{usuario}}" placeholder="Ej: PixelHero" required>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="anio_nacimiento">Año de nacimiento</label>
+                <input type="number" id="anio_nacimiento" name="anio_nacimiento" value="{{anio_nacimiento}}" placeholder="Ej: 1998" required>
+            </div>
+            <div class="form-group">
+                <label for="sexo">Sexo</label>
+                <select id="sexo" name="sexo" required>
+                    <option value="" disabled {{^sexo}}selected{{/sexo}}>Selecciona</option>
+                    <option value="M" {{#isM}}selected{{/isM}}>Masculino</option>
+                    <option value="F" {{#isF}}selected{{/isF}}>Femenino</option>
+                    <option value="O" {{#isO}}selected{{/isO}}>Prefiero No Decirlo</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="ciudad">Ciudad</label>
+            <input type="text" id="ciudad" name="ciudad" value="{{ciudad}}" placeholder="Ej: Buenos Aires" required>
+        </div>
+
+        <div class="form-group">
+            <label for="pais">País</label>
+            <input type="text" id="pais" name="pais" value="{{pais}}" placeholder="Ej: Argentina" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" value="{{email}}" placeholder="Ej: jugador@arcade.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" placeholder="Mínimo 4 caracteres" required>
+        </div>
+
+        <div class="form-group">
+            <label for="foto_perfil">Foto de perfil</label>
+            <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn-submit">🚀 Crear cuenta</button>
+        <a href="/1C-2026/tpfinal_mvc/game/home" class="back-link">← Volver al inicio</a>
+    </form>
+</div>
+{{>footer}}

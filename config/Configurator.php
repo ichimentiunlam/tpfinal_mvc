@@ -8,9 +8,9 @@ class Configurator {
         $this->config = parse_ini_file("config/config.ini");
     }
 
-    public function getVikingoController()
+    public function getGameController()
     {
-        return new VikingoController($this->getVikingoModel(), $this->getRenderer(), new Request());
+        return new GameController($this->getGameModel(), $this->getRenderer(), new Request());
     }
 
     private function getDatabase()
@@ -28,14 +28,14 @@ class Configurator {
         return new MustacheRenderer(__DIR__ . '/../view');
     }
 
-    private function getVikingoModel()
+    private function getGameModel()
     {
-        return new VikingoModel($this->getDatabase());
+        return new GameModel($this->getDatabase());
     }
 
     public function getRouter()
     {
-        return new Router($this, 'vikingo', 'ver');
+        return new Router($this, 'game', 'home');
     }
 
     public function getOrDefault($controllerName, $defaultControllerName)

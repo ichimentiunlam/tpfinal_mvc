@@ -17,8 +17,8 @@ Options -Indexes
 # ══════════════════════════════════════════════════════
 # URL REWRITING
 # Transforma URLs limpias en la URL real de PHP.
-# El browser pide:  /vikingo/ver
-# Apache convierte: index.php?controller=vikingo&method=ver
+# El browser pide:  /game/ver
+# Apache convierte: index.php?controller=game&method=ver
 # El browser nunca sabe que existe index.php.
 # ══════════════════════════════════════════════════════
 <IfModule mod_rewrite.c>
@@ -27,7 +27,7 @@ Options -Indexes
 
     # Raíz desde donde se aplican las reglas (relativo al DocumentRoot).
     # Si el proyecto no está en la raíz de htdocs, cambiar a /nombre-carpeta/
-    RewriteBase /
+    RewriteBase /1C-2026/tpfinal_mvc/
 
     # ── CONDICIONES ── (aplican a las dos reglas de abajo)
     # Solo reescribir si la URL NO es un archivo real en disco.
@@ -43,7 +43,7 @@ Options -Indexes
     #   $2 = segundo segmento (method)
     # [L]   = Last: si esta regla coincide, no evaluar las siguientes.
     # [QSA] = Query String Append: conserva parámetros adicionales.
-    #   /vikingo/editar?id=5 llega como controller=vikingo&method=editar&id=5
+    #   /game/editar?id=5 llega como controller=game&method=editar&id=5
     RewriteRule ^([^/]+)/([^/]+)$ index.php?controller=$1&method=$2 [L,QSA]
 
     # ── REGLA 2: /controller (sin method) ────────────────
