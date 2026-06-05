@@ -1,0 +1,27 @@
+{{>header}}
+<div class="container">
+    <h2>Panel de jugador</h2>
+    <div class="panel" style="background: rgba(33, 46, 71, 0.8); border-color: #7b5cff; color: #f5f5f5;">
+        {{#user.foto_perfil}}
+        <div style="text-align:center; margin-bottom:16px;">
+            <img src="/1C-2026/tpfinal_mvc/{{user.foto_perfil}}" alt="Foto de perfil" style="max-width:120px; border-radius:50%; border:2px solid #74b9ff;">
+        </div>
+        {{/user.foto_perfil}}
+        <p><strong>Nombre completo:</strong> {{user.nombre}} {{user.apellido}}</p>
+        <p><strong>Usuario:</strong> {{user.usuario}}</p>
+        <p><strong>Correo:</strong> {{user.email}}</p>
+        <p><strong>Año de nacimiento:</strong> {{user.anio_nacimiento}}</p>
+        <p><strong>Sexo:</strong> {{user.sexo}}</p>
+        <p><strong>Ciudad:</strong> {{user.ciudad}}</p>
+        <p><strong>País:</strong> {{user.pais}}</p>
+        <p><strong>Estado:</strong> {{#user.validated}}Correo verificado{{/user.validated}}{{^user.validated}}Pendiente de verificación{{/user.validated}}</p>
+        <p><strong>Puntos:</strong> {{user.score}}</p>
+        <p><strong>Retos completados:</strong> {{user.played}}</p>
+    </div>
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="/1C-2026/tpfinal_mvc/game/quiz?q=0" class="btn-submit">🎮 Comenzar desafío</a>
+        <a href="/1C-2026/tpfinal_mvc/game/logout" class="btn-submit" style="margin-top: 15px; background-color: #ff7675;">🚪 Salir</a>
+    </div>
+    <a href="/1C-2026/tpfinal_mvc/game/home" class="back-link">← Volver al inicio</a>
+</div>
+{{>footer}}

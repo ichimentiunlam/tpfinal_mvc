@@ -1,0 +1,21 @@
+{{>header}}
+<div class="container">
+    <h2>{{title}}</h2>
+    <p style="margin-bottom: 30px; font-size: 1.05rem; color: #dcdcdc;">{{subtitle}}</p>
+
+    {{#loggedIn}}
+    <div class="panel">
+        <p style="font-size: 1.05rem; margin-bottom: 20px;">Hola, <strong>{{username}}</strong>. Tienes <strong>{{score}}</strong> puntos de experiencia.</p>
+        <a href="/1C-2026/tpfinal_mvc/game/quiz?q=0" class="btn-submit">🎮 Iniciar desafío</a>
+        <a href="/1C-2026/tpfinal_mvc/game/perfil" class="btn-submit" style="margin-top: 15px;">📊 Ver mi perfil</a>
+    </div>
+    {{/loggedIn}}
+
+    {{^loggedIn}}
+    <div class="panel">
+        <a href="/1C-2026/tpfinal_mvc/game/registro" class="btn-submit">📝 Crear cuenta</a>
+        <a href="/1C-2026/tpfinal_mvc/game/login" class="btn-submit" style="margin-top: 15px;">🔐 Iniciar sesión</a>
+    </div>
+    {{/loggedIn}}
+</div>
+{{>footer}}
