@@ -19,7 +19,8 @@ class Configurator {
             $this->config['hostname'],
             $this->config['username'],
             $this->config['password'],
-            $this->config['database']
+            $this->config['database'],
+            $this->config['port']
         );
     }
 
