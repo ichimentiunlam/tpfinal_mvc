@@ -10,6 +10,6 @@ class Redirect
 
     public static function toIndex()
     {
-        self::to('/1C-2026/tpfinal_mvc/game/ver');
+        self::to('/tpfinal_mvc/game/ver');
     }
 }

@@ -327,7 +327,7 @@ class GameController
         $this->ensureSession();
 
         if ($this->getCurrentUser()) {
-            Redirect::to('/1C-2026/tpfinal_mvc/game/perfil');
+            Redirect::to('/tpfinal_mvc/game/perfil');
             return;
         }
 
@@ -369,7 +369,7 @@ class GameController
         }
 
         $this->setCurrentUser($email);
-        Redirect::to('/1C-2026/tpfinal_mvc/game/perfil');
+        Redirect::to('/tpfinal_mvc/game/perfil');
     }
 
     public function perfil()
@@ -378,7 +378,7 @@ class GameController
 
         $user = $this->getCurrentUser();
         if (!$user) {
-            Redirect::to('/1C-2026/tpfinal_mvc/game/login');
+            Redirect::to('/tpfinal_mvc/game/login');
             return;
         }
 
@@ -391,6 +391,6 @@ class GameController
     {
         $this->ensureSession();
         $this->logoutUser();
-        Redirect::to('/1C-2026/tpfinal_mvc/game/home');
+        Redirect::to('/tpfinal_mvc/game/home');
     }
 }
