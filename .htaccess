@@ -27,7 +27,7 @@ Options -Indexes
 
     # Raíz desde donde se aplican las reglas (relativo al DocumentRoot).
     # Si el proyecto no está en la raíz de htdocs, cambiar a /nombre-carpeta/
-    RewriteBase /1C-2026/tpfinal_mvc/
+    RewriteBase /tpfinal_mvc/
 
     # ── CONDICIONES ── (aplican a las dos reglas de abajo)
     # Solo reescribir si la URL NO es un archivo real en disco.
@@ -49,4 +49,6 @@ Options -Indexes
     # ── REGLA 2: /controller (sin method) ────────────────
     # Si solo viene el controller, el router usa el método default ('ver').
     RewriteRule ^([^/]+)$         index.php?controller=$1           [L,QSA]
+
+    RewriteRule ^(public)($|/) - [L,NC]
 </IfModule>

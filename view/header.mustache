@@ -252,15 +252,15 @@
     <h1>Arcade Challenge</h1>
     <p>Bienvenido al centro de respuesta más divertido. Regístrate, valida tu correo y supera los retos.</p>
     <nav class="main-nav">
-        <a href="/1C-2026/tpfinal_mvc/game/home">Inicio</a>
+        <a href="/tpfinal_mvc/game/home">Inicio</a>
         {{^loggedIn}}
-        <a href="/1C-2026/tpfinal_mvc/game/registro">Registro</a>
-        <a href="/1C-2026/tpfinal_mvc/game/login">Login</a>
+        <a href="/tpfinal_mvc/game/registro">Registro</a>
+        <a href="/tpfinal_mvc/game/login">Login</a>
         {{/loggedIn}}
         {{#loggedIn}}
-        <a href="/1C-2026/tpfinal_mvc/game/perfil">Mi perfil</a>
-        <a href="/1C-2026/tpfinal_mvc/game/quiz?q=0">Desafíos</a>
-        <a href="/1C-2026/tpfinal_mvc/game/logout">Salir</a>
+        <a href="/tpfinal_mvc/game/perfil">Mi perfil</a>
+        <a href="/tpfinal_mvc/game/quiz?q=0">Desafíos</a>
+        <a href="/tpfinal_mvc/game/logout">Salir</a>
         {{/loggedIn}}
     </nav>
 

@@ -6,7 +6,7 @@
         {{error}}
     </div>
     {{/error}}
-    <form action="/1C-2026/tpfinal_mvc/game/procesarRegistro" method="POST" enctype="multipart/form-data">
+    <form action="/tpfinal_mvc/game/procesarRegistro" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nombre">Nombre</label>
             <input type="text" id="nombre" name="nombre" value="{{nombre}}" placeholder="Ej: Juan" required>
@@ -64,7 +64,7 @@
         </div>
 
         <button type="submit" class="btn-submit">🚀 Crear cuenta</button>
-        <a href="/1C-2026/tpfinal_mvc/game/home" class="back-link">← Volver al inicio</a>
+        <a href="/tpfinal_mvc/game/home" class="back-link">← Volver al inicio</a>
     </form>
 </div>
 {{>footer}}
