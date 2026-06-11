@@ -1,0 +1,34 @@
+.loginContainer {
+    width: 400px;
+    padding: 30px;
+    background: #24303c;
+    margin: auto;
+    margin-top: 30px;
+    border-radius: 4px;
+}
+
+.loginContainer h2{
+    margin-bottom: 1rem;
+}
+
+.loginForm input{
+    width: 100%;
+    background: #24303c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+    border: 1px solid #1f53c5;
+    font-size: 18px;
+    color: white;
+}
+
+.btn{
+    margin-top: 1rem;
+    font-size: 15px;
+}
+
+.btn.primary{
+    cursor: pointer;
+    box-shadow: none;
+    
+}
