@@ -1,12 +1,13 @@
 {{>header}}
-<div class="container">
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/register.css">
+<section class="registerContainer">
     <h2>Registro de jugador</h2>
     {{#error}}
-    <div class="panel" style="background: rgba(255, 87, 34, 0.12); border-color: #ff6b6b; color: #ffd369; margin-bottom: 20px;">
+    <div class="panel">
         {{error}}
     </div>
     {{/error}}
-    <form action="/tpfinal_mvc/game/procesarRegistro" method="POST" enctype="multipart/form-data">
+    <form class="registerForm" action="/tpfinal_mvc/game/procesarRegistro" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nombre">Nombre</label>
             <input type="text" id="nombre" name="nombre" value="{{nombre}}" placeholder="Ej: Juan" required>
@@ -28,7 +29,7 @@
                 <input type="number" id="anio_nacimiento" name="anio_nacimiento" value="{{anio_nacimiento}}" placeholder="Ej: 1998" required>
             </div>
             <div class="form-group">
-                <label for="sexo">Sexo</label>
+                <label for="sexo">Sexo</label><br>
                 <select id="sexo" name="sexo" required>
                     <option value="" disabled {{^sexo}}selected{{/sexo}}>Selecciona</option>
                     <option value="M" {{#isM}}selected{{/isM}}>Masculino</option>
@@ -58,13 +59,13 @@
             <input type="password" id="password" name="password" placeholder="Mínimo 4 caracteres" required>
         </div>
 
-        <div class="form-group">
+        <div class="form-group fotoUpload">
             <label for="foto_perfil">Foto de perfil</label>
             <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*">
         </div>
 
-        <button type="submit" class="btn-submit">🚀 Crear cuenta</button>
-        <a href="/tpfinal_mvc/game/home" class="back-link">← Volver al inicio</a>
+        <button type="submit" class="btn primary">Crear cuenta</button>
+        <a href="/tpfinal_mvc/game/home" class="btn secondary">Volver</a>
     </form>
-</div>
+</section>
 {{>footer}}

@@ -1,22 +1,23 @@
 {{>header}}
-<div class="container">
+ <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/login.css">
+<section class="loginContainer">
     <h2>Acceder</h2>
     {{#error}}
     <div class="panel" style="background: rgba(255, 119, 119, 0.12); border-color: #ff7675; color: #ffeaa7; margin-bottom: 20px;">
         {{error}}
     </div>
     {{/error}}
-    <form action="/tpfinal_mvc/game/procesarLogin" method="POST">
-        <div class="form-group">
-            <label for="email">Correo electrónico</label>
+    <form class="loginForm" action="/tpfinal_mvc/game/procesarLogin" method="POST">
+        <div>
+            
             <input type="email" id="email" name="email" value="{{email}}" placeholder="jugador@arcade.com" required>
         </div>
-        <div class="form-group">
-            <label for="password">Contraseña</label>
+        <div>
+            
             <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
         </div>
-        <button type="submit" class="btn-submit">🔐 Entrar al arcade</button>
-        <a href="/tpfinal_mvc/game/registro" class="back-link">← Crear cuenta nueva</a>
+        <button type="submit" class="btn primary">Iniciar Sesion</button>
+        <a href="/tpfinal_mvc/game/registro" class="btn secondary">Crear cuenta</a>
     </form>
-</div>
+</section>
 {{>footer}}

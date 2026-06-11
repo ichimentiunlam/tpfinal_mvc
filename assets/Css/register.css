@@ -1,0 +1,103 @@
+.registerContainer {
+    width: 400px;
+    padding: 30px;
+    background: #24303c;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 60px;    
+    border-radius: 4px;
+}
+
+.registerContainer h2{
+    margin-bottom: 1rem;
+}
+
+.registerContainer input{
+    width: 100%;
+    background: #24303c;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+    margin-top: 0.2rem;
+    border: 1px solid #1f53c5;
+    font-size: 18px;
+    color: white;
+}
+
+
+.form-group.fotoUpload input{
+    border: none;
+    margin: 0;
+    padding: 0;
+    padding-top: 0.5rem;
+    
+}
+
+.form-group select{
+    padding: 10px;
+    margin-top: 0.2rem;
+    margin-bottom: 0.4rem;
+    background: #24303c;
+    border: 1px solid #1f53c5;
+    font-size: 18px;
+    color: white;
+}
+
+.btn{
+    margin-top: 1rem;
+    font-size: 15px;
+}
+
+.btn.primary{
+    cursor: pointer;
+    box-shadow: none;
+    
+}
+
+.btn.secondary{
+    border: none;
+}
+
+/* verificar */
+
+.validateContainer {
+    width: 400px;
+    padding: 30px;
+    background: #24303c;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 60px;    
+    border-radius: 4px;
+}
+
+.validateContainer p{
+    margin-top: 0.8rem;
+}
+
+.succesContainer {
+    width: 400px;
+    padding: 30px;
+    background: #24303c;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 60px;    
+    border-radius: 4px;
+}
+
+.succesContainer p{
+    margin-top: 0.8rem;
+}
+
+.errorContainer {
+    width: 400px;
+    padding: 30px;
+    background: #24303c;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 60px;    
+    border-radius: 4px;
+}
+
+.errorContainer p{
+    margin-top: 0.8rem;
+}
