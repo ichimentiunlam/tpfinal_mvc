@@ -112,6 +112,7 @@ class GameController
         $pais = trim($this->request->post('pais'));
         $email = trim($this->request->post('email'));
         $password = trim($this->request->post('password'));
+        $repetirPassword = trim($this->request->post('repetirPassword'));
         $foto_perfil = null;
 
         if (!empty($_FILES['foto_perfil']['name'])) {
@@ -187,6 +188,24 @@ class GameController
         if (!$nombre || !$apellido || !$usuario || !$anio_nacimiento || !$sexo || !$ciudad || !$pais || !$email || !$password) {
             $this->render('registerView', [
                 'error' => 'Completa todos los campos para crear tu perfil de jugador.',
+                'nombre' => $nombre,
+                'apellido' => $apellido,
+                'usuario' => $usuario,
+                'anio_nacimiento' => $anio_nacimiento,
+                'sexo' => $sexo,
+                'isM' => $sexo === 'M',
+                'isF' => $sexo === 'F',
+                'isO' => $sexo === 'O',
+                'ciudad' => $ciudad,
+                'pais' => $pais,
+                'email' => $email,
+            ]);
+            return;
+        }
+
+                if ( $password != $repetirPassword) {
+            $this->render('registerView', [
+                'error' => 'Las Contraseñas no coincidem',
                 'nombre' => $nombre,
                 'apellido' => $apellido,
                 'usuario' => $usuario,
