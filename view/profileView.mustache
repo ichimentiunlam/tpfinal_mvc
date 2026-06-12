@@ -5,21 +5,25 @@
 
     <div class="profileLeft">
         <div class="profileFoto">
-            <img src="/tpfinal_mvc/assets/Img/default.png" alt="Foto de perfil">
-                    <!-- {{#user.foto_perfil}} -->
-        <!--    <img src="tpfinal_mvc/{{user.foto_perfil}}" alt="Foto de perfil"> -->
-        <!--{{/user.foto_perfil}} -->
+
+        {{^user.foto_perfil}}
+        <img src="/tpfinal_mvc/assets/Img/default.png" alt="Foto de perfil por defecto">
+        {{/user.foto_perfil}}
+        
+        {{#user.foto_perfil}}
+        <img src="tpfinal_mvc/{{user.foto_perfil}}" alt="Foto de perfil">
+        {{/user.foto_perfil}}
             <h1>{{user.usuario}}</h1>
         </div>
 
         <div class="stats">
             <div class="statCard">
-                <span class="statNumber">{{user.score}}0</span>
+                <span class="statNumber">{{user.puntaje_max}}</span>
                 <span class="statLabel">Puntaje</span>
             </div>
 
             <div class="statCard">
-                <span class="statNumber">{{user.preguntas_respondidas}}0</span>
+                <span class="statNumber">{{user.preguntas_respondidas}}</span>
                 <span class="statLabel">Respondidas</span>
             </div>
         </div>

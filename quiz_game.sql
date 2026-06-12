@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 10-06-2026 a las 21:45:31
+-- Tiempo de generación: 12-06-2026 a las 02:11:32
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -239,6 +239,26 @@ INSERT INTO `tipos_pregunta` (`id`, `tipo`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tipos_usuario`
+--
+
+CREATE TABLE `tipos_usuario` (
+  `id` int(11) NOT NULL,
+  `tipo` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tipos_usuario`
+--
+
+INSERT INTO `tipos_usuario` (`id`, `tipo`) VALUES
+(1, 'Comun'),
+(2, 'Editor'),
+(3, 'Administrador');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuarios`
 --
 
@@ -255,7 +275,11 @@ CREATE TABLE `usuarios` (
   `password` varchar(255) NOT NULL,
   `usuario` varchar(50) NOT NULL,
   `foto_perfil` varchar(255) DEFAULT NULL,
-  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp()
+  `fecha_registro` timestamp NOT NULL DEFAULT current_timestamp(),
+  `puntaje_max` int(11) NOT NULL DEFAULT 0,
+  `preguntas_respondidas` int(11) NOT NULL DEFAULT 0,
+  `preguntas_correctas` int(11) NOT NULL DEFAULT 0,
+  `id_tipo` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -286,12 +310,19 @@ ALTER TABLE `tipos_pregunta`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `tipos_usuario`
+--
+ALTER TABLE `tipos_usuario`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `usuario` (`usuario`);
+  ADD UNIQUE KEY `usuario` (`usuario`),
+  ADD KEY `tipo_usuario` (`id_tipo`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -316,10 +347,16 @@ ALTER TABLE `tipos_pregunta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT de la tabla `tipos_usuario`
+--
+ALTER TABLE `tipos_usuario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restricciones para tablas volcadas
@@ -334,6 +371,12 @@ ALTER TABLE `preguntas`
   ADD CONSTRAINT `respuesta3` FOREIGN KEY (`id_respuesta3`) REFERENCES `respuestas` (`Id`),
   ADD CONSTRAINT `respuesta4` FOREIGN KEY (`id_respuesta4`) REFERENCES `respuestas` (`Id`),
   ADD CONSTRAINT `tipo` FOREIGN KEY (`id_tipo_pregunta`) REFERENCES `tipos_pregunta` (`id`);
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `tipo_usuario` FOREIGN KEY (`id_tipo`) REFERENCES `tipos_usuario` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
