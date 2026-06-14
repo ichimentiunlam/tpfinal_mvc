@@ -1,0 +1,16 @@
+{{>header}}
+
+<main class="arcade-wrapper">
+    <div class="arcade-card">
+        <h2 style="margin-bottom: 25px; color: #ff4d4d;">¡Perdiste!</h2>
+        
+        <div style="margin-bottom: 30px; color: white;">
+            <p>Tu puntaje final fue: <strong>{{puntaje}}</strong></p>
+            <p>La respuesta correcta era: <strong>{{respuesta_correcta}}</strong></p>
+        </div>
+
+        <a href="/tpfinal_mvc/game/jugar" class="arcade-btn" style="text-decoration: none;">Volver a jugar</a>
+    </div>
+</main>
+
+{{>footer}}

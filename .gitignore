@@ -1,4 +1,9 @@
+# 
 log/2026-06-02.log
 vendor/mustache/src/Mustache/Parser.php
 /log
 config/config.ini
+
+# Reglas generales que agregamos para limpiar el repo 
+/vendor/
+.DS_Store

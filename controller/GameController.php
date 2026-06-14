@@ -406,10 +406,51 @@ class GameController
         ]);
     }
 
-    public function logout()
-    {
+   public function logout()
+{
+    $this->ensureSession();
+    $this->logoutUser();
+    unset($_SESSION['puntaje']); // Limpiar puntaje al cerrar sesión
+    
+    
+    header('Location: /tpfinal_mvc/game/home'); // Redirigir a la página de inicio después de cerrar sesión
+    exit();
+}
+
+
+public function jugar() {
         $this->ensureSession();
-        $this->logoutUser();
-        Redirect::to('/tpfinal_mvc/game/home');
+        
+        // Inicializamos el puntaje si no existe
+        if (!isset($_SESSION['puntaje'])) {
+            $_SESSION['puntaje'] = 0;
+        }
+
+        $data = $this->model->obtenerPreguntaAleatoria();
+        $data['puntaje'] = $_SESSION['puntaje']; 
+        
+        $this->render('gameView', $data);
+    }
+
+    public function validarRespuesta() {
+        $this->ensureSession();
+        $id_respuesta = $this->request->post('id_respuesta');
+        $id_pregunta = $this->request->post('id_pregunta');
+
+        if ($this->model->esRespuestaCorrecta($id_respuesta)) {
+            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 1;
+            header('Location: /tpfinal_mvc/game/jugar');
+            exit();
+        } else {
+            $puntaje_final = $_SESSION['puntaje'] ?? 0;
+            $_SESSION['puntaje'] = 0; // Reseteamos al perder
+            
+            $respuestaCorrecta = $this->model->getRespuestaCorrecta($id_pregunta);
+            
+            $this->render('resultadoView', [
+                'puntaje' => $puntaje_final,
+                'respuesta_correcta' => $respuestaCorrecta
+            ]);
+        }
     }
 }
