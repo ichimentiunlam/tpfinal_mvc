@@ -7,6 +7,7 @@ class MyDatabase
     public function __construct($hostname, $username, $password, $database, $port)
     {
         $this->conexion = new mysqli($hostname, $username, $password, $database, $port);
+         $this->conexion->set_charset("utf8mb4");
     }
 
     public function query($sql, $params = [])
