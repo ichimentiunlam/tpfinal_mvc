@@ -7,7 +7,7 @@
         {{error}}
     </div>
     {{/error}}
-    <form class="loginForm" action="/tpfinal_mvc/game/procesarLogin" method="POST">
+    <form class="loginForm" action="/tpfinal_mvc/User/procesarLogin" method="POST">
         <div>
             
             <input type="email" id="email" name="email" value="{{email}}" placeholder="jugador@arcade.com" required>
@@ -17,7 +17,7 @@
             <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
         </div>
         <button type="submit" class="btn primary">Iniciar Sesion</button>
-        <a href="/tpfinal_mvc/game/registro" class="btn secondary">Crear cuenta</a>
+        <a href="/tpfinal_mvc/User/registro" class="btn secondary">Crear cuenta</a>
     </form>
 </section>
 {{>footer}}

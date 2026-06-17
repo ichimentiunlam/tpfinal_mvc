@@ -10,6 +10,6 @@ class Redirect
 
     public static function toIndex()
     {
-        self::to('/tpfinal_mvc/game/ver');
+        self::to('/tpfinal_mvc/User/ver');
     }
 }
