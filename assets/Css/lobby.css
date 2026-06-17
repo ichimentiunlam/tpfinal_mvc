@@ -1,0 +1,25 @@
+.lobbyContainer{
+    text-align: center;
+}
+.lobbyInfo {
+    width: min(35rem, 92%);
+    margin: 40px auto;
+    padding: 35px;
+
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+}
+
+.lobbyInfo h2{
+    margin-bottom: 1rem;
+}
+
+.lobbyInfo p{
+    margin-bottom: 1rem;
+}
+
+.lobbyInfo a{
+    margin-bottom: 1rem;
+}
