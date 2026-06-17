@@ -13,15 +13,15 @@
 
         {{^loggedIn}}
         <div class="cta-buttons">
-            <a href="/tpfinal_mvc/game/registro" class="btn primary">Crear cuenta</a>
-            <a href="/tpfinal_mvc/game/login" class="btn secondary">Iniciar sesión</a>
+            <a href="/tpfinal_mvc/User/registro" class="btn primary">Crear cuenta</a>
+            <a href="/tpfinal_mvc/User/login" class="btn secondary">Iniciar sesión</a>
         </div>
         {{/loggedIn}}
 
         {{#loggedIn}}
         <div class="cta-buttons">
-            <a href="/tpfinal_mvc/game/jugar" class="btn primary">Iniciar desafío</a>
-            <a href="/tpfinal_mvc/game/perfil" class="btn secondary">Ver perfil</a>
+            <a href="/tpfinal_mvc/Game/jugar" class="btn primary">Iniciar desafío</a>
+            <a href="/tpfinal_mvc/User/perfil" class="btn secondary">Ver perfil</a>
         </div>
         {{/loggedIn}}
     </div>

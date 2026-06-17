@@ -11,7 +11,7 @@
         {{error}}
     </div>
     {{/error}}
-    <form class="registerForm" action="/tpfinal_mvc/game/procesarRegistro" method="POST" enctype="multipart/form-data">
+    <form class="registerForm" action="/tpfinal_mvc/User/procesarRegistro" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nombre">Nombre</label>
             <input type="text" id="nombre" name="nombre" value="{{nombre}}" placeholder="Ej: Juan" required>
@@ -74,7 +74,7 @@
         </div>
 
         <button type="submit" class="btn primary">Crear cuenta</button>
-        <a href="/tpfinal_mvc/game/home" class="btn secondary">Volver</a>
+        <a href="/tpfinal_mvc/User/home" class="btn secondary">Volver</a>
     </form>
 </section>
 <script src="/tpfinal_mvc/assets/js/register.js"></script>

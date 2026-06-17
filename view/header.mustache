@@ -11,19 +11,19 @@
 <body>
 
 <header>
-    <a class="logo" href="/tpfinal_mvc/game/home"><img src="/tpfinal_mvc/assets/Img/logo.png" alt="Logo"></a>
+    <a class="logo" href="/tpfinal_mvc/User/home"><img src="/tpfinal_mvc/assets/Img/logo.png" alt="Logo"></a>
     
     <nav>
         <ul class="nav_links">
-            <li><a href="/tpfinal_mvc/game/home">Inicio</a></li>
+            <li><a href="/tpfinal_mvc/User/home">Inicio</a></li>
             {{^loggedIn}}
-            <li><a href="/tpfinal_mvc/game/registro">Registro</a></li>
-            <li><a href="/tpfinal_mvc/game/login">Login</a></li>
+            <li><a href="/tpfinal_mvc/User/registro">Registro</a></li>
+            <li><a href="/tpfinal_mvc/User/login">Login</a></li>
             {{/loggedIn}}
             {{#loggedIn}}
-            <li><a href="/tpfinal_mvc/game/perfil">Mi perfil</a></li>
-            <li><a href="/tpfinal_mvc/game/jugar">Desafíos</a></li>
-            <li><a href="/tpfinal_mvc/game/logout">Salir</a></li>
+            <li><a href="/tpfinal_mvc/User/perfil">Mi perfil</a></li>
+            <li><a href="/tpfinal_mvc/Game/jugar">Desafíos</a></li>
+            <li><a href="/tpfinal_mvc/User/logout">Salir</a></li>
             {{/loggedIn}}
         </ul>
     </nav>

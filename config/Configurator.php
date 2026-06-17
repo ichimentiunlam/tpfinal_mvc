@@ -13,6 +13,12 @@ class Configurator {
         return new GameController($this->getGameModel(), $this->getRenderer(), new Request());
     }
 
+    public function getUserController()
+{
+    return new UserController(
+        $this->getGameModel(), $this->getRenderer(), new Request());
+}
+
     private function getDatabase()
     {
         return new MyDatabase(
