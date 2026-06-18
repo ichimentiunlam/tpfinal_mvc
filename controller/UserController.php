@@ -413,7 +413,7 @@ class UserController
     unset($_SESSION['puntaje']); // Limpiar puntaje al cerrar sesión
     
     
-    header('Location: /tpfinal_mvc/User/home'); // Redirigir a la página de inicio después de cerrar sesión
+    header('Location: /tpfinal_mvc/User/home');
     exit();
 }
 }
