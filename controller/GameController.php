@@ -69,6 +69,36 @@ class GameController
     }
 
 
+public function lobby(){
+        $this->ensureSession();
+        
+        $user = $this->getCurrentUser();
+        if (!$user) {
+            Redirect::to('/tpfinal_mvc/User/login');
+            return;
+        }
+
+        $this->render('lobbyView', [
+            'user' => $user,
+        ]);
+}
+
+public function ranking(){
+        $this->ensureSession();
+        
+        $user = $this->getCurrentUser();
+        if (!$user) {
+            Redirect::to('/tpfinal_mvc/User/login');
+            return;
+        }
+
+        $this->render('rankingView', [
+            'user' => $user,
+        ]);
+}
+
+
+
 public function jugar() {
         $this->ensureSession();
         

@@ -154,6 +154,35 @@ header {
   text-align: center;
 }
 
+.stats {
+    display: flex;
+    gap: 15px;
+}
+
+.statCard {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+
+    border-radius: 16px;
+    background: linear-gradient(135deg, #7c4dff, #00c2ff);
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .25);
+}
+
+.statNumber {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.statLabel {
+    font-size: .9rem;
+    opacity: .9;
+    color: white;
+}
+
 /*  media  */
 
 @media (max-width: 900px) {
