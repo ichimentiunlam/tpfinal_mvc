@@ -13,7 +13,7 @@ class UserController
         $this->request  = $request;
     }
 
-        private function ensureSession()
+    private function ensureSession()
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
@@ -203,7 +203,7 @@ class UserController
             return;
         }
 
-                if ( $password != $repetirPassword) {
+        if ($password != $repetirPassword) {
             $this->render('registerView', [
                 'error' => 'Las Contraseñas no coincidem',
                 'nombre' => $nombre,
@@ -315,8 +315,10 @@ class UserController
         $email = $this->request->get('email');
         $code = $this->request->get('code');
 
-        if (!$email || !$code || !isset($_SESSION['temp_validation']) 
-            || $_SESSION['temp_validation']['email'] !== $email) {
+        if (
+            !$email || !$code || !isset($_SESSION['temp_validation'])
+            || $_SESSION['temp_validation']['email'] !== $email
+        ) {
             $this->render('messageView', [
                 'title' => 'Validación fallida',
                 'message' => 'No encontramos el registro de ese correo o el código es inválido.',
@@ -370,7 +372,7 @@ class UserController
 
         // Validar credenciales contra la base de datos
         $usuario = $this->model->validarCredenciales($email, $password);
-        
+
         if (!$usuario) {
             $this->render('loginView', [
                 'error' => 'Correo o contraseña incorrectos. Verifica tus datos.',
@@ -406,15 +408,14 @@ class UserController
         ]);
     }
 
-   public function logout()
-{
-    $this->ensureSession();
-    $this->logoutUser();
-    unset($_SESSION['puntaje']); // Limpiar puntaje al cerrar sesión
-    
-    
-    header('Location: /tpfinal_mvc/User/home');
-    exit();
+    public function logout()
+    {
+        $this->ensureSession();
+        $this->logoutUser();
+        unset($_SESSION['puntaje']); // Limpiar puntaje al cerrar sesión
+
+
+        header('Location: /tpfinal_mvc/User/home');
+        exit();
+    }
 }
-}
-?>

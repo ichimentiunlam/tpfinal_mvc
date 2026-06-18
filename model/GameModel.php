@@ -71,28 +71,64 @@ class GameModel
     }
 
     // ===================== Juego =====================
-public function obtenerTipoPorId($idTipo)
-{
-    $sql = "SELECT
+    public function obtenerPreguntaPorId($id)
+    {
+        $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
+                r1.respuesta as op1, r1.id as id1,
+                r2.respuesta as op2, r2.id as id2,
+                r3.respuesta as op3, r3.id as id3,
+                r4.respuesta as op4, r4.id as id4
+                FROM preguntas p
+                JOIN respuestas r1 ON p.id_respuesta1 = r1.id
+                JOIN respuestas r2 ON p.id_respuesta2 = r2.id
+                JOIN respuestas r3 ON p.id_respuesta3 = r3.id
+                JOIN respuestas r4 ON p.id_respuesta4 = r4.id
+               	WHERE p.id = ?
+                ORDER BY RAND() LIMIT 1";
+
+        $row = $this->database->query($sql, [$id])[0] ?? null;
+
+        if ($row) {
+            $opciones = [
+                ['id' => $row['id1'], 'texto' => $row['op1']],
+                ['id' => $row['id2'], 'texto' => $row['op2']],
+                ['id' => $row['id3'], 'texto' => $row['op3']],
+                ['id' => $row['id4'], 'texto' => $row['op4']]
+            ];
+            shuffle($opciones);
+
+            return [
+                'id_pregunta' => $row['id_pregunta'],
+                'pregunta' => $row['pregunta'],
+                'opciones' => $opciones
+            ];
+        }
+        return null;
+    }
+
+    public function obtenerTipoPorId($idTipo)
+    {
+        $sql = "SELECT
                 id AS id_tipo,
                 tipo AS tipo_pregunta,
                 color
             FROM tipos_pregunta
             WHERE id = ?";
 
-    $row = $this->database->query($sql, [$idTipo])[0] ?? null;
+        $row = $this->database->query($sql, [$idTipo])[0] ?? null;
 
-    if (!$row) {
-        return null;
+        if (!$row) {
+            return null;
+        }
+
+        return [
+            'id_tipo' => $row['id_tipo'],
+            'tipo_pregunta' => $row['tipo_pregunta'],
+            'color' => $row['color']
+        ];
     }
-
-    return [
-        'id_tipo' => $row['id_tipo'],
-        'tipo_pregunta' => $row['tipo_pregunta'],
-        'color' => $row['color']
-    ];
-}
-    public function obtenerTipoDePreguntaAleatorio(){
+    public function obtenerTipoDePreguntaAleatorio()
+    {
         $sql = "SELECT id as id_tipo,
         tipo as tipo_pregunta,
         color
@@ -101,17 +137,18 @@ public function obtenerTipoPorId($idTipo)
 
         $row = $this->database->query($sql)[0] ?? null;
 
-        if($row){
+        if ($row) {
             return [
-            'id_tipo' => $row['id_tipo'],
-            'tipo_pregunta' => $row['tipo_pregunta'],
-            'color' => $row['color']
+                'id_tipo' => $row['id_tipo'],
+                'tipo_pregunta' => $row['tipo_pregunta'],
+                'color' => $row['color']
             ];
         }
-        return null;  
-    }   
+        return null;
+    }
 
-    public function obtenerPreguntaAleatoriaDeUnTipo($idTipo) {
+    public function obtenerPreguntaAleatoriaDeUnTipo($idTipo)
+    {
         $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
@@ -124,7 +161,7 @@ public function obtenerTipoPorId($idTipo)
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
                	WHERE id_tipo_pregunta = ?
                 ORDER BY RAND() LIMIT 1";
-        
+
         $row = $this->database->query($sql, [$idTipo])[0] ?? null;
 
         if ($row) {
@@ -145,13 +182,15 @@ public function obtenerTipoPorId($idTipo)
         return null;
     }
 
-    public function esRespuestaCorrecta($id_respuesta) {
+    public function esRespuestaCorrecta($id_respuesta)
+    {
         $sql = "SELECT es_correcta FROM respuestas WHERE id = ?";
         $resultado = $this->database->query($sql, [$id_respuesta]);
         return (!empty($resultado) && (int)$resultado[0]['es_correcta'] === 1);
     }
 
-    public function getRespuestaCorrecta($id_pregunta) {
+    public function getRespuestaCorrecta($id_pregunta)
+    {
         $sql = "SELECT r.respuesta 
                 FROM respuestas r
                 JOIN preguntas p ON (p.id_respuesta1 = r.id OR p.id_respuesta2 = r.id OR p.id_respuesta3 = r.id OR p.id_respuesta4 = r.id)

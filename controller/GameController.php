@@ -69,9 +69,10 @@ class GameController
     }
 
 
-public function lobby(){
+    public function lobby()
+    {
         $this->ensureSession();
-        
+
         $user = $this->getCurrentUser();
         if (!$user) {
             Redirect::to('/tpfinal_mvc/User/login');
@@ -81,11 +82,12 @@ public function lobby(){
         $this->render('lobbyView', [
             'user' => $user,
         ]);
-}
+    }
 
-public function ranking(){
+    public function ranking()
+    {
         $this->ensureSession();
-        
+
         $user = $this->getCurrentUser();
         if (!$user) {
             Redirect::to('/tpfinal_mvc/User/login');
@@ -95,78 +97,80 @@ public function ranking(){
         $this->render('rankingView', [
             'user' => $user,
         ]);
-}
-
-public function ruleta()
-{
-    $this->ensureSession();
-
-    $user = $this->getCurrentUser();
-    if (!$user) {
-        Redirect::to('/tpfinal_mvc/User/login');
-        return;
     }
 
-    if (isset($_SESSION['partida'])) {
-
-        $data = $this->model->obtenerTipoPorId(
-            $_SESSION['partida']['id_tipo']
-        );
-
-    } else {
-
-        $data = $this->model->obtenerTipoDePreguntaAleatorio();
-
-        $_SESSION['partida'] = [
-            'id_tipo' => $data['id_tipo'],
-            'puntaje' => 0,
-            'preguntas_respondidas' => [],
-            'inicio' => time()
-        ];
-    }
-
-    $this->render('ruletaView', $data);
-}
-
-
-
-public function jugar() {
+    public function ruleta()
+    {
         $this->ensureSession();
-        
-        // Inicializamos el puntaje si no existe
-        if (!isset($_SESSION['puntaje'])) {
-            $_SESSION['puntaje'] = 0;
-        }
-        
-        if (!isset($_SESSION['partida']['id_tipo'])) {
-        Redirect::to('/tpfinal_mvc/Ruleta/ruleta');
-        return;
+
+        $user = $this->getCurrentUser();
+        if (!$user) {
+            Redirect::to('/tpfinal_mvc/User/login');
+            return;
         }
 
-        $idTipoPregunta = $_SESSION['partida']['id_tipo'];
-        $data = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipoPregunta);
-        $data['puntaje'] = $_SESSION['puntaje']; 
-        
+        // SI NO EXISTE PARTIDA → CREARLA
+        if (!isset($_SESSION['partida'])) {
+
+            $data = $this->model->obtenerTipoDePreguntaAleatorio();
+
+            $_SESSION['partida'] = [
+                'id_tipo' => $data['id_tipo'],
+                'puntaje' => 0,
+                'preguntas_respondidas' => [],
+                'id_pregunta_actual' => null,
+                'inicio' => time()
+            ];
+        }
+
+        // SI EXISTE → USARLA
+        $data = $this->model->obtenerTipoPorId($_SESSION['partida']['id_tipo']);
+
+        $this->render('ruletaView', $data);
+    }
+
+    public function jugar()
+    {
+        $this->ensureSession();
+        //Comprueba que exista la sesion
+        if (!isset($_SESSION['partida'])) {
+            Redirect::to('/tpfinal_mvc/Game/ruleta');
+            return;
+        }
+        //Comprueba que id_pregunta_actual este vacio, si esta guarda una pregunta nueva, si no da la que ya esta
+        if ($_SESSION['partida']['id_pregunta_actual'] === null) {
+
+            $idTipo = $_SESSION['partida']['id_tipo'];
+            $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo);
+            $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
+        }
+
+        $data = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']);
+
+        $data['puntaje'] = $_SESSION['partida']['puntaje'];
+
         $this->render('gameView', $data);
     }
 
-    public function validarRespuesta() {
+    public function validarRespuesta()
+    {
         $this->ensureSession();
         $id_respuesta = $this->request->post('id_respuesta');
         $id_pregunta = $this->request->post('id_pregunta');
 
         if ($this->model->esRespuestaCorrecta($id_respuesta)) {
-            $_SESSION['puntaje'] = ($_SESSION['puntaje'] ?? 0) + 1;
+            $_SESSION['partida']['puntaje']++;
+            $_SESSION['partida']['id_pregunta_actual'] = null;
             header('Location: /tpfinal_mvc/Game/jugar');
             exit();
         } else {
-            $puntaje_final = $_SESSION['puntaje'] ?? 0;
+            $puntajeFinal = $_SESSION['partida']['puntaje'];
             $_SESSION['puntaje'] = 0; // Reseteamos al perder
-            
+
             $respuestaCorrecta = $this->model->getRespuestaCorrecta($id_pregunta);
             unset($_SESSION['partida']);
             $this->render('resultadoView', [
-                'puntaje' => $puntaje_final,
+                'puntaje' => $puntajeFinal,
                 'respuesta_correcta' => $respuestaCorrecta
             ]);
         }
