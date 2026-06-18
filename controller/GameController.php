@@ -97,6 +97,37 @@ public function ranking(){
         ]);
 }
 
+public function ruleta()
+{
+    $this->ensureSession();
+
+    $user = $this->getCurrentUser();
+    if (!$user) {
+        Redirect::to('/tpfinal_mvc/User/login');
+        return;
+    }
+
+    if (isset($_SESSION['partida'])) {
+
+        $data = $this->model->obtenerTipoPorId(
+            $_SESSION['partida']['id_tipo']
+        );
+
+    } else {
+
+        $data = $this->model->obtenerTipoDePreguntaAleatorio();
+
+        $_SESSION['partida'] = [
+            'id_tipo' => $data['id_tipo'],
+            'puntaje' => 0,
+            'preguntas_respondidas' => [],
+            'inicio' => time()
+        ];
+    }
+
+    $this->render('ruletaView', $data);
+}
+
 
 
 public function jugar() {
@@ -106,8 +137,14 @@ public function jugar() {
         if (!isset($_SESSION['puntaje'])) {
             $_SESSION['puntaje'] = 0;
         }
+        
+        if (!isset($_SESSION['partida']['id_tipo'])) {
+        Redirect::to('/tpfinal_mvc/Ruleta/ruleta');
+        return;
+        }
 
-        $data = $this->model->obtenerPreguntaAleatoria();
+        $idTipoPregunta = $_SESSION['partida']['id_tipo'];
+        $data = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipoPregunta);
         $data['puntaje'] = $_SESSION['puntaje']; 
         
         $this->render('gameView', $data);
@@ -127,7 +164,7 @@ public function jugar() {
             $_SESSION['puntaje'] = 0; // Reseteamos al perder
             
             $respuestaCorrecta = $this->model->getRespuestaCorrecta($id_pregunta);
-            
+            unset($_SESSION['partida']);
             $this->render('resultadoView', [
                 'puntaje' => $puntaje_final,
                 'respuesta_correcta' => $respuestaCorrecta

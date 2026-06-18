@@ -68,10 +68,51 @@ class GameModel
         $sql = "SELECT * FROM usuarios WHERE usuario = ?";
         $filas = $this->database->query($sql, [$nombre_usuario]);
         return !empty($filas);
-    }// GameModel.php
+    }
 
-public function obtenerPreguntaAleatoria() {
-        $sql = "SELECT p.id as id_pregunta, p.pregunta, 
+    // ===================== Juego =====================
+public function obtenerTipoPorId($idTipo)
+{
+    $sql = "SELECT
+                id AS id_tipo,
+                tipo AS tipo_pregunta,
+                color
+            FROM tipos_pregunta
+            WHERE id = ?";
+
+    $row = $this->database->query($sql, [$idTipo])[0] ?? null;
+
+    if (!$row) {
+        return null;
+    }
+
+    return [
+        'id_tipo' => $row['id_tipo'],
+        'tipo_pregunta' => $row['tipo_pregunta'],
+        'color' => $row['color']
+    ];
+}
+    public function obtenerTipoDePreguntaAleatorio(){
+        $sql = "SELECT id as id_tipo,
+        tipo as tipo_pregunta,
+        color
+        FROM tipos_pregunta
+        ORDER BY RAND() LIMIT 1";
+
+        $row = $this->database->query($sql)[0] ?? null;
+
+        if($row){
+            return [
+            'id_tipo' => $row['id_tipo'],
+            'tipo_pregunta' => $row['tipo_pregunta'],
+            'color' => $row['color']
+            ];
+        }
+        return null;  
+    }   
+
+    public function obtenerPreguntaAleatoriaDeUnTipo($idTipo) {
+        $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
                 r3.respuesta as op3, r3.id as id3,
@@ -81,9 +122,10 @@ public function obtenerPreguntaAleatoria() {
                 JOIN respuestas r2 ON p.id_respuesta2 = r2.id
                 JOIN respuestas r3 ON p.id_respuesta3 = r3.id
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
+               	WHERE id_tipo_pregunta = ?
                 ORDER BY RAND() LIMIT 1";
         
-        $row = $this->database->query($sql)[0] ?? null;
+        $row = $this->database->query($sql, [$idTipo])[0] ?? null;
 
         if ($row) {
             $opciones = [
