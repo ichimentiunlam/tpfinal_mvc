@@ -147,9 +147,10 @@ class GameModel
         return null;
     }
 
-    public function obtenerPreguntaAleatoriaDeUnTipo($idTipo)
+    public function obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas)
     {
-        $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
+        if (empty($preguntasRespondidas)) {
+            $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
                 r3.respuesta as op3, r3.id as id3,
@@ -161,8 +162,28 @@ class GameModel
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
                	WHERE id_tipo_pregunta = ?
                 ORDER BY RAND() LIMIT 1";
+            $params = [$idTipo];
+            
+        } else {
 
-        $row = $this->database->query($sql, [$idTipo])[0] ?? null;
+            $placeholders = implode(',', array_fill(0, count($preguntasRespondidas), '?')); //implode une los elementos de un array usando un separador
+                                                                                                // y array fill llena todo de ? ? ?
+            $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
+                r1.respuesta as op1, r1.id as id1,
+                r2.respuesta as op2, r2.id as id2,
+                r3.respuesta as op3, r3.id as id3,
+                r4.respuesta as op4, r4.id as id4
+                FROM preguntas p
+                JOIN respuestas r1 ON p.id_respuesta1 = r1.id
+                JOIN respuestas r2 ON p.id_respuesta2 = r2.id
+                JOIN respuestas r3 ON p.id_respuesta3 = r3.id
+                JOIN respuestas r4 ON p.id_respuesta4 = r4.id
+               	WHERE id_tipo_pregunta = ?  AND p.id NOT IN ($placeholders)
+                ORDER BY RAND() LIMIT 1";
+
+             $params = array_merge([$idTipo], $preguntasRespondidas);
+        }
+        $row = $this->database->query($sql, $params)[0] ?? null;
 
         if ($row) {
             $opciones = [
