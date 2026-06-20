@@ -109,11 +109,11 @@ class GameController
             return;
         }
 
-        // SI NO EXISTE PARTIDA → CREARLA
+        
         if (!isset($_SESSION['partida'])) {
 
             $data = $this->model->obtenerTipoDePreguntaAleatorio();
-
+            //Se crea una session
             $_SESSION['partida'] = [
                 'id_tipo' => $data['id_tipo'],
                 'puntaje' => 0,
@@ -123,7 +123,7 @@ class GameController
             ];
         }
 
-        // SI EXISTE → USARLA
+  
         $data = $this->model->obtenerTipoPorId($_SESSION['partida']['id_tipo']);
 
         $this->render('ruletaView', $data);
@@ -141,12 +141,13 @@ class GameController
         if ($_SESSION['partida']['id_pregunta_actual'] === null) {
 
             $idTipo = $_SESSION['partida']['id_tipo'];
-            $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo);
+            $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
+            $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
             $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
         }
 
-        $data = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']);
-
+        $data = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']); //Esto es para mostrar la misma 
+                                                                                                //pregunta si se reinicia la pagina
         $data['puntaje'] = $_SESSION['partida']['puntaje'];
 
         $this->render('gameView', $data);
@@ -160,6 +161,7 @@ class GameController
 
         if ($this->model->esRespuestaCorrecta($id_respuesta)) {
             $_SESSION['partida']['puntaje']++;
+            $_SESSION['partida']['preguntas_respondidas'][] = $_SESSION['partida']['id_pregunta_actual'];
             $_SESSION['partida']['id_pregunta_actual'] = null;
             header('Location: /tpfinal_mvc/Game/jugar');
             exit();
@@ -168,7 +170,7 @@ class GameController
             $_SESSION['puntaje'] = 0; // Reseteamos al perder
 
             $respuestaCorrecta = $this->model->getRespuestaCorrecta($id_pregunta);
-            unset($_SESSION['partida']);
+            unset($_SESSION['partida']); //Termina la session
             $this->render('resultadoView', [
                 'puntaje' => $puntajeFinal,
                 'respuesta_correcta' => $respuestaCorrecta
