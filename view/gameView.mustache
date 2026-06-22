@@ -1,13 +1,17 @@
 {{>header}}
 
-<main class="arcade-wrapper" style="flex-direction: column;"> <div style="text-align: center; margin-bottom: 20px; color: white;">
+<main class="arcade-wrapper" style="flex-direction: column;"> 
+    <div style="text-align: center; margin-bottom: 20px; color: white;">
         <h3 style="font-size: 1.8rem; font-weight: bold; background: rgba(124, 77, 255, 0.3); padding: 10px 20px; border-radius: 50px; display: inline-block;">
             Racha Actual: {{puntaje}}
         </h3>
     </div>
 
+    <div style="text-align: center; margin-bottom: 15px; color: white;">
+        <h4 id="timer" style="font-size: 1.5rem; font-weight: bold; color: #ff5252;">Tiempo: --</h4>
+    </div>
+
     <div class="arcade-card">
-        
         <h2 style="margin-bottom: 25px; font-size: 1.5rem; color: white;">{{pregunta}}</h2>
 
         <form action="/tpfinal_mvc/Game/validarRespuesta" method="POST">
@@ -21,8 +25,27 @@
                 {{/opciones}}
             </div>
         </form>
-
     </div>
+
+<script>
+    // Si Mustache viene vacío, el operador lógico || mete 60 por defecto para que no tire error de sintaxis en JS
+    let tiempo = parseInt("{{tiempo_limite}}") || 60;
+    let timerDiv = document.getElementById('timer');
+    
+    // Mostrar el tiempo inicial de entrada
+    timerDiv.innerText = "Tiempo: " + tiempo;
+    
+    let intervalo = setInterval(() => {
+        tiempo--;
+        timerDiv.innerText = "Tiempo: " + tiempo;
+        
+        if (tiempo <= 0) {
+            clearInterval(intervalo);
+            alert("¡Se acabó el tiempo!");
+            window.location.href = '/tpfinal_mvc/Game/validarRespuesta?error=timeout'; 
+        }
+    }, 1000);
+</script>
 </main>
 
 {{>footer}}

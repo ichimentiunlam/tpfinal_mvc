@@ -106,28 +106,24 @@ class GameModel
         return null;
     }
 
-    public function obtenerTipoPorId($idTipo)
+ public function obtenerTipoPorId($id)
     {
-        $sql = "SELECT
-                id AS id_tipo,
-                tipo AS tipo_pregunta,
-                color
-            FROM tipos_pregunta
-            WHERE id = ?";
+        $sql = "SELECT id as id_tipo, tipo as tipo_pregunta, color 
+                FROM tipos_pregunta 
+                WHERE id = ?";
 
-        $row = $this->database->query($sql, [$idTipo])[0] ?? null;
+        $row = $this->database->query($sql, [$id])[0] ?? null;
 
-        if (!$row) {
-            return null;
+        if ($row) {
+            return [
+                'id_tipo' => $row['id_tipo'],
+                'tipo_pregunta' => $row['tipo_pregunta'],
+                'color' => $row['color']
+            ];
         }
-
-        return [
-            'id_tipo' => $row['id_tipo'],
-            'tipo_pregunta' => $row['tipo_pregunta'],
-            'color' => $row['color']
-        ];
+        return null;
     }
-    public function obtenerTipoDePreguntaAleatorio()
+public function obtenerTipoDePreguntaAleatorio()
     {
         $sql = "SELECT id as id_tipo,
         tipo as tipo_pregunta,
