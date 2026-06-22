@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 12-06-2026 a las 02:11:32
+-- Tiempo de generación: 22-06-2026 a las 20:48:08
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -221,20 +221,21 @@ INSERT INTO `respuestas` (`id`, `respuesta`, `es_correcta`) VALUES
 
 CREATE TABLE `tipos_pregunta` (
   `id` int(11) NOT NULL,
-  `tipo` varchar(60) NOT NULL
+  `tipo` varchar(60) NOT NULL,
+  `color` varchar(60) NOT NULL DEFAULT '#3B82F6'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipos_pregunta`
 --
 
-INSERT INTO `tipos_pregunta` (`id`, `tipo`) VALUES
-(1, 'Historia'),
-(2, 'Geografia'),
-(3, 'Deportes'),
-(4, 'Arte'),
-(5, 'Ciencia'),
-(6, 'Entretenimiento');
+INSERT INTO `tipos_pregunta` (`id`, `tipo`, `color`) VALUES
+(1, 'Historia', '#3B82F6'),
+(2, 'Geografia', '#3B82F6'),
+(3, 'Deportes', '#3B82F6'),
+(4, 'Arte', '#3B82F6'),
+(5, 'Ciencia', '#3B82F6'),
+(6, 'Entretenimiento', '#3B82F6');
 
 -- --------------------------------------------------------
 
@@ -281,6 +282,13 @@ CREATE TABLE `usuarios` (
   `preguntas_correctas` int(11) NOT NULL DEFAULT 0,
   `id_tipo` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `ciudad`, `pais`, `email`, `email_validado`, `password`, `usuario`, `foto_perfil`, `fecha_registro`, `puntaje_max`, `preguntas_respondidas`, `preguntas_correctas`, `id_tipo`) VALUES
+(16, 'Testy', 'Testerson', 1234, 'M', 'Banfield', 'Argentina', 'testy@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Testy Testerson', NULL, '2026-06-17 16:52:40', 0, 0, 0, 1);
 
 --
 -- Índices para tablas volcadas
@@ -356,7 +364,7 @@ ALTER TABLE `tipos_usuario`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Restricciones para tablas volcadas
