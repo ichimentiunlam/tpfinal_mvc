@@ -130,35 +130,32 @@ class GameController
         $this->render('ruletaView', $data);
     }
 
-   public function jugar()
-{
-    $this->ensureSession();
+   ppublic function jugar()
+    {
+        $this->ensureSession();
 
-    if (!isset($_SESSION['partida'])) {
-        Redirect::to('/tpfinal_mvc/Game/ruleta');
-        return;
+        if (!isset($_SESSION['partida'])) {
+            Redirect::to('/tpfinal_mvc/Game/ruleta');
+            return;
+        }
+
+        // Si no hay pregunta asignada, buscamos una nueva
+        if ($_SESSION['partida']['id_pregunta_actual'] === null) {
+            $idTipo = $_SESSION['partida']['id_tipo'];
+            $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
+            $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
+            $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
+        }
+
+        // Obtenemos los datos de la pregunta para la vista
+        $preguntaData = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']);
+        
+        $data = $preguntaData;
+        $data['puntaje'] = $_SESSION['partida']['puntaje'];
+        $data['tiempo_limite'] = $_SESSION['partida']['tiempo_limite'] ?? 60; 
+
+        $this->render('gameView', $data);
     }
-
-    // Si no hay pregunta, buscamos una
-    if ($_SESSION['partida']['id_pregunta_actual'] === null) {
-        $idTipo = $_SESSION['partida']['id_tipo'];
-        $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
-        $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
-        $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
-    }
-
-    // Obtenemos los datos de la pregunta
-    $preguntaData = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']);
-    
-    // Unimos todo en un solo array $data
-    $data = $preguntaData;
-    $data['puntaje'] = $_SESSION['partida']['puntaje'];
-    $data['tiempo_limite'] = $_SESSION['partida']['tiempo_limite'] ?? 60; // Si es null, pone 60 por defecto
-
-   
-
-    $this->render('gameView', $data);
-}
 
     public function validarRespuesta()
     {
