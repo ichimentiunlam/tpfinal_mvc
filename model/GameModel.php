@@ -73,16 +73,18 @@ class GameModel
     // ===================== Juego =====================
     public function obtenerPreguntaPorId($id)
     {
-        $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
+        $sql = "SELECT p.id as id_pregunta, p.pregunta, p.id_tipo_pregunta, 
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
                 r3.respuesta as op3, r3.id as id3,
-                r4.respuesta as op4, r4.id as id4
+                r4.respuesta as op4, r4.id as id4,
+                tp.tipo, tp.color
                 FROM preguntas p
                 JOIN respuestas r1 ON p.id_respuesta1 = r1.id
                 JOIN respuestas r2 ON p.id_respuesta2 = r2.id
                 JOIN respuestas r3 ON p.id_respuesta3 = r3.id
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
+                JOIN tipos_pregunta tp ON p.id_tipo_pregunta = tp.id
                	WHERE p.id = ?
                 ORDER BY RAND() LIMIT 1";
 
@@ -100,13 +102,15 @@ class GameModel
             return [
                 'id_pregunta' => $row['id_pregunta'],
                 'pregunta' => $row['pregunta'],
+                'color' => $row['color'],
+                'tipo' => $row['tipo'],
                 'opciones' => $opciones
             ];
         }
         return null;
     }
 
- public function obtenerTipoPorId($id)
+    public function obtenerTipoPorId($id)
     {
         $sql = "SELECT id as id_tipo, tipo as tipo_pregunta, color 
                 FROM tipos_pregunta 
@@ -123,7 +127,19 @@ class GameModel
         }
         return null;
     }
-public function obtenerTipoDePreguntaAleatorio()
+
+    public function getCantidadDeTiposDePregunta()
+    {
+        $sql = "SELECT COUNT(*) as cantidadDeTiposDePregunta FROM tipos_pregunta";
+
+
+        $resultado = $this->database->query($sql)[0] ?? null;
+
+        return $resultado ? (int)$resultado['cantidadDeTiposDePregunta'] : 0;
+    }
+
+
+    public function obtenerTipoDePreguntaAleatorio()
     {
         $sql = "SELECT id as id_tipo,
         tipo as tipo_pregunta,
@@ -159,11 +175,10 @@ public function obtenerTipoDePreguntaAleatorio()
                	WHERE id_tipo_pregunta = ?
                 ORDER BY RAND() LIMIT 1";
             $params = [$idTipo];
-            
         } else {
 
             $placeholders = implode(',', array_fill(0, count($preguntasRespondidas), '?')); //implode une los elementos de un array usando un separador
-                                                                                                // y array fill llena todo de ? ? ?
+            // y array fill llena todo de ? ? ?
             $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
@@ -177,7 +192,7 @@ public function obtenerTipoDePreguntaAleatorio()
                	WHERE id_tipo_pregunta = ?  AND p.id NOT IN ($placeholders)
                 ORDER BY RAND() LIMIT 1";
 
-             $params = array_merge([$idTipo], $preguntasRespondidas);
+            $params = array_merge([$idTipo], $preguntasRespondidas);
         }
         $row = $this->database->query($sql, $params)[0] ?? null;
 

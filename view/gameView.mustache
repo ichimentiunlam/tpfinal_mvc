@@ -1,8 +1,9 @@
 {{>header}}
-
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/game.css">
 <main class="arcade-wrapper" style="flex-direction: column;"> 
     <div style="text-align: center; margin-bottom: 20px; color: white;">
-        <h3 style="font-size: 1.8rem; font-weight: bold; background: rgba(124, 77, 255, 0.3); padding: 10px 20px; border-radius: 50px; display: inline-block;">
+        <h3 style="font-size: 1.8rem; font-weight: bold; background: rgba(124, 77, 255, 0.3); 
+        padding: 10px 20px; border-radius: 50px; display: inline-block;">
             Racha Actual: {{puntaje}}
         </h3>
     </div>
@@ -11,13 +12,18 @@
         <h4 id="timer" style="font-size: 1.5rem; font-weight: bold; color: #ff5252;">Tiempo: --</h4>
     </div>
 
-    <div class="arcade-card">
+    <div class="arcade-card" style="border:4px solid {{color}};">
+        <div class="categoria-container">
+        <span class="categoria-chip" style="background: {{color}}">
+        {{tipo}}
+        </span>
+        </div>
         <h2 style="margin-bottom: 25px; font-size: 1.5rem; color: white;">{{pregunta}}</h2>
 
         <form action="/tpfinal_mvc/Game/validarRespuesta" method="POST">
             <input type="hidden" name="id_pregunta" value="{{id_pregunta}}">
             
-            <div class="d-flex flex-column gap-3">
+            <div>
                 {{#opciones}}
                     <button type="submit" name="id_respuesta" value="{{id}}" class="arcade-btn">
                         {{texto}}

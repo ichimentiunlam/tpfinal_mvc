@@ -82,6 +82,11 @@ class GameController
         $this->render('lobbyView', [
             'user' => $user,
         ]);
+
+        if (isset($_SESSION['partida'])) {
+            unset($_SESSION['partida']);
+            return;
+        }
     }
 
     public function ranking()
@@ -109,7 +114,7 @@ class GameController
             return;
         }
 
-        
+
         if (!isset($_SESSION['partida'])) {
 
             $data = $this->model->obtenerTipoDePreguntaAleatorio();
@@ -124,41 +129,56 @@ class GameController
             ];
         }
 
-  
+
         $data = $this->model->obtenerTipoPorId($_SESSION['partida']['id_tipo']);
 
         $this->render('ruletaView', $data);
     }
 
-   public function jugar()
-{
-    $this->ensureSession();
+    public function jugar()
+    {
+        $this->ensureSession();
 
-    if (!isset($_SESSION['partida'])) {
-        Redirect::to('/tpfinal_mvc/Game/ruleta');
-        return;
+        if (!isset($_SESSION['partida'])) {
+            Redirect::to('/tpfinal_mvc/Game/ruleta');
+            return;
+        }
+
+        // Si no hay pregunta, buscamos una
+        if ($_SESSION['partida']['id_pregunta_actual'] === null) {
+            $idTipo = $_SESSION['partida']['id_tipo'];
+            $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
+            $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
+            if($pregunta === null){
+                $_SESSION['partida']['preguntas_respondidas'] = null;
+                $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
+                $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
+            }
+            $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
+        }
+
+        $preguntaData = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']);
+
+        $data = $preguntaData;
+        $data['puntaje'] = $_SESSION['partida']['puntaje'];
+        $data['tiempo_limite'] = $_SESSION['partida']['tiempo_limite'] ?? 60; // Si es null, pone 60 por defecto
+
+
+
+        $this->render('gameView', $data);
     }
 
-    // Si no hay pregunta, buscamos una
-    if ($_SESSION['partida']['id_pregunta_actual'] === null) {
-        $idTipo = $_SESSION['partida']['id_tipo'];
-        $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
-        $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
-        $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
+    private function cambiarTipoDePregunta()
+    {
+        if ($_SESSION['partida']['puntaje'] % 5 !== 0) {
+            return;
+        }
+
+        $cantidadTipos = $this->model->getCantidadDeTiposDePregunta();
+
+        $_SESSION['partida']['id_tipo'] =
+            ($_SESSION['partida']['id_tipo'] % $cantidadTipos) + 1;
     }
-
-    // Obtenemos los datos de la pregunta
-    $preguntaData = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']);
-    
-    // Unimos todo en un solo array $data
-    $data = $preguntaData;
-    $data['puntaje'] = $_SESSION['partida']['puntaje'];
-    $data['tiempo_limite'] = $_SESSION['partida']['tiempo_limite'] ?? 60; // Si es null, pone 60 por defecto
-
-   
-
-    $this->render('gameView', $data);
-}
 
     public function validarRespuesta()
     {
@@ -168,6 +188,7 @@ class GameController
 
         if ($this->model->esRespuestaCorrecta($id_respuesta)) {
             $_SESSION['partida']['puntaje']++;
+            $this->cambiarTipoDePregunta();
             $_SESSION['partida']['preguntas_respondidas'][] = $_SESSION['partida']['id_pregunta_actual'];
             $_SESSION['partida']['id_pregunta_actual'] = null;
             $_SESSION['partida']['tiempo_limite'] += 25;
@@ -188,11 +209,7 @@ class GameController
 
     public function home()
     {
-        
+
         $this->lobby();
     }
-
-
-
-    
 }
