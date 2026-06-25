@@ -74,6 +74,7 @@ class GameModel
     public function obtenerPreguntaPorId($id)
     {
         $sql = "SELECT p.id as id_pregunta, p.pregunta, p.id_tipo_pregunta, 
+                
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
                 r3.respuesta as op3, r3.id as id3,
@@ -159,10 +160,16 @@ class GameModel
         return null;
     }
 
-    public function obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas)
+    public function obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin)
     {
+        $dificultadSql = "CASE
+            WHEN p.veces_respondida = 0 THEN 1
+            ELSE p.veces_respondida_correctamente / p.veces_respondida
+        END";
+
         if (empty($preguntasRespondidas)) {
             $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
+                $dificultadSql AS dificultad,
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
                 r3.respuesta as op3, r3.id as id3,
@@ -172,14 +179,16 @@ class GameModel
                 JOIN respuestas r2 ON p.id_respuesta2 = r2.id
                 JOIN respuestas r3 ON p.id_respuesta3 = r3.id
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
-               	WHERE id_tipo_pregunta = ?
+               	WHERE id_tipo_pregunta = ? AND $dificultadSql BETWEEN ? AND ?
                 ORDER BY RAND() LIMIT 1";
-            $params = [$idTipo];
+            $params = [$idTipo, $dificultadMin, $dificultadMax];
         } else {
 
-            $placeholders = implode(',', array_fill(0, count($preguntasRespondidas), '?')); //implode une los elementos de un array usando un separador
+            $respondidas = implode(',', array_fill(0, count($preguntasRespondidas), '?'));
+            //implode une los elementos de un array usando un separador
             // y array fill llena todo de ? ? ?
             $sql = "SELECT p.id as id_pregunta, p.pregunta, id_tipo_pregunta,
+                $dificultadSql AS dificultad,
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
                 r3.respuesta as op3, r3.id as id3,
@@ -189,10 +198,10 @@ class GameModel
                 JOIN respuestas r2 ON p.id_respuesta2 = r2.id
                 JOIN respuestas r3 ON p.id_respuesta3 = r3.id
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
-               	WHERE id_tipo_pregunta = ?  AND p.id NOT IN ($placeholders)
+               	WHERE id_tipo_pregunta = ?  AND p.id NOT IN ($respondidas) AND $dificultadSql BETWEEN ? AND ?
                 ORDER BY RAND() LIMIT 1";
 
-            $params = array_merge([$idTipo], $preguntasRespondidas);
+            $params = array_merge([$idTipo], $preguntasRespondidas, [$dificultadMin], [$dificultadMax]);
         }
         $row = $this->database->query($sql, $params)[0] ?? null;
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 22-06-2026 a las 20:48:08
+-- Tiempo de generación: 25-06-2026 a las 05:22:30
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `preguntas` (
   `id` int(11) NOT NULL,
-  `pregunta` varchar(60) NOT NULL,
+  `pregunta` varchar(120) NOT NULL,
   `id_respuesta1` int(11) NOT NULL,
   `id_respuesta2` int(11) NOT NULL,
   `id_respuesta3` int(11) NOT NULL,
@@ -73,7 +73,19 @@ INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id
 (27, '¿Saga de Harry Potter?', 105, 106, 107, 108, 0, 0, 6),
 (28, '¿Empresa creadora de PlayStation?', 109, 110, 111, 112, 0, 0, 6),
 (29, '¿Juego más vendido de la historia?', 113, 114, 115, 116, 0, 0, 6),
-(30, '¿Plataforma de streaming?', 117, 118, 119, 120, 0, 0, 6);
+(30, '¿Plataforma de streaming?', 117, 118, 119, 120, 0, 0, 6),
+(31, '¿Qué tratado puso fin a la Guerra de los Treinta Años?', 121, 122, 123, 124, 10, 3, 1),
+(32, '¿Quién fue el último emperador del Imperio Bizantino?', 125, 126, 127, 128, 10, 3, 1),
+(33, '¿Cuál es la capital de Kazajistán?', 129, 130, 131, 132, 10, 3, 2),
+(34, '¿Qué país posee la mayor parte de la selva amazónica?', 133, 134, 135, 136, 10, 3, 2),
+(35, '¿En qué ciudad se celebraron los Juegos Olímpicos de 1992?', 137, 138, 139, 140, 10, 3, 3),
+(36, '¿Qué tenista ganó más títulos de Roland Garros?', 141, 142, 143, 144, 10, 3, 3),
+(37, '¿Quién pintó Las Meninas?', 145, 146, 147, 148, 10, 3, 4),
+(38, '¿A qué movimiento pertenecía Salvador Dalí?', 149, 150, 151, 152, 10, 3, 4),
+(39, '¿Qué científico propuso las leyes del movimiento planetario?', 153, 154, 155, 156, 10, 3, 5),
+(40, '¿Cuál es el elemento químico con símbolo W?', 157, 158, 159, 160, 10, 3, 5),
+(41, '¿Qué actor interpretó a Iron Man en el UCM?', 161, 162, 163, 164, 10, 3, 6),
+(42, '¿Cuál fue la primera consola de Nintendo lanzada internacionalmente?', 165, 166, 167, 168, 10, 3, 6);
 
 -- --------------------------------------------------------
 
@@ -211,7 +223,55 @@ INSERT INTO `respuestas` (`id`, `respuesta`, `es_correcta`) VALUES
 (117, 'Netflix', 1),
 (118, 'YouTube', 0),
 (119, 'Amazon', 0),
-(120, 'Disney+', 0);
+(120, 'Disney+', 0),
+(121, 'Paz de Westfalia', 1),
+(122, 'Tratado de Versalles', 0),
+(123, 'Congreso de Viena', 0),
+(124, 'Paz de Augsburgo', 0),
+(125, 'Constantino XI', 1),
+(126, 'Justiniano I', 0),
+(127, 'Basilio II', 0),
+(128, 'Alejo I', 0),
+(129, 'Astaná', 1),
+(130, 'Almatý', 0),
+(131, 'Taskent', 0),
+(132, 'Bakú', 0),
+(133, 'Brasil', 1),
+(134, 'Perú', 0),
+(135, 'Colombia', 0),
+(136, 'Venezuela', 0),
+(137, 'Barcelona', 1),
+(138, 'Madrid', 0),
+(139, 'Atenas', 0),
+(140, 'Seúl', 0),
+(141, 'Rafael Nadal', 1),
+(142, 'Roger Federer', 0),
+(143, 'Novak Djokovic', 0),
+(144, 'Björn Borg', 0),
+(145, 'Diego Velázquez', 1),
+(146, 'Goya', 0),
+(147, 'El Greco', 0),
+(148, 'Murillo', 0),
+(149, 'Surrealismo', 1),
+(150, 'Cubismo', 0),
+(151, 'Impresionismo', 0),
+(152, 'Expresionismo', 0),
+(153, 'Johannes Kepler', 1),
+(154, 'Isaac Newton', 0),
+(155, 'Galileo Galilei', 0),
+(156, 'Tycho Brahe', 0),
+(157, 'Wolframio', 1),
+(158, 'Vanadio', 0),
+(159, 'Molibdeno', 0),
+(160, 'Titanio', 0),
+(161, 'Robert Downey Jr.', 1),
+(162, 'Chris Evans', 0),
+(163, 'Mark Ruffalo', 0),
+(164, 'Chris Hemsworth', 0),
+(165, 'NES', 1),
+(166, 'Nintendo 64', 0),
+(167, 'GameCube', 0),
+(168, 'SNES', 0);
 
 -- --------------------------------------------------------
 
@@ -231,11 +291,11 @@ CREATE TABLE `tipos_pregunta` (
 
 INSERT INTO `tipos_pregunta` (`id`, `tipo`, `color`) VALUES
 (1, 'Historia', '#3B82F6'),
-(2, 'Geografia', '#3B82F6'),
-(3, 'Deportes', '#3B82F6'),
-(4, 'Arte', '#3B82F6'),
-(5, 'Ciencia', '#3B82F6'),
-(6, 'Entretenimiento', '#3B82F6');
+(2, 'Geografia', '#10B981'),
+(3, 'Deportes', '#8B5CF6'),
+(4, 'Arte', '#EF4444'),
+(5, 'Ciencia', '#F5C700'),
+(6, 'Entretenimiento', '#F57400');
 
 -- --------------------------------------------------------
 
@@ -340,13 +400,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_pregunta`
