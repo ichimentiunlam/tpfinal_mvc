@@ -239,4 +239,52 @@ class GameModel
         $resultado = $this->database->query($sql, [$id_pregunta]);
         return !empty($resultado) ? $resultado[0]['respuesta'] : "No disponible";
     }
+
+    public function actualizarPuntajeDelUsuario($puntajeFinal, $userMail)
+    {
+        $sql = "UPDATE usuarios SET puntaje_max = ? 
+        WHERE email = ? AND puntaje_max < ?
+        ";
+
+        $this->database->execute($sql, [
+            $puntajeFinal,
+            $userMail,
+            $puntajeFinal
+        ]);
+    }
+
+    public function actualizarPreguntasRespondidasDelUsuario($preguntasRespondidasCorrectamente, $userMail)
+    {
+        $sql = "UPDATE usuarios SET preguntas_respondidas = preguntas_respondidas + ? + 1,
+        preguntas_correctas = preguntas_correctas + ?
+        WHERE email = ?
+        ";
+
+        $this->database->execute($sql, [
+            $preguntasRespondidasCorrectamente,
+            $preguntasRespondidasCorrectamente,
+            $userMail
+        ]);
+    }
+
+    public function actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta) {
+        if($esCorrecta){
+            $sql = "UPDATE preguntas 
+            SET veces_respondida = veces_respondida + 1,
+            veces_respondida_correctamente =  veces_respondida_correctamente + 1
+            WHERE id = ?
+            ";
+
+              $this->database->execute($sql, [$id_pregunta]);
+        }else{
+            $sql = "UPDATE preguntas 
+            SET veces_respondida = veces_respondida + 1
+            WHERE id = ?
+            ";
+
+              $this->database->execute($sql, [$id_pregunta]);
+        }
+        
+        
+    }
 }
