@@ -36,7 +36,7 @@ class GameController
             return null;
         }
 
-        // Obtener usuario de la base de datos
+
         $usuario = $this->model->obtenerUsuarioPorEmail($email);
         if ($usuario && $usuario['email_validado']) {
             $usuario['validated'] = $usuario['email_validado'];
@@ -103,6 +103,24 @@ class GameController
             'user' => $user,
         ]);
     }
+    
+    public function obtenerDificultadMin($puntaje)
+    {
+        $dificultadMin = 0;
+        if ($puntaje <= 5) {
+            $dificultadMin = 0.7;
+        }
+        return $dificultadMin;
+    }
+
+    public function obtenerDificultadMax($puntaje)
+    {
+        $dificultadMax = 1;
+        if ($puntaje > 5) {
+            $dificultadMax = 0.7;
+        }
+        return $dificultadMax;
+    }
 
     public function ruleta()
     {
@@ -148,11 +166,13 @@ class GameController
         if ($_SESSION['partida']['id_pregunta_actual'] === null) {
             $idTipo = $_SESSION['partida']['id_tipo'];
             $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
-            $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
-            if($pregunta === null){
+            $dificultadMin = $this->obtenerDificultadMin($_SESSION['partida']['puntaje']);
+            $dificultadMax = $this->obtenerDificultadMax($_SESSION['partida']['puntaje']);
+            $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin);
+            if ($pregunta === null) { //Si no encontro pregunta
                 $_SESSION['partida']['preguntas_respondidas'] = null;
                 $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
-                $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas);
+                $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin);
             }
             $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
         }
