@@ -103,7 +103,7 @@ class GameController
             'user' => $user,
         ]);
     }
-    
+
     public function obtenerDificultadMin($puntaje)
     {
         $dificultadMin = 0;
@@ -169,7 +169,7 @@ class GameController
             $dificultadMin = $this->obtenerDificultadMin($_SESSION['partida']['puntaje']);
             $dificultadMax = $this->obtenerDificultadMax($_SESSION['partida']['puntaje']);
             $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin);
-            if ($pregunta === null) { //Si no encontro pregunta
+            if ($pregunta === null) { //Si no encontro pregunta se borran las respondidas
                 $_SESSION['partida']['preguntas_respondidas'] = null;
                 $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
                 $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin);
@@ -205,19 +205,23 @@ class GameController
         $this->ensureSession();
         $id_respuesta = $this->request->post('id_respuesta');
         $id_pregunta = $this->request->post('id_pregunta');
-
-        if ($this->model->esRespuestaCorrecta($id_respuesta)) {
+        $esCorrecta = $this->model->esRespuestaCorrecta($id_respuesta);
+        $userMail = $this->getCurrentUserEmail();
+        if ($esCorrecta) {
             $_SESSION['partida']['puntaje']++;
             $this->cambiarTipoDePregunta();
-            $_SESSION['partida']['preguntas_respondidas'][] = $_SESSION['partida']['id_pregunta_actual'];
+            $this->model->actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta);
+            $_SESSION['partida']['preguntas_respondidas'][] = $id_pregunta;
             $_SESSION['partida']['id_pregunta_actual'] = null;
             $_SESSION['partida']['tiempo_limite'] += 25;
             header('Location: /tpfinal_mvc/Game/jugar');
             exit();
         } else {
             $puntajeFinal = $_SESSION['partida']['puntaje'];
-            $_SESSION['puntaje'] = 0; // Reseteamos al perder
-
+            $preguntasRespondidas = $puntajeFinal + 1;
+            $this->model->actualizarPuntajeDelUsuario($puntajeFinal, $userMail);
+            $this->model->actualizarPreguntasRespondidasDelUsuario($preguntasRespondidas, $userMail);
+            $this->model->actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta);
             $respuestaCorrecta = $this->model->getRespuestaCorrecta($id_pregunta);
             unset($_SESSION['partida']); //Termina la session
             $this->render('resultadoView', [
