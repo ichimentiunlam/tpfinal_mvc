@@ -106,6 +106,19 @@ class UserController
             return;
         }
 
+        $currentUser = $this->getCurrentUser();
+        $currentUserId = null;
+        if (!empty($_SESSION['user_id'])) {
+            $currentUserId = intval($_SESSION['user_id']);
+        } elseif (!empty($currentUser['id'])) {
+            $currentUserId = intval($currentUser['id']);
+        }
+
+        if ($currentUserId !== null && $currentUserId === $userId) {
+            Redirect::to('/tpfinal_mvc/User/perfil');
+            return;
+        }
+
         $requestedUser = $this->model->obtenerUsuarioPorId($userId);
         if (!$requestedUser) {
             Redirect::to('/tpfinal_mvc/User/home');
