@@ -244,6 +244,9 @@ class GameController
                 $_SESSION['partida']['preguntas_respondidas'] = null;
                 $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
                 $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin);
+                if($pregunta === null){ //Si aun asi no encontro ninguna pregunta se selecciona cualquier pregunta de la base de datos
+                    $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, 1, 0);
+                }
             }
             $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
         }
