@@ -20,7 +20,7 @@ header {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 20px 8%;
+  padding: 5px 8%;
   backdrop-filter: blur(10px);
 }
 
