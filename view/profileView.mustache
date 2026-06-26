@@ -1,6 +1,119 @@
 {{>header}}
 <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/profile.css">
 
+<style>
+    .profileContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        position: relative;
+        background: rgba(8, 8, 14, 0.96);
+        border: 1px solid rgba(124, 77, 255, 0.32);
+        border-radius: 28px;
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.45);
+        padding: 28px;
+        margin: 20px auto;
+        max-width: 1080px;
+    }
+
+    .profileLeft,
+    .profileInfo {
+        flex: 1 1 320px;
+        min-width: 280px;
+    }
+
+    .profileFoto {
+        background: rgba(12, 12, 18, 0.92);
+        border: 1px solid rgba(124, 77, 255, 0.34);
+        border-radius: 28px;
+        padding: 24px;
+        text-align: center;
+        box-shadow: inset 0 0 26px rgba(124, 77, 255, 0.14);
+    }
+
+    .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        position: relative;
+        margin-top: 22px;
+    }
+
+    .statCard {
+        flex: 1 1 140px;
+        min-width: 130px;
+        background: rgba(14, 14, 22, 0.96);
+        border: 1px solid rgba(0, 230, 118, 0.28);
+        border-radius: 24px;
+        padding: 18px 16px;
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+    }
+
+    .statNumber {
+        display: block;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #f4f4f4;
+        margin-bottom: 8px;
+        text-shadow: 0 0 12px rgba(0, 230, 118, 0.45);
+    }
+
+    .statLabel {
+        display: block;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .profileInfo {
+        background: rgba(10, 10, 16, 0.94);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 28px;
+        padding: 24px;
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.3);
+    }
+
+    .profileInfo p {
+        color: #f4f4f4;
+        line-height: 1.75;
+        margin-bottom: 12px;
+    }
+
+    .profileInfo strong {
+        color: #fff;
+    }
+
+    .purchase-coins {
+        margin-top: 26px;
+    }
+
+    .purchaseButton {
+        background: linear-gradient(135deg, #00e676 0%, #7c4dff 100%);
+        color: #111;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: 0.6px;
+        box-shadow: 0 0 24px rgba(0, 230, 118, 0.45);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        cursor: pointer;
+    }
+    .purchaseButton:hover,
+    .purchaseButton:focus {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 230, 118, 0.55);
+    }
+    .purchaseButton:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
 <section class="profileContainer">
 
     <div class="profileLeft">
@@ -26,6 +139,16 @@
                 <span class="statNumber">{{user.preguntas_respondidas}}</span>
                 <span class="statLabel">Respondidas</span>
             </div>
+
+            <div class="statCard">
+                <span class="statNumber">{{user.preguntas_correctas}}</span>
+                <span class="statLabel">Correctas</span>
+            </div>
+
+            <div class="statCard">
+                <span class="statNumber">{{user.coins}}</span>
+                <span class="statLabel">Monedas</span>
+            </div>
         </div>
     </div>
 
@@ -35,6 +158,41 @@
         <p><strong>Ciudad:</strong> {{user.ciudad}}</p>
         <p><strong>País:</strong> {{user.pais}}</p>
         <p><strong>Año de nacimiento:</strong> {{user.anio_nacimiento}}</p>
+        {{^readonly}}
+        <div class="purchase-coins">
+            <button id="buyCoinsButton" class="purchaseButton">Comprar 10 Coins ($1 USD)</button>
+            <p class="purchaseHint">Compra virtual simulada con seguimiento administrativo.</p>
+        </div>
+        {{/readonly}}
     </div>
 
 </section>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buyButton = document.getElementById('buyCoinsButton');
+        if (!buyButton) return;
+
+        buyButton.addEventListener('click', async () => {
+            buyButton.disabled = true;
+            buyButton.textContent = 'Procesando...';
+
+            const response = await fetch('/tpfinal_mvc/User/comprarCoins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'
+                },
+                body: new URLSearchParams()
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                window.location.reload();
+            } else {
+                alert(result.error || 'No se pudo completar la compra.');
+                buyButton.disabled = false;
+                buyButton.textContent = 'Comprar 10 Trampitas ($1 USD)';
+            }
+        });
+    });
+</script>

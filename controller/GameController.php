@@ -68,6 +68,38 @@ class GameController
         $this->renderer->render($viewName, array_merge($this->getNavData(), $data));
     }
 
+    private function jsonResponse(array $data, int $status = 200)
+    {
+        header('Content-Type: application/json');
+        http_response_code($status);
+        echo json_encode($data);
+        exit();
+    }
+
+    private function cobrarMonedas($email, int $cost)
+    {
+        if (!$email) {
+            return ['success' => false, 'error' => 'Sesión inválida'];
+        }
+
+        $coins = $this->model->obtenerMonedasUsuarioPorEmail($email);
+        if ($coins === null) {
+            return ['success' => false, 'error' => 'Usuario no encontrado'];
+        }
+
+        if ($coins < $cost) {
+            return ['success' => false, 'error' => 'No tenés suficientes monedas'];
+        }
+
+        $updated = $this->model->restarMonedasUsuarioPorEmail($email, $cost);
+        if (!$updated) {
+            return ['success' => false, 'error' => 'No se pudo descontar el saldo'];
+        }
+
+        $newBalance = $this->model->obtenerMonedasUsuarioPorEmail($email);
+        return ['success' => true, 'coins' => $newBalance];
+    }
+
 
     public function lobby()
     {
@@ -99,9 +131,36 @@ class GameController
             return;
         }
 
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'racha';
+        $order = isset($_GET['order']) ? $_GET['order'] : 'desc';
+
+        $ranking = $this->model->obtenerTopRanking($sort, $order);
+        $ranking = $this->formatRankingData($ranking);
+
+        $orderRacha = ($sort === 'racha' && $order === 'desc') ? 'asc' : 'desc';
+        $orderRespuestas = ($sort === 'respuestas' && $order === 'desc') ? 'asc' : 'desc';
+
         $this->render('rankingView', [
             'user' => $user,
+            'usuariosRanking' => $ranking,
+            'rankingSort' => $sort,
+            'rankingOrder' => $order,
+            'orderRacha' => $orderRacha,
+            'orderRespuestas' => $orderRespuestas,
         ]);
+    }
+
+    private function formatRankingData(array $ranking)
+    {
+        foreach ($ranking as $index => &$row) {
+            $rank = $index + 1;
+            $row['rank'] = $rank;
+            $row['rankClass'] = $rank === 1 ? 'podium-1' : ($rank === 2 ? 'podium-2' : ($rank === 3 ? 'podium-3' : ''));
+            $row['badgeClass'] = $rank === 1 ? 'gold' : ($rank === 2 ? 'silver' : ($rank === 3 ? 'bronze' : ''));
+            $row['respuestas_totales'] = $row['preguntas_correctas'] ?? 0;
+            $row['racha_max'] = $row['puntaje_max'] ?? 0;
+        }
+        return $ranking;
     }
 
     public function obtenerDificultadMin($puntaje)
@@ -133,20 +192,28 @@ class GameController
         }
 
 
-        if (!isset($_SESSION['partida'])) {
-
+        if (!isset($_SESSION['partida']) || empty($_SESSION['partida']['id_tipo'])) {
             $data = $this->model->obtenerTipoDePreguntaAleatorio();
-            //Se crea una session
+            // Se crea una session
             $_SESSION['partida'] = [
-                'id_tipo' => $data['id_tipo'],
+                'id_tipo' => $data['id_tipo'] ?? 1,
                 'puntaje' => 0,
                 'preguntas_respondidas' => [],
                 'id_pregunta_actual' => null,
                 'inicio' => time(),
-                'tiempo_limite' => 60
+                'tiempo_limite' => 60,
+                'comodin_magic_used' => false,
+                'comodin_change_used' => false,
+                'comodin_5050_usado' => false,
+                'comodin_5050_activo' => false,
+                'comodin_5050_opciones' => null,
+                'comodin_5050_pregunta' => null
             ];
         }
 
+        if (empty($_SESSION['partida']['id_tipo'])) {
+            $_SESSION['partida']['id_tipo'] = 1;
+        }
 
         $data = $this->model->obtenerTipoPorId($_SESSION['partida']['id_tipo']);
 
@@ -157,17 +224,21 @@ class GameController
     {
         $this->ensureSession();
 
-        if (!isset($_SESSION['partida'])) {
+        if (!isset($_SESSION['partida']) || empty($_SESSION['partida']['id_tipo'])) {
             Redirect::to('/tpfinal_mvc/Game/ruleta');
             return;
         }
 
         // Si no hay pregunta, buscamos una
-        if ($_SESSION['partida']['id_pregunta_actual'] === null) {
+        if (empty($_SESSION['partida']['id_pregunta_actual'])) {
+            $_SESSION['partida']['comodin_5050_activo'] = false;
+            $_SESSION['partida']['comodin_5050_opciones'] = null;
+            $_SESSION['partida']['comodin_5050_pregunta'] = null;
+
             $idTipo = $_SESSION['partida']['id_tipo'];
-            $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
-            $dificultadMin = $this->obtenerDificultadMin($_SESSION['partida']['puntaje']);
-            $dificultadMax = $this->obtenerDificultadMax($_SESSION['partida']['puntaje']);
+            $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'] ?? [];
+            $dificultadMin = $this->obtenerDificultadMin($_SESSION['partida']['puntaje'] ?? 0);
+            $dificultadMax = $this->obtenerDificultadMax($_SESSION['partida']['puntaje'] ?? 0);
             $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin);
             if ($pregunta === null) { //Si no encontro pregunta se borran las respondidas
                 $_SESSION['partida']['preguntas_respondidas'] = null;
@@ -177,11 +248,32 @@ class GameController
             $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
         }
 
+        if (empty($_SESSION['partida']['id_pregunta_actual'])) {
+            Redirect::to('/tpfinal_mvc/Game/ruleta');
+            return;
+        }
+
         $preguntaData = $this->model->obtenerPreguntaPorId($_SESSION['partida']['id_pregunta_actual']);
 
+        if (empty($preguntaData)) {
+            Redirect::to('/tpfinal_mvc/Game/ruleta');
+            return;
+        }
+
         $data = $preguntaData;
-        $data['puntaje'] = $_SESSION['partida']['puntaje'];
+        $data['puntaje'] = $_SESSION['partida']['puntaje'] ?? 0;
+        $data['coins'] = $this->getCurrentUserEmail() ? $this->model->obtenerMonedasUsuarioPorEmail($this->getCurrentUserEmail()) : 0;
+        $data['comodin_magic_used'] = $_SESSION['partida']['comodin_magic_used'] ?? false;
+        $data['comodin_change_used'] = $_SESSION['partida']['comodin_change_used'] ?? false;
+        $data['comodin_5050_used'] = $_SESSION['partida']['comodin_5050_usado'] ?? false;
+        $data['comodin_5050_activo'] = $_SESSION['partida']['comodin_5050_activo'] ?? false;
+
+        if (!empty($_SESSION['partida']['comodin_5050_activo']) && $_SESSION['partida']['comodin_5050_pregunta'] === $_SESSION['partida']['id_pregunta_actual']) {
+            $data['opciones'] = $_SESSION['partida']['comodin_5050_opciones'];
+        }
         $data['tiempo_limite'] = $_SESSION['partida']['tiempo_limite'] ?? 60; // Si es null, pone 60 por defecto
+        $data['show_time_bonus'] = !empty($_SESSION['partida']['show_time_bonus']);
+        unset($_SESSION['partida']['show_time_bonus']);
 
 
 
@@ -190,7 +282,11 @@ class GameController
 
     private function cambiarTipoDePregunta()
     {
-        if ($_SESSION['partida']['puntaje'] % 5 !== 0) {
+        if (!isset($_SESSION['partida']['puntaje']) || $_SESSION['partida']['puntaje'] % 5 !== 0) {
+            return;
+        }
+
+        if (empty($_SESSION['partida']['id_tipo'])) {
             return;
         }
 
@@ -200,20 +296,159 @@ class GameController
             ($_SESSION['partida']['id_tipo'] % $cantidadTipos) + 1;
     }
 
-    public function validarRespuesta()
+    public function useWildcardChange()
     {
         $this->ensureSession();
+
+        $email = $this->getCurrentUserEmail();
+        if (!$email || !isset($_SESSION['partida'])) {
+            $this->jsonResponse(['success' => false, 'error' => 'Sesión inválida'], 400);
+        }
+
+        if (!empty($_SESSION['partida']['comodin_change_used'])) {
+            $this->jsonResponse(['success' => false, 'error' => 'Ya usaste Change Question en esta partida'], 400);
+        }
+
+        $payment = $this->cobrarMonedas($email, 2);
+        if (!$payment['success']) {
+            $this->jsonResponse(['success' => false, 'error' => $payment['error']], 402);
+        }
+        
+        // Guardar el tiempo actual antes de hacer la recarga
+        $tiempo_restante = (int) $this->request->post('tiempo_restante');
+        if ($tiempo_restante > 0) {
+            $_SESSION['partida']['tiempo_limite'] = $tiempo_restante;
+        }
+
+        $_SESSION['partida']['id_pregunta_actual'] = null;
+        $_SESSION['partida']['comodin_change_used'] = true;
+        $_SESSION['partida']['comodin_5050_activo'] = false;
+        $_SESSION['partida']['comodin_5050_opciones'] = null;
+        $_SESSION['partida']['comodin_5050_pregunta'] = null;
+
+        $this->jsonResponse([
+            'success' => true,
+            'type' => 'change',
+            'coins' => $payment['coins']
+        ]);
+    }
+
+    
+    public function useWildcard5050()
+    {
+        $this->ensureSession();
+
+        $email = $this->getCurrentUserEmail();
+        if (!$email || !isset($_SESSION['partida']) || empty($_SESSION['partida']['id_pregunta_actual'])) {
+            $this->jsonResponse(['success' => false, 'error' => 'Sesión inválida o pregunta no encontrada'], 400);
+        }
+
+        if (!empty($_SESSION['partida']['comodin_5050_used'])) {
+            $this->jsonResponse(['success' => false, 'error' => 'Ya usaste 50/50 en esta partida'], 400);
+        }
+
+        $payment = $this->cobrarMonedas($email, 2);
+        if (!$payment['success']) {
+            $this->jsonResponse(['success' => false, 'error' => $payment['error']], 402);
+        }
+
+        $idPregunta = $_SESSION['partida']['id_pregunta_actual'];
+        $opciones = $this->model->obtenerOpcionesConCorrecta($idPregunta);
+        $correcta = array_values(array_filter($opciones, fn($opcion) => (int)$opcion['es_correcta'] === 1))[0] ?? null;
+        $incorrectas = array_values(array_filter($opciones, fn($opcion) => (int)$opcion['es_correcta'] !== 1));
+
+        if (!$correcta || count($incorrectas) < 1) {
+            $this->jsonResponse(['success' => false, 'error' => 'No se pudo aplicar 50/50'], 500);
+        }
+
+        $incorrecta = $incorrectas[array_rand($incorrectas)];
+        $disabledIncorrectIds = array_column(array_filter($incorrectas, fn($opcion) => $opcion['id'] !== $incorrecta['id']), 'id');
+
+        $_SESSION['partida']['comodin_5050_usado'] = true;
+        $_SESSION['partida']['comodin_5050_activo'] = false;
+        $_SESSION['partida']['comodin_5050_opciones'] = null;
+        $_SESSION['partida']['comodin_5050_pregunta'] = null;
+
+        $this->jsonResponse([
+            'success' => true,
+            'type' => '5050',
+            'coins' => $payment['coins'],
+            'correctId' => $correcta['id'],
+            'disabledIds' => $disabledIncorrectIds
+        ]);
+    }
+
+    public function useWildcardResolution()
+    {
+        $this->ensureSession();
+
+        $email = $this->getCurrentUserEmail();
+        if (!$email || !isset($_SESSION['partida']) || empty($_SESSION['partida']['id_pregunta_actual'])) {
+            $this->jsonResponse(['success' => false, 'error' => 'Sesión inválida o pregunta no encontrada'], 400);
+        }
+
+        if (!empty($_SESSION['partida']['comodin_magic_used'])) {
+            $this->jsonResponse(['success' => false, 'error' => 'Ya usaste Resolución Mágica en esta partida'], 400);
+        }
+
+        $payment = $this->cobrarMonedas($email, 10);
+        if (!$payment['success']) {
+            $this->jsonResponse(['success' => false, 'error' => $payment['error']], 402);
+        }
+
+        $idPregunta = $_SESSION['partida']['id_pregunta_actual'];
+        $opciones = $this->model->obtenerOpcionesConCorrecta($idPregunta);
+        $correcta = array_values(array_filter($opciones, fn($opcion) => (int)$opcion['es_correcta'] === 1))[0] ?? null;
+
+        if (!$correcta) {
+            $this->jsonResponse(['success' => false, 'error' => 'No se pudo identificar la respuesta correcta'], 500);
+        }
+
+        $_SESSION['partida']['comodin_magic_used'] = true;
+
+        $this->jsonResponse([
+            'success' => true,
+            'type' => 'resolution',
+            'coins' => $payment['coins'],
+            'correctId' => $correcta['id']
+        ]);
+    }
+
+    public function usarCincuentaCincuenta()
+    {
+        return $this->useWildcard5050();
+    }
+
+   public function validarRespuesta()
+    {
+        $this->ensureSession();
+
+        if (!isset($_SESSION['partida'])) {
+            Redirect::to('/tpfinal_mvc/Game/ruleta');
+            return;
+        }
+
         $id_respuesta = $this->request->post('id_respuesta');
         $id_pregunta = $this->request->post('id_pregunta');
+        
+        
+        $tiempo_restante = (int) $this->request->post('tiempo_restante'); 
+        
         $esCorrecta = $this->model->esRespuestaCorrecta($id_respuesta);
         $userMail = $this->getCurrentUserEmail();
+        
         if ($esCorrecta) {
             $_SESSION['partida']['puntaje']++;
             $this->cambiarTipoDePregunta();
             $this->model->actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta);
             $_SESSION['partida']['preguntas_respondidas'][] = $id_pregunta;
             $_SESSION['partida']['id_pregunta_actual'] = null;
-            $_SESSION['partida']['tiempo_limite'] += 25;
+            
+            // Le sumamos los 25s al tiempo sobrante real (y evitamos que baje de 0 por las dudas)
+            $tiempo_guardado = $tiempo_restante > 0 ? $tiempo_restante : 0;
+            $_SESSION['partida']['tiempo_limite'] = $tiempo_guardado + 25;
+            
+            $_SESSION['partida']['show_time_bonus'] = true;
             header('Location: /tpfinal_mvc/Game/jugar');
             exit();
         } else {
@@ -223,7 +458,7 @@ class GameController
             $this->model->actualizarPreguntasRespondidasDelUsuario($preguntasRespondidas, $userMail);
             $this->model->actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta);
             $respuestaCorrecta = $this->model->getRespuestaCorrecta($id_pregunta);
-            unset($_SESSION['partida']); //Termina la session
+            unset($_SESSION['partida']); 
             $this->render('resultadoView', [
                 'puntaje' => $puntajeFinal,
                 'respuesta_correcta' => $respuestaCorrecta
@@ -231,9 +466,35 @@ class GameController
         }
     }
 
+    public function timeout()
+    {
+        $this->ensureSession();
+        $userMail = $this->getCurrentUserEmail();
+        $puntajeFinal = $_SESSION['partida']['puntaje'] ?? 0;
+        $idPregunta = $_SESSION['partida']['id_pregunta_actual'] ?? null;
+        $respuestaCorrecta = $idPregunta ? $this->model->getRespuestaCorrecta($idPregunta) : '';
+
+        if ($userMail) {
+            $preguntasRespondidas = $puntajeFinal + 1;
+            $this->model->actualizarPuntajeDelUsuario($puntajeFinal, $userMail);
+            $this->model->actualizarPreguntasRespondidasDelUsuario($preguntasRespondidas, $userMail);
+            if ($idPregunta) {
+                $this->model->actualizarVecesRespondidaDeLaPregunta($idPregunta, false);
+            }
+        }
+
+        unset($_SESSION['partida']);
+
+        $this->render('resultadoView', [
+            'puntaje' => $puntajeFinal,
+            'respuesta_correcta' => $respuestaCorrecta
+        ]);
+    }
+
     public function home()
     {
 
         $this->lobby();
     }
+    
 }

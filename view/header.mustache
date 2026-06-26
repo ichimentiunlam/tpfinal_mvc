@@ -6,6 +6,24 @@
     <title>Arcade de Preguntas - Challenge Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/style.css">
+    <style>
+        header {
+            background: rgba(4, 4, 10, 0.92);
+            border-bottom: 1px solid rgba(124, 77, 255, 0.28);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(14px);
+        }
+
+        nav ul.nav_links li a {
+            transition: text-shadow 0.22s ease, color 0.18s ease;
+        }
+
+        nav ul.nav_links li a:hover,
+        nav ul.nav_links li a:focus {
+            color: #00e676;
+            text-shadow: 0 0 10px #00e676;
+        }
+    </style>
 
 </head>
 <body>
@@ -23,6 +41,7 @@
             {{#loggedIn}}
             <li><a href="/tpfinal_mvc/User/perfil">Mi perfil</a></li>
             <li><a href="/tpfinal_mvc/Game/lobby">Lobby</a></li>
+            <li><a href="/tpfinal_mvc/Game/ranking">Ranking</a></li>
             <li><a href="/tpfinal_mvc/User/logout">Salir</a></li>
             {{/loggedIn}}
         </ul>

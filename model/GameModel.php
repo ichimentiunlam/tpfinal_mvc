@@ -12,8 +12,8 @@ class GameModel
     // ===================== USUARIOS =====================
     public function registrarUsuario($nombre, $apellido, $usuario, $email, $password, $anio_nacimiento, $sexo, $ciudad, $pais, $foto_perfil)
     {
-        $sql = "INSERT INTO usuarios (nombre, apellido, usuario, email, password, anio_nacimiento, sexo, ciudad, pais, foto_perfil, email_validado) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, false)";
+        $sql = "INSERT INTO usuarios (nombre, apellido, usuario, email, password, anio_nacimiento, sexo, ciudad, pais, foto_perfil, email_validado, coins) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, false, 0)";
         Log::info("SQL: Registrar usuario [$email, $usuario]");
         try {
             return $this->database->execute($sql, [
@@ -39,6 +39,14 @@ class GameModel
         $sql = "SELECT * FROM usuarios WHERE email = ?";
         Log::info("SQL: Obtener usuario por email [$email]");
         $filas = $this->database->query($sql, [$email]);
+        return !empty($filas) ? $filas[0] : null;
+    }
+
+    public function obtenerUsuarioPorId($id)
+    {
+        $sql = "SELECT * FROM usuarios WHERE id = ?";
+        Log::info("SQL: Obtener usuario por id [$id]");
+        $filas = $this->database->query($sql, [$id]);
         return !empty($filas) ? $filas[0] : null;
     }
 
@@ -68,6 +76,25 @@ class GameModel
         $sql = "SELECT * FROM usuarios WHERE usuario = ?";
         $filas = $this->database->query($sql, [$nombre_usuario]);
         return !empty($filas);
+    }
+
+    public function obtenerTopRanking($sort = 'racha', $order = 'desc')
+    {
+        $allowedSorts = [
+            'racha' => 'puntaje_max',
+            'respuestas' => 'preguntas_correctas'
+        ];
+        $allowedOrders = ['asc', 'desc'];
+
+        $sortColumn = $allowedSorts[$sort] ?? 'puntaje_max';
+        $orderDirection = in_array(strtolower($order), $allowedOrders, true) ? strtolower($order) : 'desc';
+
+        $sql = "SELECT id, COALESCE(usuario, nombre) AS usuario, preguntas_correctas, puntaje_max
+                FROM usuarios
+                ORDER BY {$sortColumn} {$orderDirection}, usuario ASC
+                LIMIT 10";
+
+        return $this->database->query($sql);
     }
 
     // ===================== Juego =====================
@@ -240,6 +267,15 @@ class GameModel
         return !empty($resultado) ? $resultado[0]['respuesta'] : "No disponible";
     }
 
+    public function obtenerOpcionesConCorrecta($id_pregunta)
+    {
+        $sql = "SELECT r.id, r.respuesta, r.es_correcta
+                FROM respuestas r
+                JOIN preguntas p ON (p.id_respuesta1 = r.id OR p.id_respuesta2 = r.id OR p.id_respuesta3 = r.id OR p.id_respuesta4 = r.id)
+                WHERE p.id = ?";
+        return $this->database->query($sql, [$id_pregunta]);
+    }
+
     public function actualizarPuntajeDelUsuario($puntajeFinal, $userMail)
     {
         $sql = "UPDATE usuarios SET puntaje_max = ? 
@@ -287,4 +323,33 @@ class GameModel
         
         
     }
+
+    public function obtenerMonedasUsuarioPorEmail($email)
+    {
+        $sql = "SELECT coins FROM usuarios WHERE email = ?";
+        $resultado = $this->database->query($sql, [$email]);
+        if (empty($resultado)) {
+            return null;
+        }
+
+        return (int)$resultado[0]['coins'];
+    }
+
+    public function restarMonedasUsuarioPorEmail($email, $cantidad)
+    {
+        $sql = "UPDATE usuarios SET coins = coins - ? WHERE email = ? AND coins >= ?";
+        return $this->database->execute($sql, [$cantidad, $email, $cantidad]);
+    }
+
+    public function sumarMonedasUsuario($email, $cantidad, $amountUsd)
+    {
+        $this->database->execute(
+            "UPDATE usuarios SET coins = coins + ? WHERE email = ?",
+            [$cantidad, $email]
+        );
+
+        $sql = "INSERT INTO compras_simuladas (user_email, amount_usd, coins_bought, date) VALUES (?, ?, ?, NOW())";
+        return $this->database->execute($sql, [$email, $amountUsd, $cantidad]);
+    }
 }
+

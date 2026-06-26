@@ -1,12 +1,12 @@
-.arcade-wrapper{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
+.arcade-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-    min-height: calc(100vh - 140px); 
+  min-height: calc(100vh - 140px);
 
-    padding:20px;
+  padding: 20px;
 }
 
 .arcade-card {
@@ -21,7 +21,6 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   margin: 0 auto;
 }
-
 
 .arcade-btn {
   display: block;
@@ -48,16 +47,205 @@
   color: white;
 }
 
-.categoria-chip{
-    border-radius: 50px;
-    padding: 0.3rem;
-    color: black;
+.categoria-chip {
+  border-radius: 50px;
+  padding: 0.3rem;
+  color: black;
 }
 
-.categoria-container{
-    margin-bottom: 20px;
+.categoria-container {
+  margin-bottom: 20px;
 }
 
-.arcade-wrapper.fail{
-    min-height: 140px;
+.wildcard-panel {
+  margin-bottom: 20px;
+  text-align: left;
+  position: relative;
+}
+
+.wildcard-btn {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 16px 24px;
+  border-radius: 40px;
+  border: 2px solid rgba(124, 77, 255, 0.8);
+  background: linear-gradient(
+    135deg,
+    rgba(124, 77, 255, 0.25),
+    rgba(34, 12, 82, 0.4)
+  );
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.wildcard-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(124, 77, 255, 0.18);
+  background: linear-gradient(
+    135deg,
+    rgba(124, 77, 255, 0.45),
+    rgba(34, 12, 82, 0.6)
+  );
+}
+
+.wildcard-btn .wildcard-balance {
+  font-size: 0.9rem;
+  color: #ffd700;
+  margin-left: 10px;
+}
+
+.wildcard-panel-bottom {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 22px;
+  position: relative;
+}
+
+.wildcard-menu {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0.35s ease;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 100%;
+  margin-top: 12px;
+  background: rgba(10, 8, 28, 0.95);
+  border: 1px solid rgba(124, 77, 255, 0.18);
+  border-radius: 24px;
+  padding: 20px;
+  z-index: 50;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+}
+
+.wildcard-menu.visible {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.wildcard-panel-bottom {
+  width: 100%;
+  max-width: 500px;
+  margin-top: 22px;
+}
+
+.wildcard-btn {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 18px 24px;
+  border-radius: 40px;
+  border: 2px solid #ffd54f;
+  background: linear-gradient(135deg, #ffd54f 0%, #ff6d00 100%);
+  color: #1b0f00;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+  box-shadow: 0 18px 35px rgba(255, 109, 0, 0.25);
+}
+
+.wildcard-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 42px rgba(255, 109, 0, 0.35);
+  background: linear-gradient(135deg, #ffe082 0%, #ff8f00 100%);
+}
+
+.timer-bonus {
+  display: inline-block;
+  min-width: 48px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(30, 140, 80, 0.18);
+  color: #c5ffd6;
+  font-weight: 800;
+  opacity: 0;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.timer-bonus.visible {
+  opacity: 1;
+  transform: translateY(-8px);
+}
+
+.wildcard-header {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.wildcard-balance-row {
+  margin-bottom: 18px;
+  color: #d1d1ff;
+  font-size: 0.95rem;
+}
+
+.wildcard-action {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(124, 77, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-size: 0.96rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.wildcard-action:hover:not(:disabled) {
+  background: rgba(124, 77, 255, 0.16);
+  transform: translateX(2px);
+}
+
+.wildcard-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.wildcard-message {
+  margin-top: 12px;
+  color: #dcdfff;
+  font-size: 0.95rem;
+  min-height: 22px;
+}
+
+.answer-btn.answer-correct {
+  border-color: #35b36f;
+  background: rgba(53, 179, 111, 0.2);
+  color: #bdffdc;
+}
+
+.arcade-wrapper.fail {
+  min-height: 140px;
 }

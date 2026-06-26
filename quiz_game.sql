@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost:3307
--- Tiempo de generación: 25-06-2026 a las 05:22:30
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 26-06-2026 a las 11:47:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,62 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `quiz_game`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `compras_simuladas`
+--
+
+CREATE TABLE `compras_simuladas` (
+  `id` int(11) NOT NULL,
+  `user_email` varchar(100) NOT NULL,
+  `amount_usd` decimal(6,2) NOT NULL DEFAULT 0.00,
+  `coins_bought` int(11) NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `compras_simuladas`
+--
+
+INSERT INTO `compras_simuladas` (`id`, `user_email`, `amount_usd`, `coins_bought`, `date`) VALUES
+(1, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:21:22'),
+(2, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:21:24'),
+(3, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:21:26'),
+(4, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:26:28'),
+(5, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:26:29'),
+(6, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:26:30'),
+(7, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:26:32'),
+(8, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:31:11'),
+(9, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:31:11'),
+(10, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:34:41'),
+(11, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:34:43'),
+(12, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:34:43'),
+(13, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:38:28'),
+(14, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:38:29'),
+(15, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:38:29'),
+(16, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:42:23'),
+(17, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:42:24'),
+(18, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:46:38'),
+(19, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:46:39'),
+(20, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:46:40'),
+(21, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:48:39'),
+(22, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:48:42'),
+(23, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:52:20'),
+(24, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:52:21'),
+(25, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:52:22'),
+(26, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:52:23'),
+(27, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:52:23'),
+(28, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:52:24'),
+(29, 'Testy@mail.com', 1.00, 10, '2026-06-26 05:52:24'),
+(30, 'Testy@mail.com', 1.00, 10, '2026-06-26 06:23:32'),
+(31, 'Testy@mail.com', 1.00, 10, '2026-06-26 06:23:34'),
+(32, 'Testy@mail.com', 1.00, 10, '2026-06-26 06:23:35'),
+(33, 'Testy@mail.com', 1.00, 10, '2026-06-26 06:23:35'),
+(34, 'Testy@mail.com', 1.00, 10, '2026-06-26 06:23:36'),
+(35, 'Testy@mail.com', 1.00, 10, '2026-06-26 06:23:36'),
+(36, 'Testy@mail.com', 1.00, 10, '2026-06-26 06:25:56');
 
 -- --------------------------------------------------------
 
@@ -44,36 +100,36 @@ CREATE TABLE `preguntas` (
 --
 
 INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id_respuesta3`, `id_respuesta4`, `veces_respondida`, `veces_respondida_correctamente`, `id_tipo_pregunta`) VALUES
-(1, '¿En qué año comenzó la Segunda Guerra Mundial?', 1, 2, 3, 4, 0, 0, 1),
-(2, '¿Quién fue el primer presidente de Argentina?', 5, 6, 7, 8, 0, 0, 1),
-(3, '¿Qué civilización construyó las pirámides de Giza?', 9, 10, 11, 12, 0, 0, 1),
-(4, '¿En qué año cayó el Imperio Romano de Occidente?', 13, 14, 15, 16, 0, 0, 1),
-(5, '¿Quién descubrió América en 1492?', 17, 18, 19, 20, 0, 0, 1),
-(6, '¿Cuál es el río más largo del mundo?', 21, 22, 23, 24, 0, 0, 2),
-(7, '¿Cuál es la capital de Australia?', 25, 26, 27, 28, 0, 0, 2),
-(8, '¿En qué continente está Egipto?', 29, 30, 31, 32, 0, 0, 2),
-(9, '¿Cuál es el país más grande del mundo?', 33, 34, 35, 36, 0, 0, 2),
-(10, '¿Cuál es el océano más grande?', 37, 38, 39, 40, 0, 0, 2),
-(11, '¿Cuántos jugadores tiene un equipo de fútbol?', 41, 42, 43, 44, 0, 0, 3),
-(12, '¿Quién ganó el Mundial 2022?', 45, 46, 47, 48, 0, 0, 3),
-(13, '¿En qué deporte se usa raqueta?', 49, 50, 51, 52, 0, 0, 3),
-(14, '¿Cuántos sets tiene un Grand Slam masculino?', 53, 54, 55, 56, 0, 0, 3),
-(15, '¿Qué deporte practica Messi?', 57, 58, 59, 60, 0, 0, 3),
-(16, '¿Quién pintó la Mona Lisa?', 61, 62, 63, 64, 0, 0, 4),
-(17, '¿En qué movimiento participó Picasso?', 65, 66, 67, 68, 0, 0, 4),
-(18, '¿Quién pintó La noche estrellada?', 69, 70, 71, 72, 0, 0, 4),
-(19, '¿Cuál es una obra de Leonardo da Vinci?', 73, 74, 75, 76, 0, 0, 4),
-(20, '¿Qué estilo usa formas geométricas?', 77, 78, 79, 80, 0, 0, 4),
-(21, '¿Cuál es el planeta más cercano al Sol?', 81, 82, 83, 84, 0, 0, 5),
-(22, '¿Qué gas respiramos principalmente?', 85, 86, 87, 88, 0, 0, 5),
-(23, '¿Cuántos estados de la materia clásica existen?', 89, 90, 91, 92, 0, 0, 5),
-(24, '¿Qué órgano bombea la sangre?', 93, 94, 95, 96, 0, 0, 5),
-(25, '¿Unidad de fuerza?', 97, 98, 99, 100, 0, 0, 5),
-(26, '¿Quién creó Mickey Mouse?', 101, 102, 103, 104, 0, 0, 6),
-(27, '¿Saga de Harry Potter?', 105, 106, 107, 108, 0, 0, 6),
-(28, '¿Empresa creadora de PlayStation?', 109, 110, 111, 112, 0, 0, 6),
-(29, '¿Juego más vendido de la historia?', 113, 114, 115, 116, 0, 0, 6),
-(30, '¿Plataforma de streaming?', 117, 118, 119, 120, 0, 0, 6),
+(1, '¿En qué año comenzó la Segunda Guerra Mundial?', 1, 2, 3, 4, 1, 0, 1),
+(2, '¿Quién fue el primer presidente de Argentina?', 5, 6, 7, 8, 6, 4, 1),
+(3, '¿Qué civilización construyó las pirámides de Giza?', 9, 10, 11, 12, 1, 0, 1),
+(4, '¿En qué año cayó el Imperio Romano de Occidente?', 13, 14, 15, 16, 1, 0, 1),
+(5, '¿Quién descubrió América en 1492?', 17, 18, 19, 20, 2, 1, 1),
+(6, '¿Cuál es el río más largo del mundo?', 21, 22, 23, 24, 1, 0, 2),
+(7, '¿Cuál es la capital de Australia?', 25, 26, 27, 28, 1, 0, 2),
+(8, '¿En qué continente está Egipto?', 29, 30, 31, 32, 1, 0, 2),
+(9, '¿Cuál es el país más grande del mundo?', 33, 34, 35, 36, 8, 5, 2),
+(10, '¿Cuál es el océano más grande?', 37, 38, 39, 40, 2, 1, 2),
+(11, '¿Cuántos jugadores tiene un equipo de fútbol?', 41, 42, 43, 44, 23, 20, 3),
+(12, '¿Quién ganó el Mundial 2022?', 45, 46, 47, 48, 1, 0, 3),
+(13, '¿En qué deporte se usa raqueta?', 49, 50, 51, 52, 1, 0, 3),
+(14, '¿Cuántos sets tiene un Grand Slam masculino?', 53, 54, 55, 56, 1, 0, 3),
+(15, '¿Qué deporte practica Messi?', 57, 58, 59, 60, 2, 1, 3),
+(16, '¿Quién pintó la Mona Lisa?', 61, 62, 63, 64, 1, 0, 4),
+(17, '¿En qué movimiento participó Picasso?', 65, 66, 67, 68, 1, 0, 4),
+(18, '¿Quién pintó La noche estrellada?', 69, 70, 71, 72, 1, 0, 4),
+(19, '¿Cuál es una obra de Leonardo da Vinci?', 73, 74, 75, 76, 3, 2, 4),
+(20, '¿Qué estilo usa formas geométricas?', 77, 78, 79, 80, 2, 1, 4),
+(21, '¿Cuál es el planeta más cercano al Sol?', 81, 82, 83, 84, 9, 9, 5),
+(22, '¿Qué gas respiramos principalmente?', 85, 86, 87, 88, 1, 0, 5),
+(23, '¿Cuántos estados de la materia clásica existen?', 89, 90, 91, 92, 1, 0, 5),
+(24, '¿Qué órgano bombea la sangre?', 93, 94, 95, 96, 14, 11, 5),
+(25, '¿Unidad de fuerza?', 97, 98, 99, 100, 1, 0, 5),
+(26, '¿Quién creó Mickey Mouse?', 101, 102, 103, 104, 2, 1, 6),
+(27, '¿Saga de Harry Potter?', 105, 106, 107, 108, 1, 0, 6),
+(28, '¿Empresa creadora de PlayStation?', 109, 110, 111, 112, 2, 1, 6),
+(29, '¿Juego más vendido de la historia?', 113, 114, 115, 116, 6, 4, 6),
+(30, '¿Plataforma de streaming?', 117, 118, 119, 120, 3, 1, 6),
 (31, '¿Qué tratado puso fin a la Guerra de los Treinta Años?', 121, 122, 123, 124, 10, 3, 1),
 (32, '¿Quién fue el último emperador del Imperio Bizantino?', 125, 126, 127, 128, 10, 3, 1),
 (33, '¿Cuál es la capital de Kazajistán?', 129, 130, 131, 132, 10, 3, 2),
@@ -340,19 +396,45 @@ CREATE TABLE `usuarios` (
   `puntaje_max` int(11) NOT NULL DEFAULT 0,
   `preguntas_respondidas` int(11) NOT NULL DEFAULT 0,
   `preguntas_correctas` int(11) NOT NULL DEFAULT 0,
-  `id_tipo` int(11) NOT NULL DEFAULT 1
+  `id_tipo` int(11) NOT NULL DEFAULT 1,
+  `coins` int(11) NOT NULL DEFAULT 10
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `ciudad`, `pais`, `email`, `email_validado`, `password`, `usuario`, `foto_perfil`, `fecha_registro`, `puntaje_max`, `preguntas_respondidas`, `preguntas_correctas`, `id_tipo`) VALUES
-(16, 'Testy', 'Testerson', 1234, 'M', 'Banfield', 'Argentina', 'testy@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Testy Testerson', NULL, '2026-06-17 16:52:40', 0, 0, 0, 1);
+INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `ciudad`, `pais`, `email`, `email_validado`, `password`, `usuario`, `foto_perfil`, `fecha_registro`, `puntaje_max`, `preguntas_respondidas`, `preguntas_correctas`, `id_tipo`, `coins`) VALUES
+(16, 'Testy', 'Testerson', 1234, 'M', 'Banfield', 'Argentina', 'testy@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Testy Testerson', NULL, '2026-06-17 16:52:40', 6, 120, 74, 1, 306),
+(18, 'Valentina', 'Gomez', 1998, '', 'San Justo', 'Argentina', 'valen@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'valeng', 'avatar2.jpg', '2026-02-15 14:20:00', 38, 95, 80, 2, 20),
+(19, 'Kevin', 'Rodriguez', 1995, '', 'Laferrere', 'Argentina', 'kevin@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'kevin_gym', 'avatar3.jpg', '2026-03-01 12:15:00', 50, 200, 185, 3, 100),
+(20, 'Agustina', 'Perez', 1999, '', 'Moron', 'Argentina', 'agus@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'agusp', 'avatar4.jpg', '2026-03-10 17:30:00', 25, 60, 45, 1, 10),
+(21, 'Carlos', 'Lopez', 1994, '', 'CABA', 'Argentina', 'carlos@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'carlitos', 'avatar5.jpg', '2026-03-20 19:45:00', 12, 40, 20, 2, 5),
+(22, 'Sofia', 'Martinez', 2000, '', 'La Plata', 'Argentina', 'sofi@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'sofimart', 'avatar6.jpg', '2026-04-05 11:00:00', 42, 110, 95, 3, 40),
+(24, 'Lucia', 'Sanchez', 1997, '', 'Cordoba', 'Argentina', 'lucia@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'lu_sanchez', 'avatar8.jpg', '2026-04-18 22:00:00', 20, 50, 35, 2, 8),
+(25, 'Matias', 'Gimenez', 1996, '', 'Mendoza', 'Argentina', 'mati@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'mati_g', 'avatar9.jpg', '2026-05-02 13:20:00', 35, 90, 75, 3, 30),
+(26, 'Camila', 'Torres', 1998, '', 'Tucuman', 'Argentina', 'cami@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'cami_t', 'avatar10.jpg', '2026-05-10 14:35:00', 28, 70, 55, 1, 12),
+(27, 'Lucas', 'Diaz', 1995, '', 'Salta', 'Argentina', 'lucas@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'lucas_d', 'avatar11.jpg', '2026-05-15 12:50:00', 18, 45, 30, 2, 6),
+(28, 'Florencia', 'Ruiz', 1997, '', 'Parana', 'Argentina', 'flor@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'flor_ruiz', 'avatar12.jpg', '2026-05-20 18:15:00', 40, 105, 90, 3, 35),
+(29, 'Javier', 'Lopez', 1994, '', 'Santa Fe', 'Argentina', 'javier@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'javilop', 'avatar13.jpg', '2026-05-25 20:00:00', 22, 55, 40, 1, 9),
+(30, 'Paula', 'Moreno', 1999, '', 'Neuquen', 'Argentina', 'paula@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'paula_m', 'avatar14.jpg', '2026-06-01 13:00:00', 33, 85, 70, 2, 25),
+(31, 'Tomas', 'Silva', 1996, '', 'Chubut', 'Argentina', 'tomi@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tomi_s', 'avatar15.jpg', '2026-06-05 16:20:00', 26, 65, 50, 3, 14),
+(32, 'Brenda', 'Castro', 2000, '', 'Rio Negro', 'Argentina', 'brenda@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'bren_c', 'avatar16.jpg', '2026-06-10 14:10:00', 15, 35, 25, 1, 4),
+(33, 'Ezequiel', 'Ortiz', 1993, '', 'San Luis', 'Argentina', 'eze@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'eze_o', 'avatar17.jpg', '2026-06-12 12:45:00', 31, 80, 65, 2, 22),
+(34, 'Julieta', 'Acosta', 1998, '', 'Formosa', 'Argentina', 'juli@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'juli_a', 'avatar18.jpg', '2026-06-15 17:05:00', 19, 48, 38, 3, 7),
+(35, 'Rodrigo', 'Vazquez', 1995, '', 'Corrientes', 'Argentina', 'rodri@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'rodri_v', 'avatar19.jpg', '2026-06-20 19:30:00', 36, 92, 78, 1, 28),
+(36, 'Mariana', 'Diaz', 1997, '', 'La Rioja', 'Argentina', 'mari@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'mari_d', 'avatar20.jpg', '2026-06-25 13:00:00', 24, 60, 48, 2, 11);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `compras_simuladas`
+--
+ALTER TABLE `compras_simuladas`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_email` (`user_email`);
 
 --
 -- Indices de la tabla `preguntas`
@@ -397,6 +479,12 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `compras_simuladas`
+--
+ALTER TABLE `compras_simuladas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
@@ -424,7 +512,7 @@ ALTER TABLE `tipos_usuario`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Restricciones para tablas volcadas
@@ -434,10 +522,10 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  ADD CONSTRAINT `respuesta1` FOREIGN KEY (`id_respuesta1`) REFERENCES `respuestas` (`Id`),
-  ADD CONSTRAINT `respuesta2` FOREIGN KEY (`id_respuesta2`) REFERENCES `respuestas` (`Id`),
-  ADD CONSTRAINT `respuesta3` FOREIGN KEY (`id_respuesta3`) REFERENCES `respuestas` (`Id`),
-  ADD CONSTRAINT `respuesta4` FOREIGN KEY (`id_respuesta4`) REFERENCES `respuestas` (`Id`),
+  ADD CONSTRAINT `respuesta1` FOREIGN KEY (`id_respuesta1`) REFERENCES `respuestas` (`id`),
+  ADD CONSTRAINT `respuesta2` FOREIGN KEY (`id_respuesta2`) REFERENCES `respuestas` (`id`),
+  ADD CONSTRAINT `respuesta3` FOREIGN KEY (`id_respuesta3`) REFERENCES `respuestas` (`id`),
+  ADD CONSTRAINT `respuesta4` FOREIGN KEY (`id_respuesta4`) REFERENCES `respuestas` (`id`),
   ADD CONSTRAINT `tipo` FOREIGN KEY (`id_tipo_pregunta`) REFERENCES `tipos_pregunta` (`id`);
 
 --

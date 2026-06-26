@@ -72,6 +72,53 @@ class UserController
         $this->renderer->render($viewName, array_merge($this->getNavData(), $data));
     }
 
+    private function jsonResponse(array $data, int $status = 200)
+    {
+        header('Content-Type: application/json');
+        http_response_code($status);
+        echo json_encode($data);
+        exit();
+    }
+
+    public function comprarCoins()
+    {
+        $this->ensureSession();
+        $email = $this->getCurrentUserEmail();
+        if (!$email) {
+            $this->jsonResponse(['success' => false, 'error' => 'Sesión inválida'], 400);
+        }
+
+        $added = $this->model->sumarMonedasUsuario($email, 10, 1);
+        if (!$added) {
+            $this->jsonResponse(['success' => false, 'error' => 'No se pudo completar la compra'], 500);
+        }
+
+        $coins = $this->model->obtenerMonedasUsuarioPorEmail($email);
+        $this->jsonResponse(['success' => true, 'coins' => $coins]);
+    }
+
+    public function verPerfil()
+    {
+        $this->ensureSession();
+        $userId = isset($_GET['id']) ? intval($_GET['id']) : null;
+        if (!$userId) {
+            Redirect::to('/tpfinal_mvc/User/home');
+            return;
+        }
+
+        $requestedUser = $this->model->obtenerUsuarioPorId($userId);
+        if (!$requestedUser) {
+            Redirect::to('/tpfinal_mvc/User/home');
+            return;
+        }
+
+        $requestedUser['username'] = $requestedUser['usuario'] ?? $requestedUser['nombre'];
+        $this->render('profileView', [
+            'user' => $requestedUser,
+            'readonly' => true
+        ]);
+    }
+
     public function home()
     {
         Log::info("GameController::home");
