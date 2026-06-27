@@ -154,6 +154,16 @@ header {
   text-align: center;
 }
 
+.succesMessage {
+  color: lime;
+  margin-top: 0.2rem;
+  margin-bottom: 0.4rem;
+  padding: 0.5rem;
+  border: 2px solid lime;
+  border-radius: 6px;
+  text-align: center;
+}
+
 .stats {
     display: flex;
     gap: 15px;

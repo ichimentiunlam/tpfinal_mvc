@@ -207,7 +207,8 @@ class GameController
                 'comodin_5050_usado' => false,
                 'comodin_5050_activo' => false,
                 'comodin_5050_opciones' => null,
-                'comodin_5050_pregunta' => null
+                'comodin_5050_pregunta' => null,
+                'mensaje' => null
             ];
         }
 
@@ -270,7 +271,8 @@ class GameController
         $data['comodin_change_used'] = $_SESSION['partida']['comodin_change_used'] ?? false;
         $data['comodin_5050_used'] = $_SESSION['partida']['comodin_5050_usado'] ?? false;
         $data['comodin_5050_activo'] = $_SESSION['partida']['comodin_5050_activo'] ?? false;
-
+        $data['mensaje'] = $_SESSION['partida']['mensaje'];
+        $_SESSION['partida']['mensaje'] == null;
         if (!empty($_SESSION['partida']['comodin_5050_activo']) && $_SESSION['partida']['comodin_5050_pregunta'] === $_SESSION['partida']['id_pregunta_actual']) {
             $data['opciones'] = $_SESSION['partida']['comodin_5050_opciones'];
         }
@@ -498,6 +500,24 @@ class GameController
     {
 
         $this->lobby();
+    }
+
+    public function reportarPregunta(){
+        $this->ensureSession();
+
+        if (!isset($_SESSION['partida'])) {
+            Redirect::to('/tpfinal_mvc/Game/ruleta');
+            return;
+        }
+        $email = $this->getCurrentUserEmail();
+        $mensaje = $this->request->post('mensaje');
+        $id_pregunta = $this->request->post('id_pregunta');
+
+        $this->model->createReporteDePregunta($id_pregunta, $mensaje, $email);
+
+        $_SESSION['partida']['mensaje'] = "¡Gracias! Tu reporte fue enviado correctamente.";
+
+        Redirect::to('/tpfinal_mvc/Game/jugar');
     }
     
 }

@@ -351,5 +351,12 @@ class GameModel
         $sql = "INSERT INTO compras_simuladas (user_email, amount_usd, coins_bought, date) VALUES (?, ?, ?, NOW())";
         return $this->database->execute($sql, [$email, $amountUsd, $cantidad]);
     }
+
+    public function createReporteDePregunta($id_pregunta, $mensaje, $email){
+        $sql = "INSERT INTO preguntas_reportadas (motivo, id_pregunta, mail_usuario, id_estado) 
+        VALUES (? , ? , ? , ?)";
+
+        $this->database->execute($sql, [$mensaje, $id_pregunta, $email, 1]);
+    }
 }
 
