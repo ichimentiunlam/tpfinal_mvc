@@ -228,6 +228,50 @@
                 {{/opciones}}
             </div>
         </form>
+        {{#mensaje}}
+        <div class="succesMessage">
+            {{mensaje}}
+        </div>
+        {{/mensaje}}
+        <button id="reportBtn" class="report-btn" type="button">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        </button>
+
+        <div id="reportModal" class="report-modal">
+        <div class="report-box">
+            <button class="close-report" id="closeReport">
+                <i class="bi bi-x-lg"></i>
+            </button>
+            <h3>Reportar pregunta</h3>
+            <p>
+                ¿Encontraste un error en esta pregunta?
+            </p>
+            <form action="/tpfinal_mvc/Game/reportarPregunta" method="POST">
+                <input
+                    type="hidden"
+                    name="id_pregunta"
+                    value="{{id_pregunta}}">
+                <textarea
+                    name="mensaje"
+                    rows="5"
+                    placeholder="Escribí el motivo (opcional)...">
+                </textarea>
+                <div class="report-actions">
+                    <button
+                        type="button"
+                        id="cancelReport"
+                        class="btn-report secondary">
+                        Cancelar
+                    </button>
+                    <button
+                        type="submit"
+                        class="btn-report primary">
+                        Enviar reporte
+                    </button>
+                </div>
+            </form>
+        </div>
+        </div>
 
         <div class="wildcard-control">
             <button id="wildcardToggle" type="button" class="naza-toggle-btn">
@@ -395,6 +439,43 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+});
+
+// Modal de reportar pregunta
+const reportBtn = document.getElementById("reportBtn");
+const reportModal = document.getElementById("reportModal");
+const closeReport = document.getElementById("closeReport");
+const cancelReport = document.getElementById("cancelReport");
+
+reportBtn.addEventListener("click", () => {
+    reportModal.classList.add("active");
+});
+
+function cerrarModal(){
+    reportModal.classList.remove("active");
+}
+
+closeReport.addEventListener("click", cerrarModal);
+cancelReport.addEventListener("click", cerrarModal);
+
+//Cerrar haciendo click afuera
+
+reportModal.addEventListener("click",(e)=>{
+
+    if(e.target===reportModal){
+        cerrarModal();
+    }
+
+});
+
+//Cerrar con ESC
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Escape"){
+        cerrarModal();
+    }
+
 });
 </script>
 {{>footer}}
