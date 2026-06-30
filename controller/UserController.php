@@ -72,6 +72,51 @@ class UserController
         $this->renderer->render($viewName, array_merge($this->getNavData(), $data));
     }
 
+    private function generarCodigoValidacion(): string
+    {
+        return str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+    }
+
+    private function enviarCodigoValidacion(string $email, string $codigo): bool
+    {
+        $config = parse_ini_file(__DIR__ . '/../config/config.ini');
+        $asunto = 'Código de validación de tu cuenta';
+        $mensaje = "Hola,\n\nGracias por registrarte en Arcade de Desafíos.\nTu código de validación es: $codigo\n\nIngresa este código en la pantalla de verificación para activar tu cuenta.\n\nSi no solicitaste este registro, puedes ignorar este mensaje.\n";
+
+        try {
+            require_once __DIR__ . '/../vendor/autoload.php';
+            $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = $config['smtp_host'] ?? 'localhost';
+            $mail->Port = (int) ($config['smtp_port'] ?? 1025);
+            $mail->CharSet = 'UTF-8';
+
+            if (!empty($config['smtp_username']) && !empty($config['smtp_password'])) {
+                $mail->SMTPAuth = true;
+                $mail->Username = $config['smtp_username'];
+                $mail->Password = $config['smtp_password'];
+                $mail->SMTPSecure = $config['smtp_encryption'] ?? 'tls';
+            } else {
+                $mail->SMTPAuth = false;
+                $mail->SMTPSecure = '';
+            }
+
+            $mail->setFrom($config['mail_from'] ?? 'no-reply@arcade.local', $config['mail_from_name'] ?? 'Arcade de Desafíos');
+            $mail->addAddress($email);
+            $mail->addReplyTo($config['mail_from'] ?? 'no-reply@arcade.local', $config['mail_from_name'] ?? 'Arcade de Desafíos');
+            $mail->Subject = $asunto;
+            $mail->Body = $mensaje;
+            $mail->AltBody = strip_tags($mensaje);
+
+            $mail->send();
+            Log::info("Correo de validación enviado a $email");
+            return true;
+        } catch (Exception $e) {
+            Log::warning('Error al enviar el correo real: ' . $e->getMessage());
+            return false;
+        }
+    }
+
     private function jsonResponse(array $data, int $status = 200)
     {
         header('Content-Type: application/json');
@@ -353,8 +398,9 @@ class UserController
             return;
         }
 
-        // Guardar datos temporales en sesión para validación
-        $codigo = substr(str_shuffle('0123456789'), 0, 6);
+        $codigo = $this->generarCodigoValidacion();
+        $correoEnviado = $this->enviarCodigoValidacion($email, $codigo);
+
         $_SESSION['temp_validation'] = [
             'email' => $email,
             'code' => $codigo,
@@ -365,6 +411,10 @@ class UserController
         $this->render('validateEmailView', [
             'email' => $email,
             'code' => $codigo,
+            'mailSent' => $correoEnviado,
+            'message' => $correoEnviado
+                ? 'Se ha enviado un correo con el código de verificación.'
+                : 'No se pudo enviar el correo desde este entorno. Usa el código que aparece a continuación.',
         ]);
     }
 
@@ -372,8 +422,8 @@ class UserController
     {
         $this->ensureSession();
 
-        $email = $this->request->get('email');
-        $code = $this->request->get('code');
+        $email = trim($this->request->post('email', $this->request->get('email')));
+        $code = trim((string) $this->request->post('code', $this->request->get('code')));
 
         if (
             !$email || !$code || !isset($_SESSION['temp_validation'])
@@ -389,12 +439,11 @@ class UserController
         if ($_SESSION['temp_validation']['code'] !== $code) {
             $this->render('messageView', [
                 'title' => 'Código incorrecto',
-                'message' => 'El código no coincide. Revisa el enlace enviado o regístrate de nuevo.',
+                'message' => 'El código no coincide. Revisa el correo enviado o vuelve a registrarte si lo necesitas.',
             ]);
             return;
         }
 
-        // Marcar email como validado en la base de datos
         $this->model->marcarEmailValidado($email);
         unset($_SESSION['temp_validation']);
 

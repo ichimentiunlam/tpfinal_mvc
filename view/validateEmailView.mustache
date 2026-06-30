@@ -3,11 +3,17 @@
 <div class="validateContainer">
     <h2>Verificación de correo</h2>
     <div>
-        <p>Se ha enviado un mensaje simulado a <strong>{{email}}</strong>. Para activar tu cuenta, pulsa el siguiente botón:</p>
-        <p>Ingrese el código de verificación:</p>
-        <a href="/tpfinal_mvc/User/validarCorreo?email={{email}}&code={{code}}" class="btn primary">Validar correo</a>
+        <p>{{message}}</p>
+        <p>Ingrésalo abajo para activar tu cuenta <strong>{{email}}</strong>.</p>
+
+        <form action="/tpfinal_mvc/User/validarCorreo" method="POST" class="registerForm">
+            <input type="hidden" name="email" value="{{email}}">
+            <label for="code">Código de verificación</label>
+            <input type="text" id="code" name="code" maxlength="6" placeholder="Ej: 123456" required>
+            <button type="submit" class="btn primary">Validar correo</button>
+        </form>
+
         <a href="/tpfinal_mvc/User/home" class="btn secondary">Volver al inicio</a>
     </div>
-    
 </div>
 {{>footer}}
