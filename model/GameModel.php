@@ -156,6 +156,13 @@ class GameModel
         return null;
     }
 
+    public function getTipoPregunta()
+    {
+        $sql = "SELECT id, tipo FROM tipos_pregunta";
+
+        return $this->database->query($sql);
+    }
+
     public function getCantidadDeTiposDePregunta()
     {
         $sql = "SELECT COUNT(*) as cantidadDeTiposDePregunta FROM tipos_pregunta";
@@ -303,25 +310,24 @@ class GameModel
         ]);
     }
 
-    public function actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta) {
-        if($esCorrecta){
+    public function actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta)
+    {
+        if ($esCorrecta) {
             $sql = "UPDATE preguntas 
             SET veces_respondida = veces_respondida + 1,
             veces_respondida_correctamente =  veces_respondida_correctamente + 1
             WHERE id = ?
             ";
 
-              $this->database->execute($sql, [$id_pregunta]);
-        }else{
+            $this->database->execute($sql, [$id_pregunta]);
+        } else {
             $sql = "UPDATE preguntas 
             SET veces_respondida = veces_respondida + 1
             WHERE id = ?
             ";
 
-              $this->database->execute($sql, [$id_pregunta]);
+            $this->database->execute($sql, [$id_pregunta]);
         }
-        
-        
     }
 
     public function obtenerMonedasUsuarioPorEmail($email)
@@ -352,11 +358,19 @@ class GameModel
         return $this->database->execute($sql, [$email, $amountUsd, $cantidad]);
     }
 
-    public function createReporteDePregunta($id_pregunta, $mensaje, $email){
+    public function createReporteDePregunta($id_pregunta, $mensaje, $email)
+    {
         $sql = "INSERT INTO preguntas_reportadas (motivo, id_pregunta, mail_usuario, id_estado) 
         VALUES (? , ? , ? , ?)";
 
         $this->database->execute($sql, [$mensaje, $id_pregunta, $email, 1]);
     }
-}
 
+    public function createPreguntaSugerida($pregunta, $respuestaCorrecta, $respuestaIncorrecta1, $respuestaIncorrecta2, $respuestaIncorrecta3, $id_tipo_pregunta)
+    {
+        $sql = "INSERT INTO preguntas_sugeridas (pregunta, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, id_tipo_pregunta) 
+        VALUES (? , ? , ? , ?, ?, ?)";
+
+        $this->database->execute($sql, [$pregunta, $respuestaCorrecta, $respuestaIncorrecta1, $respuestaIncorrecta2, $respuestaIncorrecta3, $id_tipo_pregunta]);
+    }
+}

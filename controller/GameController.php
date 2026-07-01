@@ -111,8 +111,14 @@ class GameController
             return;
         }
 
+        $mensaje = $_SESSION['partida']['mensaje'] ?? null;
+        $_SESSION['partida']['mensaje'] = null;
+        $categorias = $this->model->getTipoPregunta();
+
         $this->render('lobbyView', [
-            'user' => $user,
+        'user' => $user,
+        'mensaje' => $mensaje,
+        'categorias' => $categorias
         ]);
 
         if (isset($_SESSION['partida'])) {
@@ -272,7 +278,7 @@ class GameController
         $data['comodin_5050_used'] = $_SESSION['partida']['comodin_5050_usado'] ?? false;
         $data['comodin_5050_activo'] = $_SESSION['partida']['comodin_5050_activo'] ?? false;
         $data['mensaje'] = $_SESSION['partida']['mensaje'];
-        $_SESSION['partida']['mensaje'] == null;
+        $_SESSION['partida']['mensaje'] = null;
         if (!empty($_SESSION['partida']['comodin_5050_activo']) && $_SESSION['partida']['comodin_5050_pregunta'] === $_SESSION['partida']['id_pregunta_actual']) {
             $data['opciones'] = $_SESSION['partida']['comodin_5050_opciones'];
         }
@@ -518,6 +524,34 @@ class GameController
         $_SESSION['partida']['mensaje'] = "¡Gracias! Tu reporte fue enviado correctamente.";
 
         Redirect::to('/tpfinal_mvc/Game/jugar');
+    }
+
+    public function sugerirPregunta(){
+        $this->ensureSession();
+
+        
+        $pregunta = $this->request->post('nuevaPregunta');
+        $respuestaCorrecta = $this->request->post('respuestaCorrecta');
+        $respuestaIncorrecta1 = $this->request->post('incorrecta1');
+        $respuestaIncorrecta2 = $this->request->post('incorrecta2');
+        $respuestaIncorrecta3 = $this->request->post('incorrecta3');
+        $id_tipo_pregunta = $this->request->post('id_tipo_pregunta');
+
+        if($pregunta == null || $respuestaCorrecta == null || 
+        $respuestaIncorrecta1 == null || 
+        $respuestaIncorrecta2 == null || 
+        $respuestaIncorrecta3 == null || 
+        $id_tipo_pregunta == null){
+            $_SESSION['partida']['mensaje'] = "Se deben llenar todos los campos";
+            Redirect::to('/tpfinal_mvc/Game/lobby');
+            return;
+        }
+
+        $this->model->createPreguntaSugerida($pregunta, $respuestaCorrecta, $respuestaIncorrecta1, $respuestaIncorrecta2, $respuestaIncorrecta3, $id_tipo_pregunta);
+
+        $_SESSION['partida']['mensaje'] = "¡Gracias! Tu pregunta fue sugerida correctamente.";
+
+        Redirect::to('/tpfinal_mvc/Game/lobby');
     }
     
 }

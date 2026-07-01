@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 29-06-2026 a las 16:17:41
+-- Tiempo de generación: 01-07-2026 a las 02:24:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -118,7 +118,7 @@ INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id
 (8, '¿En qué continente está Egipto?', 29, 30, 31, 32, 2, 0, 2),
 (9, '¿Cuál es el país más grande del mundo?', 33, 34, 35, 36, 8, 5, 2),
 (10, '¿Cuál es el océano más grande?', 37, 38, 39, 40, 2, 1, 2),
-(11, '¿Cuántos jugadores tiene un equipo de fútbol?', 41, 42, 43, 44, 28, 23, 3),
+(11, '¿Cuántos jugadores tiene un equipo de fútbol?', 41, 42, 43, 44, 29, 23, 3),
 (12, '¿Quién ganó el Mundial 2022?', 45, 46, 47, 48, 1, 0, 3),
 (13, '¿En qué deporte se usa raqueta?', 49, 50, 51, 52, 1, 0, 3),
 (14, '¿Cuántos sets tiene un Grand Slam masculino?', 53, 54, 55, 56, 1, 0, 3),
@@ -171,6 +171,22 @@ CREATE TABLE `preguntas_reportadas` (
 
 INSERT INTO `preguntas_reportadas` (`id`, `motivo`, `id_pregunta`, `mail_usuario`, `id_estado`) VALUES
 (7, '                Es malisima', 20, 'testy@mail.com', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `preguntas_sugeridas`
+--
+
+CREATE TABLE `preguntas_sugeridas` (
+  `id` int(11) NOT NULL,
+  `pregunta` varchar(90) NOT NULL,
+  `respuestaCorrecta` varchar(90) NOT NULL,
+  `respuestaIncorrecta1` varchar(90) NOT NULL,
+  `respuestaIncorrecta2` varchar(90) NOT NULL,
+  `respuestaIncorrecta3` varchar(90) NOT NULL,
+  `id_tipo_pregunta` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -434,7 +450,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `ciudad`, `pais`, `email`, `email_validado`, `password`, `usuario`, `foto_perfil`, `fecha_registro`, `puntaje_max`, `preguntas_respondidas`, `preguntas_correctas`, `id_tipo`, `coins`) VALUES
-(16, 'Testy', 'Testerson', 1234, 'M', 'Banfield', 'Argentina', 'testy@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Testy Testerson', NULL, '2026-06-17 16:52:40', 6, 158, 95, 1, 372),
+(16, 'Testy', 'Testerson', 1234, 'M', 'Banfield', 'Argentina', 'testy@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Testy Testerson', NULL, '2026-06-17 16:52:40', 6, 160, 96, 1, 372),
 (18, 'Valentina', 'Gomez', 1998, '', 'San Justo', 'Argentina', 'valen@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'valeng', 'avatar2.jpg', '2026-02-15 14:20:00', 38, 95, 80, 2, 20),
 (19, 'Kevin', 'Rodriguez', 1995, '', 'Laferrere', 'Argentina', 'kevin@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'kevin_gym', 'avatar3.jpg', '2026-03-01 12:15:00', 50, 200, 185, 3, 100),
 (20, 'Agustina', 'Perez', 1999, '', 'Moron', 'Argentina', 'agus@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'agusp', 'avatar4.jpg', '2026-03-10 17:30:00', 25, 60, 45, 1, 10),
@@ -484,6 +500,12 @@ ALTER TABLE `preguntas_reportadas`
   ADD KEY `fk_id_pregunta` (`id_pregunta`);
 
 --
+-- Indices de la tabla `preguntas_sugeridas`
+--
+ALTER TABLE `preguntas_sugeridas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
@@ -531,6 +553,12 @@ ALTER TABLE `preguntas`
 --
 ALTER TABLE `preguntas_reportadas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT de la tabla `preguntas_sugeridas`
+--
+ALTER TABLE `preguntas_sugeridas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
