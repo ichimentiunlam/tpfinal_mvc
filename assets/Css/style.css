@@ -193,6 +193,143 @@ header {
     color: white;
 }
 
+/* modal pregunta */
+.report-btn{
+    position:absolute;
+    top:18px;
+    right:18px;
+
+    width:42px;
+    height:42px;
+
+    border:none;
+    border-radius:50%;
+
+    cursor:pointer;
+
+    background:rgba(255,255,255,.08);
+    color:#ffca28;
+
+    transition:.25s;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:1.1rem;
+}
+
+.report-btn:hover{
+    background:#ffca28;
+    color:#222;
+    transform:scale(1.08);
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    visibility:hidden;
+    transition:.25s;
+    z-index:9999;
+}
+
+.modal.active{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal-box{
+    width:90%;
+    max-width:500px;
+
+    background:#181828;
+
+    border:2px solid #7c4dff;
+
+    border-radius:18px;
+
+    padding:28px;
+
+    position:relative;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+
+    animation:popup .25s ease;
+
+}
+
+@keyframes popup{
+    from{
+        transform:scale(.9);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+
+}
+
+.modal-box h3{
+    margin-bottom:10px;
+    font-size:1.5rem;
+}
+
+.modal-box p{
+    opacity:.8;
+    margin-bottom:20px;
+    line-height:1.5;
+}
+
+.close-modal{
+    position:absolute;
+    top:16px;
+    right:16px;
+    background:none;
+    border:none;
+    color:white;
+    cursor:pointer;
+    font-size:1rem;
+
+}
+
+.modal-actions{
+    margin-top:22px;
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+
+}
+
+.btn-report{
+    padding:12px 18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+
+}
+
+.btn-report.primary{
+    background:linear-gradient(135deg,#7c4dff,#00ffe7);
+    color:black;
+}
+
+.btn-report.secondary{
+    background:#333;
+    color:white;
+}
+
+.btn-report:hover{
+    transform:translateY(-2px);
+}
+
 /*  media  */
 
 @media (max-width: 900px) {

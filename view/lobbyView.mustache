@@ -6,8 +6,121 @@
                 <p> Puntaje Maximo: {{user.puntaje_max}}</p>
                 <a href="/tpfinal_mvc/Game/ranking" class="btn secondary">Ranking</a><br>
                 <a href="/tpfinal_mvc/Game/ruleta" class="btn primary">Empezar partida</a>
+                
+
+                {{#mensaje}}
+                <div class="succesMessage">
+                {{mensaje}}
+                </div>
+                {{/mensaje}}
+                <button id="modalBtn" class="report-btn" type="button">
+                <i class="bi bi-file-plus"></i>
+                </button>
+                <div id="crearModal" class="modal">
+                        <div class="modal-box">
+                                <button class="close-modal" id="closeModal">
+                                        <i class="bi bi-x-lg"></i>
+                                </button>
+                                <h3>Sugerir pregunta</h3>
+                                <form action="/tpfinal_mvc/Game/sugerirPregunta" method="POST">
+                                        <input
+                                        type="text"
+                                        name="nuevaPregunta"
+                                        class="inputPregunta"
+                                        placeholder="Escribí tu pregunta">
+                                        
+                                        <p>Opcion correcta</p>
+
+                                        <input
+                                        type="text"
+                                        name="respuestaCorrecta"
+                                        placeholder="Respuesta correcta">
+
+                                        <p>Opciones Incorrectas</p>
+                                        
+                                        <input
+                                        type="text"
+                                        name="incorrecta1"
+                                        placeholder="Respuesta incorrecta">
+                                        
+                                        <input
+                                        type="text"
+                                        name="incorrecta2"
+                                        placeholder="Respuesta incorrecta">
+                                        
+                                        <input
+                                        type="text"
+                                        name="incorrecta3"
+                                        placeholder="Respuesta incorrecta">
+
+                                           <p>Categoria</p>
+                                        <select name="id_tipo_pregunta" required>
+                                                <option value="">Seleccione una categoría</option>
+
+                                                {{#categorias}}
+                                                        <option value="{{id}}">
+                                                        {{tipo}}
+                                                        </option>
+                                                {{/categorias}}
+                                        </select>
+                                        <div class="modal-actions">
+                                                <button
+                                                        type="button"
+                                                        id="cancelModal"
+                                                        class="btn-report secondary">
+                                                        Cancelar
+                                                </button>
+                                                <button
+                                                        type="submit"
+                                                        class="btn-report primary">
+                                                        Enviar sugerencia
+                                                </button>
+                                        </div>
+                                </form>
+                        </div>
+                </div>
+                        
         </div>
 
 </main>
 
 {{>footer}}
+<script>
+// Modal de crear pregunta
+const ModalBtn = document.getElementById("modalBtn");
+const crearModal = document.getElementById("crearModal");
+const closeModal = document.getElementById("closeModal");
+const cancelModal = document.getElementById("cancelModal");
+
+
+ModalBtn.addEventListener("click", () => {
+    crearModal.classList.add("active");
+});
+
+function cerrarModal(){
+    crearModal.classList.remove("active");
+}
+
+closeModal.addEventListener("click", cerrarModal);
+cancelModal.addEventListener("click", cerrarModal);
+
+//Cerrar haciendo click afuera
+
+crearModal.addEventListener("click",(e)=>{
+
+    if(e.target===crearModal){
+        cerrarModal();
+    }
+
+});
+
+//Cerrar con ESC
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Escape"){
+        cerrarModal();
+    }
+
+});
+</script>
