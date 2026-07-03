@@ -43,6 +43,14 @@
             <li><a href="/tpfinal_mvc/User/perfil">Mi perfil</a></li>
             <li><a href="/tpfinal_mvc/Game/lobby">Lobby</a></li>
             <li><a href="/tpfinal_mvc/Game/ranking">Ranking</a></li>
+            {{#esAdmin}}
+            <li><a href="/tpfinal_mvc/Admin/estadisticas">Estadisticas</a></li>
+            {{/esAdmin}}
+
+            {{#esEditor}}
+            <li><a href="/tpfinal_mvc/Editor/modificar">Modificar</a></li>
+            <li><a href="/tpfinal_mvc/Editor/correo">Correo</a></li>
+            {{/esEditor}}
             <li><a href="/tpfinal_mvc/User/logout">Salir</a></li>
             {{/loggedIn}}
         </ul>

@@ -19,6 +19,17 @@ class Configurator {
         $this->getGameModel(), $this->getRenderer(), new Request());
 }
 
+    public function getEditorController()
+    {
+        return new EditorController($this->getGameModel(), $this->getRenderer(), new Request());
+    }
+
+    
+    public function getAdminController()
+    {
+        return new AdminController($this->getGameModel(), $this->getRenderer(), new Request());
+    }
+
     private function getDatabase()
     {
         return new MyDatabase(

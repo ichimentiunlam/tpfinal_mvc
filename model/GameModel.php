@@ -36,7 +36,7 @@ class GameModel
 
     public function obtenerUsuarioPorEmail($email)
     {
-        $sql = "SELECT * FROM usuarios WHERE email = ?";
+        $sql = "SELECT u.*, tu.tipo AS rol FROM usuarios u JOIN tipos_usuario tu ON u.id_tipo = tu.id WHERE email = ?";
         Log::info("SQL: Obtener usuario por email [$email]");
         $filas = $this->database->query($sql, [$email]);
         return !empty($filas) ? $filas[0] : null;
