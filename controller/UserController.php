@@ -59,10 +59,13 @@ class UserController
     private function getNavData()
     {
         $user = $this->getCurrentUser();
+        $rol = $user['rol'] ?? ''; 
         return [
             'loggedIn' => (bool) $user,
             'username' => $user['usuario'] ?? $user['nombre'] ?? null,
             'validated' => $user['email_validado'] ?? false,
+            'esAdmin' => $rol === 'Administrador',
+            'esEditor' => in_array($rol, ['Administrador', 'Editor'])
         ];
     }
 
