@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 01-07-2026 a las 02:24:14
+-- Tiempo de generación: 03-07-2026 a las 19:40:28
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -83,7 +83,13 @@ INSERT INTO `compras_simuladas` (`id`, `user_email`, `amount_usd`, `coins_bought
 (41, 'testy@mail.com', 1.00, 10, '2026-06-26 13:52:39'),
 (42, 'testy@mail.com', 1.00, 10, '2026-06-26 13:52:39'),
 (43, 'testy@mail.com', 1.00, 10, '2026-06-26 13:52:40'),
-(44, 'testy@mail.com', 1.00, 10, '2026-06-26 13:52:40');
+(44, 'testy@mail.com', 1.00, 10, '2026-06-26 13:52:40'),
+(45, 'testy@mail.com', 1.00, 10, '2026-07-02 14:09:45'),
+(46, 'testy@mail.com', 1.00, 10, '2026-07-02 14:09:46'),
+(47, 'testy@mail.com', 1.00, 10, '2026-07-02 14:09:46'),
+(48, 'testy@mail.com', 1.00, 10, '2026-07-02 14:09:46'),
+(49, 'testy@mail.com', 1.00, 10, '2026-07-02 14:09:47'),
+(50, 'testy@mail.com', 1.00, 10, '2026-07-02 14:09:47');
 
 -- --------------------------------------------------------
 
@@ -187,6 +193,13 @@ CREATE TABLE `preguntas_sugeridas` (
   `respuestaIncorrecta3` varchar(90) NOT NULL,
   `id_tipo_pregunta` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `preguntas_sugeridas`
+--
+
+INSERT INTO `preguntas_sugeridas` (`id`, `pregunta`, `respuestaCorrecta`, `respuestaIncorrecta1`, `respuestaIncorrecta2`, `respuestaIncorrecta3`, `id_tipo_pregunta`) VALUES
+(2, 'Test', 'correcta', 'incorrecta1', 'incorrecta2', 'incorrecta3', 3);
 
 -- --------------------------------------------------------
 
@@ -450,7 +463,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `ciudad`, `pais`, `email`, `email_validado`, `password`, `usuario`, `foto_perfil`, `fecha_registro`, `puntaje_max`, `preguntas_respondidas`, `preguntas_correctas`, `id_tipo`, `coins`) VALUES
-(16, 'Testy', 'Testerson', 1234, 'M', 'Banfield', 'Argentina', 'testy@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Testy Testerson', NULL, '2026-06-17 16:52:40', 6, 160, 96, 1, 372),
+(16, 'Testy', 'Testerson', 1234, 'M', 'Banfield', 'Argentina', 'testy@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Testy Testerson', NULL, '2026-06-17 16:52:40', 6, 160, 96, 1, 432),
 (18, 'Valentina', 'Gomez', 1998, '', 'San Justo', 'Argentina', 'valen@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'valeng', 'avatar2.jpg', '2026-02-15 14:20:00', 38, 95, 80, 2, 20),
 (19, 'Kevin', 'Rodriguez', 1995, '', 'Laferrere', 'Argentina', 'kevin@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'kevin_gym', 'avatar3.jpg', '2026-03-01 12:15:00', 50, 200, 185, 3, 100),
 (20, 'Agustina', 'Perez', 1999, '', 'Moron', 'Argentina', 'agus@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'agusp', 'avatar4.jpg', '2026-03-10 17:30:00', 25, 60, 45, 1, 10),
@@ -468,7 +481,10 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `
 (33, 'Ezequiel', 'Ortiz', 1993, '', 'San Luis', 'Argentina', 'eze@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'eze_o', 'avatar17.jpg', '2026-06-12 12:45:00', 31, 80, 65, 2, 22),
 (34, 'Julieta', 'Acosta', 1998, '', 'Formosa', 'Argentina', 'juli@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'juli_a', 'avatar18.jpg', '2026-06-15 17:05:00', 19, 48, 38, 3, 7),
 (35, 'Rodrigo', 'Vazquez', 1995, '', 'Corrientes', 'Argentina', 'rodri@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'rodri_v', 'avatar19.jpg', '2026-06-20 19:30:00', 36, 92, 78, 1, 28),
-(36, 'Mariana', 'Diaz', 1997, '', 'La Rioja', 'Argentina', 'mari@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'mari_d', 'avatar20.jpg', '2026-06-25 13:00:00', 24, 60, 48, 2, 11);
+(36, 'Mariana', 'Diaz', 1997, '', 'La Rioja', 'Argentina', 'mari@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'mari_d', 'avatar20.jpg', '2026-06-25 13:00:00', 24, 60, 48, 2, 11),
+(37, 'Borrame', '123', 1234, 'M', 'Avellaneda', 'Argentina', 'fajifo7166@icotz.com', 0, '$2y$10$ZgBs/dTcbq96qrrD8bMo0.4zp5BCk6u9tiZMDS2IprUorwzKga9jS', '123', NULL, '2026-07-02 17:08:45', 0, 0, 0, 1, 0),
+(38, 'Ed', 'Itor', 9999, 'M', 'Tucuman', 'Argentina', 'editor@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'editor', NULL, '2026-07-02 17:45:34', 0, 0, 0, 2, 10),
+(39, 'Admini', 'Strador', 4331, 'F', 'Tucuman', 'Argentina', 'admin@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Admin', NULL, '2026-07-02 17:45:34', 0, 0, 0, 3, 10);
 
 --
 -- Índices para tablas volcadas
@@ -540,7 +556,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `compras_simuladas`
 --
 ALTER TABLE `compras_simuladas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas`
@@ -558,7 +574,7 @@ ALTER TABLE `preguntas_reportadas`
 -- AUTO_INCREMENT de la tabla `preguntas_sugeridas`
 --
 ALTER TABLE `preguntas_sugeridas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
@@ -582,7 +598,7 @@ ALTER TABLE `tipos_usuario`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- Restricciones para tablas volcadas
