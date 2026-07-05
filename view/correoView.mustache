@@ -1,5 +1,94 @@
 {{>header}}
-<main>
-hola correo
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/correo.css">
+<main class="correoContainer">
+
+    <section class="panel">
+        <h2>Preguntas sugeridas</h2>
+
+        {{#preguntasSugeridas}}
+
+        <div class="cardPregunta">
+
+            <h3>{{pregunta}}</h3>
+
+            <div class="respuestas">
+
+                <p class="correcta">{{respuestaCorrecta}}</p>
+
+                <p class="incorrecta">{{respuestaIncorrecta1}}</p>
+
+                <p class="incorrecta">{{respuestaIncorrecta2}}</p>
+
+                <p class="incorrecta">{{respuestaIncorrecta3}}</p>
+
+            </div>
+
+            <span class="categoria">{{categoria}}</span>
+
+            <div class="acciones">
+
+                 <form action="/tpfinal_mvc/Editor/aceptarPregunta" method="POST">
+                <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="pregunta" value="{{pregunta}}">
+                <input type="hidden" name="respuestaCorrecta" value="{{respuestaCorrecta}}">
+                <input type="hidden" name="respuestaIncorrecta1" value="{{respuestaIncorrecta1}}">
+                <input type="hidden" name="respuestaIncorrecta2" value="{{respuestaIncorrecta2}}">
+                <input type="hidden" name="respuestaIncorrecta3" value="{{respuestaIncorrecta3}}">
+                <input type="hidden" name="id_tipo" value="{{id_tipo}}">
+                <button>Aceptar</button>
+            </form>
+
+            <form action="/tpfinal_mvc/Editor/rechazarPregunta" method="POST">
+                <input type="hidden" name="id" value="{{id}}">
+                <button>Rechazar</button>
+            </form>
+
+            </div>
+
+        </div>
+
+        {{/preguntasSugeridas}}
+
+    </section>
+
+    <section class="panel">
+
+        <h2>Preguntas reportadas</h2>
+
+        {{#reportes}}
+
+        <div class="cardPregunta">
+
+            <h3>{{pregunta}}</h3>
+
+            <p><strong>Motivo:</strong> {{motivo}}</p>
+
+            <p class="estado">{{estado}}</p>
+
+            <div class="acciones">
+
+                  <form action="/tpfinal_mvc/Editor/modificarPregunta" method="POST">
+                <input type="hidden" name="id" value="{{id}}">
+                <button>Modificar</button>
+            </form>
+
+            <form action="/tpfinal_mvc/Editor/marcarReporteComoVisto" method="POST">
+                <input type="hidden" name="id" value="{{id}}">
+                <button>Marcar como visto</button>
+            </form>
+
+            </div>
+
+        </div>
+
+        {{/reportes}}
+
+    </section>
+
 </main>
 {{>footer}}
+
+
+
+
+

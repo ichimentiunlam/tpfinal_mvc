@@ -373,4 +373,75 @@ class GameModel
 
         $this->database->execute($sql, [$pregunta, $respuestaCorrecta, $respuestaIncorrecta1, $respuestaIncorrecta2, $respuestaIncorrecta3, $id_tipo_pregunta]);
     }
+
+
+
+
+/* Usuario Editor */
+    public function getPreguntasSugeridas(){
+        $sql = "SELECT ps.*, tp.tipo AS categoria, tp.id AS id_tipo
+        FROM preguntas_sugeridas ps
+        JOIN tipos_pregunta tp
+        ON ps.id_tipo_pregunta = tp.id"; 
+
+        return $this->database->query($sql);
+
+    }
+
+    public function deletePreguntaSugerida($id){
+         $sql = "DELETE FROM preguntas_sugeridas
+                WHERE id = ?";
+
+        $this->database->execute($sql, [$id]);
+    }
+
+    public function createPregunta($datos){
+        $idRespuesta1 = $this->crearRespuesta($datos['respuestaCorrecta'], 1);
+
+        $idRespuesta2 = $this->crearRespuesta($datos['respuestaIncorrecta1'], 0);
+
+        $idRespuesta3 = $this->crearRespuesta($datos['respuestaIncorrecta2'], 0);
+
+        $idRespuesta4 = $this->crearRespuesta($datos['respuestaIncorrecta3'], 0);
+          
+        $sql = "INSERT INTO preguntas (pregunta, id_respuesta1, id_respuesta2, id_respuesta3, id_respuesta4, id_tipo_pregunta)
+        VALUES (?, ?, ?, ?, ?, ?)";
+
+        $this->database->execute($sql, [
+        $datos['pregunta'],
+        $idRespuesta1,
+        $idRespuesta2,
+        $idRespuesta3,
+        $idRespuesta4,
+        $datos['id_tipo_pregunta']
+        ]);
+    }
+
+    private function crearRespuesta($texto, $esCorrecta)
+{
+    $sql = "INSERT INTO respuestas (respuesta, es_correcta)
+            VALUES (?, ?)";
+
+    $this->database->execute($sql, [$texto, $esCorrecta]);
+
+    return $this->database->getLastInsertId();
+}
+
+    public function getPreguntasReportadasNoVistas(){
+        $sql = "SELECT pr.*, p.pregunta, p.id as id_pregunta, er.estado
+        FROM preguntas_reportadas pr
+        JOIN preguntas p
+        ON p.id = pr.id_pregunta
+        JOIN estados_reporte er
+        ON pr.id_estado = er.id
+        WHERE pr.id_estado = 1"; 
+
+        return $this->database->query($sql);
+    }
+
+    public function marcarReporteComoVisto($id){
+        $sql = "UPDATE preguntas_reportadas SET id_estado = 2 WHERE id = ?";
+
+        $this->database->execute($sql, [$id]);
+    }
 }

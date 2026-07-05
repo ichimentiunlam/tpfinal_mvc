@@ -28,4 +28,9 @@ class MyDatabase
     {
         $this->conexion->close();
     }
+
+    public function getLastInsertId()
+    {
+        return $this->conexion->insert_id;
+    }
 }

@@ -46,6 +46,12 @@ class EditorController
         return null;
     }
 
+        public function home()
+    {
+
+        Redirect::to('/tpfinal_mvc/User/home');
+    }
+
    private function getNavData()
     {
         $user = $this->getCurrentUser();
@@ -83,12 +89,49 @@ class EditorController
             return;
         }
         $this->necesitaEditor();
-        $data = "hola";
-
-        $this->render('correoView', [$data]
-        );
+        $preguntasSugeridas = $this->model->getPreguntasSugeridas();
+        $reportes = $this->model->getPreguntasReportadasNoVistas();
+        
+        $this->render('correoView', [
+        'preguntasSugeridas' => $preguntasSugeridas,
+        'reportes' => $reportes
+        ]);
     }
 
+    public function aceptarPregunta(){
+        $this->ensureSession();
+        $id = $this->request->post('id');
+
+        $datos = [
+        "pregunta" => $this->request->post('pregunta'),
+        "respuestaCorrecta" => $this->request->post('respuestaCorrecta'),
+        "respuestaIncorrecta1" => $this->request->post('respuestaIncorrecta1'),
+        "respuestaIncorrecta2" => $this->request->post('respuestaIncorrecta2'),
+        "respuestaIncorrecta3" => $this->request->post('respuestaIncorrecta3'),
+        "id_tipo_pregunta" => $this->request->post('id_tipo')
+        ];
+        $this->model->createPregunta($datos);
+        $this->model->deletePreguntaSugerida($id);
+        Redirect::to('/tpfinal_mvc/Editor/correo');
+        return;
+    }
+
+    public function rechazarPregunta(){
+        $this->ensureSession();
+        $id = $this->request->post('id');
+        $this->model->deletePreguntaSugerida($id);
+        Redirect::to('/tpfinal_mvc/Editor/correo');
+        return;
+    }
+
+    public function marcarReporteComoVisto(){
+        $this->ensureSession();
+        $id = $this->request->post('id');
+        $this->model->marcarReporteComoVisto($id);
+        Redirect::to('/tpfinal_mvc/Editor/correo');
+        return;
+    }
+    
     public function modificar(){
         $this->ensureSession();
 
