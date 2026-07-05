@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 03-07-2026 a las 19:40:28
+-- Tiempo de generación: 05-07-2026 a las 07:22:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -94,6 +94,25 @@ INSERT INTO `compras_simuladas` (`id`, `user_email`, `amount_usd`, `coins_bought
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `estados_reporte`
+--
+
+CREATE TABLE `estados_reporte` (
+  `id` int(11) NOT NULL,
+  `estado` varchar(90) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `estados_reporte`
+--
+
+INSERT INTO `estados_reporte` (`id`, `estado`) VALUES
+(1, 'No visto'),
+(2, 'Visto');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `preguntas`
 --
 
@@ -134,10 +153,10 @@ INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id
 (18, '¿Quién pintó La noche estrellada?', 69, 70, 71, 72, 1, 0, 4),
 (19, '¿Cuál es una obra de Leonardo da Vinci?', 73, 74, 75, 76, 4, 2, 4),
 (20, '¿Qué estilo usa formas geométricas?', 77, 78, 79, 80, 4, 2, 4),
-(21, '¿Cuál es el planeta más cercano al Sol?', 81, 82, 83, 84, 11, 9, 5),
+(21, '¿Cuál es el planeta más cercano al Sol?', 81, 82, 83, 84, 12, 9, 5),
 (22, '¿Qué gas respiramos principalmente?', 85, 86, 87, 88, 1, 0, 5),
 (23, '¿Cuántos estados de la materia clásica existen?', 89, 90, 91, 92, 1, 0, 5),
-(24, '¿Qué órgano bombea la sangre?', 93, 94, 95, 96, 15, 11, 5),
+(24, '¿Qué órgano bombea la sangre?', 93, 94, 95, 96, 16, 12, 5),
 (25, '¿Unidad de fuerza?', 97, 98, 99, 100, 1, 0, 5),
 (26, '¿Quién creó Mickey Mouse?', 101, 102, 103, 104, 4, 1, 6),
 (27, '¿Saga de Harry Potter?', 105, 106, 107, 108, 1, 0, 6),
@@ -155,7 +174,8 @@ INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id
 (39, '¿Qué científico propuso las leyes del movimiento planetario?', 153, 154, 155, 156, 10, 3, 5),
 (40, '¿Cuál es el elemento químico con símbolo W?', 157, 158, 159, 160, 10, 3, 5),
 (41, '¿Qué actor interpretó a Iron Man en el UCM?', 161, 162, 163, 164, 11, 3, 6),
-(42, '¿Cuál fue la primera consola de Nintendo lanzada internacionalmente?', 165, 166, 167, 168, 10, 3, 6);
+(42, '¿Cuál fue la primera consola de Nintendo lanzada internacionalmente?', 165, 166, 167, 168, 10, 3, 6),
+(45, 'Cuanto es 2 + 2', 181, 182, 183, 184, 1, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -199,7 +219,7 @@ CREATE TABLE `preguntas_sugeridas` (
 --
 
 INSERT INTO `preguntas_sugeridas` (`id`, `pregunta`, `respuestaCorrecta`, `respuestaIncorrecta1`, `respuestaIncorrecta2`, `respuestaIncorrecta3`, `id_tipo_pregunta`) VALUES
-(2, 'Test', 'correcta', 'incorrecta1', 'incorrecta2', 'incorrecta3', 3);
+(6, 'Mimamamemima', 'si', 'no', 'un poco', 'terrible', 2);
 
 -- --------------------------------------------------------
 
@@ -385,7 +405,11 @@ INSERT INTO `respuestas` (`id`, `respuesta`, `es_correcta`) VALUES
 (165, 'NES', 1),
 (166, 'Nintendo 64', 0),
 (167, 'GameCube', 0),
-(168, 'SNES', 0);
+(168, 'SNES', 0),
+(181, '4', 1),
+(182, '1', 0),
+(183, '2', 0),
+(184, '3', 0);
 
 -- --------------------------------------------------------
 
@@ -484,7 +508,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `
 (36, 'Mariana', 'Diaz', 1997, '', 'La Rioja', 'Argentina', 'mari@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'mari_d', 'avatar20.jpg', '2026-06-25 13:00:00', 24, 60, 48, 2, 11),
 (37, 'Borrame', '123', 1234, 'M', 'Avellaneda', 'Argentina', 'fajifo7166@icotz.com', 0, '$2y$10$ZgBs/dTcbq96qrrD8bMo0.4zp5BCk6u9tiZMDS2IprUorwzKga9jS', '123', NULL, '2026-07-02 17:08:45', 0, 0, 0, 1, 0),
 (38, 'Ed', 'Itor', 9999, 'M', 'Tucuman', 'Argentina', 'editor@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'editor', NULL, '2026-07-02 17:45:34', 0, 0, 0, 2, 10),
-(39, 'Admini', 'Strador', 4331, 'F', 'Tucuman', 'Argentina', 'admin@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Admin', NULL, '2026-07-02 17:45:34', 0, 0, 0, 3, 10);
+(39, 'Admini', 'Strador', 4331, 'F', 'Tucuman', 'Argentina', 'admin@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Admin', NULL, '2026-07-02 17:45:34', 2, 4, 3, 3, 10);
 
 --
 -- Índices para tablas volcadas
@@ -496,6 +520,12 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `
 ALTER TABLE `compras_simuladas`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_email` (`user_email`);
+
+--
+-- Indices de la tabla `estados_reporte`
+--
+ALTER TABLE `estados_reporte`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `preguntas`
@@ -513,7 +543,8 @@ ALTER TABLE `preguntas`
 --
 ALTER TABLE `preguntas_reportadas`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_id_pregunta` (`id_pregunta`);
+  ADD KEY `fk_id_pregunta` (`id_pregunta`),
+  ADD KEY `estado_reporte_fk` (`id_estado`);
 
 --
 -- Indices de la tabla `preguntas_sugeridas`
@@ -559,10 +590,16 @@ ALTER TABLE `compras_simuladas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
+-- AUTO_INCREMENT de la tabla `estados_reporte`
+--
+ALTER TABLE `estados_reporte`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_reportadas`
@@ -574,13 +611,13 @@ ALTER TABLE `preguntas_reportadas`
 -- AUTO_INCREMENT de la tabla `preguntas_sugeridas`
 --
 ALTER TABLE `preguntas_sugeridas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_pregunta`
@@ -618,6 +655,7 @@ ALTER TABLE `preguntas`
 -- Filtros para la tabla `preguntas_reportadas`
 --
 ALTER TABLE `preguntas_reportadas`
+  ADD CONSTRAINT `estado_reporte_fk` FOREIGN KEY (`id_estado`) REFERENCES `estados_reporte` (`id`),
   ADD CONSTRAINT `fk_id_pregunta` FOREIGN KEY (`id_pregunta`) REFERENCES `preguntas` (`id`);
 
 --
