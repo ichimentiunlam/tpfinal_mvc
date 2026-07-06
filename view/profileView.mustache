@@ -268,7 +268,7 @@
                 const lat = parseFloat(result.lat);
                 const lon = parseFloat(result.lon);
                 map.setView([lat, lon], 10);
-                L.marker([lat, lon]).addTo(map).bindPopup(result.display_name).openPopup();
+                L.marker([lat, lon]).addTo(map);
             }
         } catch (error) {
             console.error('No se pudo cargar la ubicación del perfil:', error);
