@@ -27,7 +27,7 @@
 
             <div class="acciones">
 
-                 <form action="/tpfinal_mvc/Editor/aceptarPregunta" method="POST">
+            <form action="/tpfinal_mvc/Editor/aceptarPregunta" method="POST">
                 <input type="hidden" name="id" value="{{id}}">
                 <input type="hidden" name="pregunta" value="{{pregunta}}">
                 <input type="hidden" name="respuestaCorrecta" value="{{respuestaCorrecta}}">
@@ -67,10 +67,8 @@
 
             <div class="acciones">
 
-                  <form action="/tpfinal_mvc/Editor/modificarPregunta" method="POST">
-                <input type="hidden" name="id" value="{{id}}">
-                <button>Modificar</button>
-            </form>
+                
+            <a href="/tpfinal_mvc/Editor/detallePregunta?id={{id_pregunta}}" ><button class="btn primary">Modificar</button></a>
 
             <form action="/tpfinal_mvc/Editor/marcarReporteComoVisto" method="POST">
                 <input type="hidden" name="id" value="{{id}}">

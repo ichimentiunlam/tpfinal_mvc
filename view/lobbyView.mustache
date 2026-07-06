@@ -53,7 +53,7 @@
                                         name="incorrecta3"
                                         placeholder="Respuesta incorrecta">
 
-                                           <p>Categoria</p>
+                                        <p>Categoria</p>
                                         <select name="id_tipo_pregunta" required>
                                                 <option value="">Seleccione una categoría</option>
 
@@ -86,41 +86,37 @@
 
 {{>footer}}
 <script>
-// Modal de crear pregunta
 const ModalBtn = document.getElementById("modalBtn");
 const crearModal = document.getElementById("crearModal");
 const closeModal = document.getElementById("closeModal");
 const cancelModal = document.getElementById("cancelModal");
 
-
-ModalBtn.addEventListener("click", () => {
-    crearModal.classList.add("active");
-});
-
-function cerrarModal(){
-    crearModal.classList.remove("active");
+if (ModalBtn && crearModal) {
+    ModalBtn.addEventListener("click", () => {
+        crearModal.classList.add("active");
+    });
 }
 
-closeModal.addEventListener("click", cerrarModal);
-cancelModal.addEventListener("click", cerrarModal);
-
-//Cerrar haciendo click afuera
-
-crearModal.addEventListener("click",(e)=>{
-
-    if(e.target===crearModal){
-        cerrarModal();
+function cerrarModal(){
+    if (crearModal) {
+        crearModal.classList.remove("active");
     }
+}
 
-});
+if (closeModal) closeModal.addEventListener("click", cerrarModal);
+if (cancelModal) cancelModal.addEventListener("click", cerrarModal);
 
-//Cerrar con ESC
+if (crearModal) {
+    crearModal.addEventListener("click",(e)=>{
+        if(e.target === crearModal){
+            cerrarModal();
+        }
+    });
+}
 
 document.addEventListener("keydown",(e)=>{
-
-    if(e.key==="Escape"){
+    if(e.key === "Escape"){
         cerrarModal();
     }
-
 });
 </script>

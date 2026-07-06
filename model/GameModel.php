@@ -100,7 +100,7 @@ class GameModel
     // ===================== Juego =====================
     public function obtenerPreguntaPorId($id)
     {
-        $sql = "SELECT p.id as id_pregunta, p.pregunta, p.id_tipo_pregunta, 
+        $sql = "SELECT p.id as id_pregunta, p.pregunta, p.id_tipo_pregunta, p.veces_respondida, p.veces_respondida_correctamente, 
                 
                 r1.respuesta as op1, r1.id as id1,
                 r2.respuesta as op2, r2.id as id2,
@@ -132,6 +132,8 @@ class GameModel
                 'pregunta' => $row['pregunta'],
                 'color' => $row['color'],
                 'tipo' => $row['tipo'],
+                'veces_respondida' => $row['veces_respondida'],
+                'veces_respondida_correctamente' => $row['veces_respondida_correctamente'],
                 'opciones' => $opciones
             ];
         }
@@ -444,4 +446,46 @@ class GameModel
 
         $this->database->execute($sql, [$id]);
     }
+
+    public function getTodasLasPreguntas(){
+        $dificultadSql = "CASE
+            WHEN p.veces_respondida = 0 THEN 1
+            ELSE ROUND((p.veces_respondida_correctamente / p.veces_respondida) * 100, 2)
+        END";
+
+        $sql = "SELECT p.*, tp.tipo, $dificultadSql AS porcentaje FROM preguntas p
+        JOIN tipos_pregunta tp ON p.id_tipo_pregunta = tp.id"; 
+
+        return $this->database->query($sql);
+    }
+
+     public function deletePregunta($id){
+         $sql = "DELETE FROM preguntas
+                WHERE id = ?";
+
+        $this->database->execute($sql, [$id]);
+    }
+
+    public function updatePregunta($datos){
+        $this->updateRespuesta($datos['respuestaCorrecta'], $datos['id_respuestaCorrecta']);
+
+        $this->updateRespuesta($datos['incorrecta1'], $datos['id_incorrecta1']);
+
+        $this->updateRespuesta($datos['incorrecta2'], $datos['id_incorrecta2']);
+
+        $this->updateRespuesta($datos['incorrecta3'], $datos['id_incorrecta3']);
+          
+        $sql = "UPDATE preguntas SET pregunta = ?, id_tipo_pregunta = ? WHERE id = ?";
+
+        $this->database->execute($sql, [$datos['nuevaPregunta'], $datos['id_tipo_pregunta'], $datos['id']
+        ]);
+    }
+
+    private function updateRespuesta($texto, $id)
+{
+    $sql = "UPDATE respuestas SET respuesta = ?
+            WHERE id = ?";
+
+    $this->database->execute($sql, [$texto, $id]);
+}
 }

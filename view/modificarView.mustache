@@ -1,5 +1,39 @@
 {{>header}}
-<main>
-hola modificar
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/modificar.css">
+
+<main class="modificarContainer">
+
+   <!--  <div class="buscador">
+        <input type="text" placeholder="Buscar pregunta...">
+    </div> -->
+
+    <section class="tablaPreguntas">
+
+        <div class="preguntasGrid head">
+            <div>N°</div>
+            <div>Pregunta</div>
+            <div>Categoría</div>
+            <div>Respondida</div>
+            <div>% Acierto</div>
+        </div>
+
+        {{#preguntas}}
+
+        <a href="/tpfinal_mvc/Editor/detallePregunta?id={{id}}" class="preguntasGrid fila">
+
+            <div>{{numero}}</div>
+
+            <div>{{pregunta}}</div>
+
+            <div>{{tipo}}</div>
+
+            <div>{{veces_respondida}}</div>
+
+            <div>{{porcentaje}}%</div>
+
+        </a>
+        {{/preguntas}}
+    </section>
 </main>
+
 {{>footer}}
