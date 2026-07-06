@@ -1,5 +1,7 @@
 {{>header}}
 <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/profile.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <style>
     .profileContainer {
@@ -112,6 +114,35 @@
         transform: none;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+
+    .locationMapBox {
+        margin-top: 20px;
+        padding: 14px 14px 14px 18px;
+        border: 1px solid rgba(124, 77, 255, 0.24);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .locationMapBox::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #7c4dff 0%, #a78bfa 100%);
+        border-radius: 0 6px 6px 0;
+    }
+
+    .profileMap {
+        height: 220px;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-top: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 </style>
 
 <section class="profileContainer">
@@ -168,6 +199,10 @@
         <p><strong>Ciudad:</strong> {{user.ciudad}}</p>
         <p><strong>País:</strong> {{user.pais}}</p>
         <p><strong>Año de nacimiento:</strong> {{user.anio_nacimiento}}</p>
+        <div class="locationMapBox">
+            <strong>Ubicacion</strong>
+            <div id="profileMap" class="profileMap" data-city="{{user.ciudad}}" data-country="{{user.pais}}"></div>
+	    </div>
         {{^readonly}}
         <div class="purchase-coins">
             <button id="buyCoinsButton" class="purchaseButton">Comprar 10 Coins ($1 USD)</button>
