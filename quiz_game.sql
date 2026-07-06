@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 05-07-2026 a las 07:22:55
+-- Tiempo de generación: 06-07-2026 a las 19:28:01
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -175,7 +175,7 @@ INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id
 (40, '¿Cuál es el elemento químico con símbolo W?', 157, 158, 159, 160, 10, 3, 5),
 (41, '¿Qué actor interpretó a Iron Man en el UCM?', 161, 162, 163, 164, 11, 3, 6),
 (42, '¿Cuál fue la primera consola de Nintendo lanzada internacionalmente?', 165, 166, 167, 168, 10, 3, 6),
-(45, 'Cuanto es 2 + 2', 181, 182, 183, 184, 1, 1, 5);
+(46, 'Mi mama no me mima', 185, 186, 187, 188, 0, 0, 5);
 
 -- --------------------------------------------------------
 
@@ -219,7 +219,7 @@ CREATE TABLE `preguntas_sugeridas` (
 --
 
 INSERT INTO `preguntas_sugeridas` (`id`, `pregunta`, `respuestaCorrecta`, `respuestaIncorrecta1`, `respuestaIncorrecta2`, `respuestaIncorrecta3`, `id_tipo_pregunta`) VALUES
-(6, 'Mimamamemima', 'si', 'no', 'un poco', 'terrible', 2);
+(10, 'Mimama', 'si', 'no', 'para nada', 'terrible', 1);
 
 -- --------------------------------------------------------
 
@@ -409,7 +409,11 @@ INSERT INTO `respuestas` (`id`, `respuesta`, `es_correcta`) VALUES
 (181, '4', 1),
 (182, '1', 0),
 (183, '2', 0),
-(184, '3', 0);
+(184, '3', 0),
+(185, 'Si me mima', 1),
+(186, 'no me mima', 0),
+(187, 'me mima un poco', 0),
+(188, 'Soy homero chino', 0);
 
 -- --------------------------------------------------------
 
@@ -599,7 +603,7 @@ ALTER TABLE `estados_reporte`
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_reportadas`
@@ -611,13 +615,13 @@ ALTER TABLE `preguntas_reportadas`
 -- AUTO_INCREMENT de la tabla `preguntas_sugeridas`
 --
 ALTER TABLE `preguntas_sugeridas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_pregunta`
