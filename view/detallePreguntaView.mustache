@@ -1,0 +1,150 @@
+{{>header}}
+
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/correo.css">
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/lobby.css">
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/modificar.css">
+
+
+<main class="detalleContainer">
+    <section class="panel">
+        {{#pregunta}}
+        <div class="cardPregunta">
+            <h3>{{pregunta}}</h3>
+            
+            {{#opciones}}
+            <div class="respuestas">
+                <p class="respuesta">{{texto}}</p>
+            </div>
+            {{/opciones}}
+
+            <span class="categoria">{{tipo}}</span>
+            <p>Veces respondida: {{veces_respondida}}</p>
+            <p>Veces Respondida correctamente: {{veces_respondida_correctamente}}</p>
+
+            <div class="botones">
+                <button id="modalBtn" type="button">
+                <span class="btn primary">Modificar</span>
+                </button>
+
+                <form action="/tpfinal_mvc/Editor/eliminarPregunta" method="POST">
+                <input type="hidden" name="id" value="{{id}}">
+                <button type="button"  style="background:none;border:none;padding:0;" ><span class="btn secondary" style="backgroud: none;">Eliminar</span></button>
+                </form>
+                <a class="btn" style="color: white" href="/tpfinal_mvc/Editor/modificar">Volver</a>
+            </div>
+                {{/pregunta}}
+        </div>
+    </section>
+    
+   
+
+    
+    <div id="crearModal" class="modal">
+         <div class="modal-box">
+            <button class="close-modal" id="closeModal">
+            <i class="bi bi-x-lg"></i>
+            </button>
+            <h3>Modificar Pregunta</h3>
+            <form action="/tpfinal_mvc/Editor/modificarPregunta" method="POST">
+                <input type="hidden" name="id" value="{{id}}">
+                <input type="hidden" name="id_respuestaCorrecta" value="{{pregunta.id_respuestaCorrecta}}">
+                <input type="hidden" name="id_incorrecta1" value="{{pregunta.id_incorrecta1}}">
+                <input type="hidden" name="id_incorrecta2" value="{{pregunta.id_incorrecta2}}">
+                <input type="hidden" name="id_incorrecta3" value="{{pregunta.id_incorrecta3}}">
+
+
+                <input
+                type="text"
+                name="nuevaPregunta"
+                class="inputPregunta"
+                value="{{pregunta.pregunta}}">
+                                        
+                <p>Opcion correcta</p>
+
+                <input
+                type="text"
+                name="respuestaCorrecta"
+                value="{{pregunta.respuestaCorrecta}}">
+
+                <p>Opciones Incorrectas</p>
+                                        
+                <input
+                type="text"
+                name="incorrecta1"
+                value="{{pregunta.incorrecta1}}">
+                                        
+                <input
+                type="text"
+                name="incorrecta2"
+                value="{{pregunta.incorrecta2}}">
+                                        
+                <input
+                type="text"
+                name="incorrecta3"
+                value="{{pregunta.incorrecta3}}">
+
+                <p>Categoria</p>
+                <select name="id_tipo_pregunta" required>
+                    {{#categorias}}
+                    <option value="{{id}}">
+                    {{tipo}}
+                    </option>
+                    {{/categorias}}
+                </select>
+                    <div class="modal-actions">
+                        <button
+                        type="button"
+                        id="cancelModal"
+                        class="btn-report secondary">
+                        Cancelar
+                        </button>
+                        <button
+                        type="submit"
+                        class="btn-report primary">
+                        Modificar
+                        </button>
+                    </div>
+            </form>
+         </div>
+    </div>
+</main>
+{{>footer}}
+
+
+<script>
+const ModalBtn = document.getElementById("modalBtn");
+const crearModal = document.getElementById("crearModal");
+const closeModal = document.getElementById("closeModal");
+const cancelModal = document.getElementById("cancelModal");
+
+if (ModalBtn && crearModal) {
+    ModalBtn.addEventListener("click", () => {
+        crearModal.classList.add("active");
+    });
+}
+
+function cerrarModal(){
+    if (crearModal) {
+        crearModal.classList.remove("active");
+    }
+}
+
+if (closeModal) closeModal.addEventListener("click", cerrarModal);
+if (cancelModal) cancelModal.addEventListener("click", cerrarModal);
+
+if (crearModal) {
+    crearModal.addEventListener("click",(e)=>{
+        if(e.target === crearModal){
+            cerrarModal();
+        }
+    });
+}
+
+document.addEventListener("keydown",(e)=>{
+    if(e.key === "Escape"){
+        cerrarModal();
+    }
+});
+</script>
+
+
