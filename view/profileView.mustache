@@ -1,5 +1,7 @@
 {{>header}}
 <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/profile.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <style>
     .profileContainer {
@@ -112,6 +114,35 @@
         transform: none;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
+
+    .locationMapBox {
+        margin-top: 20px;
+        padding: 14px 14px 14px 18px;
+        border: 1px solid rgba(124, 77, 255, 0.24);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .locationMapBox::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #7c4dff 0%, #a78bfa 100%);
+        border-radius: 0 6px 6px 0;
+    }
+
+    .profileMap {
+        height: 220px;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-top: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 </style>
 
 <section class="profileContainer">
@@ -152,12 +183,26 @@
         </div>
     </div>
 
+<div class="perfil-qr-section" style="margin: 30px auto; padding: 20px; text-align: center; border: 1px solid #eee; border-radius: 15px; max-width: 300px;">
+    <h3 style="margin-bottom: 15px; font-size: 1.2rem; color: #333;">Comparte mi perfil</h3>
+    
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://preguntados.rf.gd/tpfinal_mvc/User/verPerfil?id={{id}}" 
+         alt="QR Perfil" 
+         style="border: 2px solid #ddd; padding: 5px; border-radius: 8px;">
+    
+    <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">Escanea para ver mi perfil</p>
+</div>
+
     <div class="profileInfo">
         <p><strong>Nombre:</strong> {{user.nombre}} {{user.apellido}}</p>
         <p><strong>Correo:</strong> {{user.email}}</p>
         <p><strong>Ciudad:</strong> {{user.ciudad}}</p>
         <p><strong>País:</strong> {{user.pais}}</p>
         <p><strong>Año de nacimiento:</strong> {{user.anio_nacimiento}}</p>
+        <div class="locationMapBox">
+            <strong>Ubicacion</strong>
+            <div id="profileMap" class="profileMap" data-city="{{user.ciudad}}" data-country="{{user.pais}}"></div>
+	    </div>
         {{^readonly}}
         <div class="purchase-coins">
             <button id="buyCoinsButton" class="purchaseButton">Comprar 10 Coins ($1 USD)</button>
@@ -194,5 +239,39 @@
                 buyButton.textContent = 'Comprar 10 Trampitas ($1 USD)';
             }
         });
+    });
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const mapContainer = document.getElementById('profileMap');
+        if (!mapContainer || typeof L === 'undefined') return;
+
+        const map = L.map('profileMap').setView([0, 0], 2);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const city = mapContainer.dataset.city || '';
+        const country = mapContainer.dataset.country || '';
+        const query = [city, country].filter(Boolean).join(', ');
+
+        if (!query) {
+            map.setView([20, 0], 2);
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=${encodeURIComponent(query)}`);
+            const data = await response.json();
+
+            if (data && data.length) {
+                const result = data[0];
+                const lat = parseFloat(result.lat);
+                const lon = parseFloat(result.lon);
+                map.setView([lat, lon], 10);
+                L.marker([lat, lon]).addTo(map);
+            }
+        } catch (error) {
+            console.error('No se pudo cargar la ubicación del perfil:', error);
+        }
     });
 </script>

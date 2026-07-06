@@ -230,7 +230,7 @@ class GameController
         $this->render('ruletaView', $data);
     }
 
-    public function jugar()
+public function jugar()
     {
         $this->ensureSession();
 
@@ -250,6 +250,7 @@ class GameController
             $dificultadMin = $this->obtenerDificultadMin($_SESSION['partida']['puntaje'] ?? 0);
             $dificultadMax = $this->obtenerDificultadMax($_SESSION['partida']['puntaje'] ?? 0);
             $pregunta = $this->model->obtenerPreguntaAleatoriaDeUnTipo($idTipo, $preguntasRespondidas, $dificultadMax, $dificultadMin);
+            
             if ($pregunta === null) { //Si no encontro pregunta se borran las respondidas
                 $_SESSION['partida']['preguntas_respondidas'] = null;
                 $preguntasRespondidas = $_SESSION['partida']['preguntas_respondidas'];
@@ -259,6 +260,9 @@ class GameController
                 }
             }
             $_SESSION['partida']['id_pregunta_actual'] = $pregunta['id_pregunta'];
+            
+            //  NUEVO: GUARDAMOS LA HORA EXACTA EN LA QUE EMPEZÓ LA PREGUNTA 
+            $_SESSION['partida']['timestamp_inicio_pregunta'] = time();
         }
 
         if (empty($_SESSION['partida']['id_pregunta_actual'])) {
@@ -273,6 +277,20 @@ class GameController
             return;
         }
 
+        // --- NUEVO: CALCULAMOS CUÁNTO TIEMPO PASÓ REALMENTE ---
+        $tiempo_base = $_SESSION['partida']['tiempo_limite'] ?? 60;
+        //  fallback a time() por si es la primera vez que entra a la variable
+        $timestamp_inicio = $_SESSION['partida']['timestamp_inicio_pregunta'] ?? time(); 
+        $segundos_pasados = time() - $timestamp_inicio;
+        $tiempo_restante = $tiempo_base - $segundos_pasados;
+
+        // Si recargó la página (F5) pero ya se le había acabado el tiempo real:
+        if ($tiempo_restante <= 0) {
+            Redirect::to('/tpfinal_mvc/Game/timeout');
+            return;
+        }
+
+        
         $data = $preguntaData;
         $data['puntaje'] = $_SESSION['partida']['puntaje'] ?? 0;
         $data['coins'] = $this->getCurrentUserEmail() ? $this->model->obtenerMonedasUsuarioPorEmail($this->getCurrentUserEmail()) : 0;
@@ -280,16 +298,18 @@ class GameController
         $data['comodin_change_used'] = $_SESSION['partida']['comodin_change_used'] ?? false;
         $data['comodin_5050_used'] = $_SESSION['partida']['comodin_5050_usado'] ?? false;
         $data['comodin_5050_activo'] = $_SESSION['partida']['comodin_5050_activo'] ?? false;
-        $data['mensaje'] = $_SESSION['partida']['mensaje'];
+        $data['mensaje'] = $_SESSION['partida']['mensaje'] ?? null;
         $_SESSION['partida']['mensaje'] = null;
+        
         if (!empty($_SESSION['partida']['comodin_5050_activo']) && $_SESSION['partida']['comodin_5050_pregunta'] === $_SESSION['partida']['id_pregunta_actual']) {
             $data['opciones'] = $_SESSION['partida']['comodin_5050_opciones'];
         }
-        $data['tiempo_limite'] = $_SESSION['partida']['tiempo_limite'] ?? 60; // Si es null, pone 60 por defecto
+        
+        
+        $data['tiempo_limite'] = $tiempo_restante; 
+        
         $data['show_time_bonus'] = !empty($_SESSION['partida']['show_time_bonus']);
         unset($_SESSION['partida']['show_time_bonus']);
-
-
 
         $this->render('gameView', $data);
     }
