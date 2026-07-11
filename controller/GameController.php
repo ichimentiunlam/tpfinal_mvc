@@ -149,9 +149,16 @@ class GameController extends BaseController
             $_SESSION['partida']['id_tipo'] = 1;
         }
 
-        $data = $this->model->obtenerTipoPorId($_SESSION['partida']['id_tipo']);
+        $tipoActual = $this->model->obtenerTipoPorId($_SESSION['partida']['id_tipo']);
 
-        $this->render('ruletaView', $data);
+        $categorias = $this->model->getTipoPregunta();
+
+        $this->render('ruletaView', [
+            'id_tipo' => $tipoActual['id_tipo'],
+            'tipo_pregunta' => $tipoActual['tipo_pregunta'],
+            'color' => $tipoActual['color'],
+            'categorias' => $categorias
+        ]);
     }
 
 public function jugar()
@@ -476,25 +483,39 @@ public function jugar()
     public function sugerirPregunta(){
         $this->ensureSession();
 
-        
-        $pregunta = $this->request->post('nuevaPregunta');
-        $respuestaCorrecta = $this->request->post('respuestaCorrecta');
-        $respuestaIncorrecta1 = $this->request->post('incorrecta1');
-        $respuestaIncorrecta2 = $this->request->post('incorrecta2');
-        $respuestaIncorrecta3 = $this->request->post('incorrecta3');
-        $id_tipo_pregunta = $this->request->post('id_tipo_pregunta');
+        $datos = [
+        "pregunta" => $this->request->post('nuevaPregunta'),
+        "respuestaCorrecta" => $this->request->post('respuestaCorrecta'),
+        "respuestaIncorrecta1" => $this->request->post('incorrecta1'),
+        "respuestaIncorrecta2" => $this->request->post('incorrecta2'),
+        "respuestaIncorrecta3" => $this->request->post('incorrecta3'),
+        "id_tipo_pregunta"=> $this->request->post('id_tipo_pregunta')
+        ];
 
-        if($pregunta == null || $respuestaCorrecta == null || 
-        $respuestaIncorrecta1 == null || 
-        $respuestaIncorrecta2 == null || 
-        $respuestaIncorrecta3 == null || 
-        $id_tipo_pregunta == null){
+        $nombreCategoria = $this->request->post('nombreCategoria');
+        $colorCategoria = $this->request->post('colorCategoria');
+        
+        if($datos['pregunta'] == null || $datos['respuestaCorrecta'] == null || 
+        $datos['respuestaIncorrecta1'] == null || 
+        $datos['respuestaIncorrecta2'] == null || 
+        $datos['respuestaIncorrecta3'] == null || 
+        $datos['id_tipo_pregunta'] == null){
             $_SESSION['partida']['mensaje'] = "Se deben llenar todos los campos";
             Redirect::to('/tpfinal_mvc/Game/lobby');
             return;
         }
 
-        $this->model->createPreguntaSugerida($pregunta, $respuestaCorrecta, $respuestaIncorrecta1, $respuestaIncorrecta2, $respuestaIncorrecta3, $id_tipo_pregunta);
+        if($datos['id_tipo_pregunta'] == null && $nombreCategoria == null){
+            $_SESSION['partida']['mensaje'] = "Se deben elegir categoria";
+            Redirect::to('/tpfinal_mvc/Game/lobby');
+            return;
+        }
+        //El value de la option "nueva categoria" es nueva
+        if($datos['id_tipo_pregunta'] == 'nueva'){
+            $datos['id_tipo_pregunta'] = $this->model->createCategoriaSugerida($nombreCategoria, $colorCategoria);
+        }
+
+        $this->model->createPreguntaSugerida($datos);
 
         $_SESSION['partida']['mensaje'] = "¡Gracias! Tu pregunta fue sugerida correctamente.";
 

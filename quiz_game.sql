@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 06-07-2026 a las 19:28:01
+-- Tiempo de generación: 11-07-2026 a las 03:26:06
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -94,6 +94,25 @@ INSERT INTO `compras_simuladas` (`id`, `user_email`, `amount_usd`, `coins_bought
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `estados_preguntas`
+--
+
+CREATE TABLE `estados_preguntas` (
+  `id` int(11) NOT NULL,
+  `estado` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `estados_preguntas`
+--
+
+INSERT INTO `estados_preguntas` (`id`, `estado`) VALUES
+(1, 'aceptada'),
+(2, 'sugerida');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `estados_reporte`
 --
 
@@ -113,6 +132,25 @@ INSERT INTO `estados_reporte` (`id`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `estados_tipo_pregunta`
+--
+
+CREATE TABLE `estados_tipo_pregunta` (
+  `id` int(11) NOT NULL,
+  `estado` varchar(60) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `estados_tipo_pregunta`
+--
+
+INSERT INTO `estados_tipo_pregunta` (`id`, `estado`) VALUES
+(1, 'aceptada'),
+(2, 'sugerida');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `preguntas`
 --
 
@@ -125,57 +163,58 @@ CREATE TABLE `preguntas` (
   `id_respuesta4` int(11) NOT NULL,
   `veces_respondida` int(11) NOT NULL DEFAULT 0,
   `veces_respondida_correctamente` int(11) NOT NULL DEFAULT 0,
-  `id_tipo_pregunta` int(11) NOT NULL
+  `id_tipo_pregunta` int(11) NOT NULL,
+  `id_estado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `preguntas`
 --
 
-INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id_respuesta3`, `id_respuesta4`, `veces_respondida`, `veces_respondida_correctamente`, `id_tipo_pregunta`) VALUES
-(1, '¿En qué año comenzó la Segunda Guerra Mundial?', 1, 2, 3, 4, 2, 0, 1),
-(2, '¿Quién fue el primer presidente de Argentina?', 5, 6, 7, 8, 6, 4, 1),
-(3, '¿Qué civilización construyó las pirámides de Giza?', 9, 10, 11, 12, 1, 0, 1),
-(4, '¿En qué año cayó el Imperio Romano de Occidente?', 13, 14, 15, 16, 1, 0, 1),
-(5, '¿Quién descubrió América en 1492?', 17, 18, 19, 20, 2, 1, 1),
-(6, '¿Cuál es el río más largo del mundo?', 21, 22, 23, 24, 1, 0, 2),
-(7, '¿Cuál es la capital de Australia?', 25, 26, 27, 28, 1, 0, 2),
-(8, '¿En qué continente está Egipto?', 29, 30, 31, 32, 2, 0, 2),
-(9, '¿Cuál es el país más grande del mundo?', 33, 34, 35, 36, 8, 5, 2),
-(10, '¿Cuál es el océano más grande?', 37, 38, 39, 40, 2, 1, 2),
-(11, '¿Cuántos jugadores tiene un equipo de fútbol?', 41, 42, 43, 44, 29, 23, 3),
-(12, '¿Quién ganó el Mundial 2022?', 45, 46, 47, 48, 1, 0, 3),
-(13, '¿En qué deporte se usa raqueta?', 49, 50, 51, 52, 1, 0, 3),
-(14, '¿Cuántos sets tiene un Grand Slam masculino?', 53, 54, 55, 56, 1, 0, 3),
-(15, '¿Qué deporte practica Messi?', 57, 58, 59, 60, 2, 1, 3),
-(16, '¿Quién pintó la Mona Lisa?', 61, 62, 63, 64, 2, 0, 4),
-(17, '¿En qué movimiento participó Picasso?', 65, 66, 67, 68, 1, 0, 4),
-(18, '¿Quién pintó La noche estrellada?', 69, 70, 71, 72, 1, 0, 4),
-(19, '¿Cuál es una obra de Leonardo da Vinci?', 73, 74, 75, 76, 4, 2, 4),
-(20, '¿Qué estilo usa formas geométricas?', 77, 78, 79, 80, 4, 2, 4),
-(21, '¿Cuál es el planeta más cercano al Sol?', 81, 82, 83, 84, 12, 9, 5),
-(22, '¿Qué gas respiramos principalmente?', 85, 86, 87, 88, 1, 0, 5),
-(23, '¿Cuántos estados de la materia clásica existen?', 89, 90, 91, 92, 1, 0, 5),
-(24, '¿Qué órgano bombea la sangre?', 93, 94, 95, 96, 16, 12, 5),
-(25, '¿Unidad de fuerza?', 97, 98, 99, 100, 1, 0, 5),
-(26, '¿Quién creó Mickey Mouse?', 101, 102, 103, 104, 4, 1, 6),
-(27, '¿Saga de Harry Potter?', 105, 106, 107, 108, 1, 0, 6),
-(28, '¿Empresa creadora de PlayStation?', 109, 110, 111, 112, 2, 1, 6),
-(29, '¿Juego más vendido de la historia?', 113, 114, 115, 116, 6, 4, 6),
-(30, '¿Plataforma de streaming?', 117, 118, 119, 120, 3, 1, 6),
-(31, '¿Qué tratado puso fin a la Guerra de los Treinta Años?', 121, 122, 123, 124, 10, 3, 1),
-(32, '¿Quién fue el último emperador del Imperio Bizantino?', 125, 126, 127, 128, 11, 3, 1),
-(33, '¿Cuál es la capital de Kazajistán?', 129, 130, 131, 132, 11, 3, 2),
-(34, '¿Qué país posee la mayor parte de la selva amazónica?', 133, 134, 135, 136, 11, 3, 2),
-(35, '¿En qué ciudad se celebraron los Juegos Olímpicos de 1992?', 137, 138, 139, 140, 10, 3, 3),
-(36, '¿Qué tenista ganó más títulos de Roland Garros?', 141, 142, 143, 144, 10, 3, 3),
-(37, '¿Quién pintó Las Meninas?', 145, 146, 147, 148, 11, 3, 4),
-(38, '¿A qué movimiento pertenecía Salvador Dalí?', 149, 150, 151, 152, 10, 3, 4),
-(39, '¿Qué científico propuso las leyes del movimiento planetario?', 153, 154, 155, 156, 10, 3, 5),
-(40, '¿Cuál es el elemento químico con símbolo W?', 157, 158, 159, 160, 10, 3, 5),
-(41, '¿Qué actor interpretó a Iron Man en el UCM?', 161, 162, 163, 164, 11, 3, 6),
-(42, '¿Cuál fue la primera consola de Nintendo lanzada internacionalmente?', 165, 166, 167, 168, 10, 3, 6),
-(46, 'Mi mama no me mima', 185, 186, 187, 188, 0, 0, 5);
+INSERT INTO `preguntas` (`id`, `pregunta`, `id_respuesta1`, `id_respuesta2`, `id_respuesta3`, `id_respuesta4`, `veces_respondida`, `veces_respondida_correctamente`, `id_tipo_pregunta`, `id_estado`) VALUES
+(1, '¿En qué año comenzó la Segunda Guerra Mundial?', 1, 2, 3, 4, 2, 0, 1, 1),
+(2, '¿Quién fue el primer presidente de Argentina?', 5, 6, 7, 8, 6, 4, 1, 1),
+(3, '¿Qué civilización construyó las pirámides de Giza?', 9, 10, 11, 12, 2, 1, 1, 1),
+(4, '¿En qué año cayó el Imperio Romano de Occidente?', 13, 14, 15, 16, 2, 0, 1, 1),
+(5, '¿Quién descubrió América en 1492?', 17, 18, 19, 20, 3, 2, 1, 1),
+(6, '¿Cuál es el río más largo del mundo?', 21, 22, 23, 24, 2, 1, 2, 1),
+(7, '¿Cuál es la capital de Australia?', 25, 26, 27, 28, 2, 1, 2, 1),
+(9, '¿Cuál es el país más grande del mundo?', 33, 34, 35, 36, 8, 5, 2, 1),
+(10, '¿Cuál es el océano más grande?', 37, 38, 39, 40, 3, 1, 2, 1),
+(11, '¿Cuántos jugadores tiene un equipo de fútbol?', 41, 42, 43, 44, 34, 28, 3, 1),
+(12, '¿Quién ganó el Mundial 2022?', 45, 46, 47, 48, 1, 0, 3, 1),
+(13, '¿En qué deporte se usa raqueta?', 49, 50, 51, 52, 1, 0, 3, 1),
+(14, '¿Cuántos sets tiene un Grand Slam masculino?', 53, 54, 55, 56, 1, 0, 3, 1),
+(15, '¿Qué deporte practica Messi?', 57, 58, 59, 60, 2, 1, 3, 1),
+(16, '¿Quién pintó la Mona Lisa?', 61, 62, 63, 64, 2, 0, 4, 1),
+(17, '¿En qué movimiento participó Picasso?', 65, 66, 67, 68, 1, 0, 4, 1),
+(18, '¿Quién pintó La noche estrellada?', 69, 70, 71, 72, 3, 1, 4, 1),
+(19, '¿Cuál es una obra de Leonardo da Vinci?', 73, 74, 75, 76, 5, 2, 4, 1),
+(20, '¿Qué estilo usa formas geométricas?', 77, 78, 79, 80, 5, 3, 4, 1),
+(21, '¿Cuál es el planeta más cercano al Sol?', 81, 82, 83, 84, 13, 10, 5, 1),
+(22, '¿Qué gas respiramos principalmente?', 85, 86, 87, 88, 1, 0, 5, 1),
+(23, '¿Cuántos estados de la materia clásica existen?', 89, 90, 91, 92, 1, 0, 5, 1),
+(24, '¿Qué órgano bombea la sangre?', 93, 94, 95, 96, 18, 14, 5, 1),
+(25, '¿Unidad de fuerza?', 97, 98, 99, 100, 1, 0, 5, 1),
+(26, '¿Quién creó Mickey Mouse?', 101, 102, 103, 104, 6, 3, 6, 1),
+(27, '¿Saga de Harry Potter?', 105, 106, 107, 108, 3, 1, 6, 1),
+(28, '¿Empresa creadora de PlayStation?', 109, 110, 111, 112, 3, 2, 6, 1),
+(29, '¿Juego más vendido de la historia?', 113, 114, 115, 116, 7, 4, 6, 1),
+(30, '¿Plataforma de streaming?', 117, 118, 119, 120, 6, 3, 6, 1),
+(31, '¿Qué tratado puso fin a la Guerra de los Treinta Años?', 121, 122, 123, 124, 11, 3, 1, 1),
+(32, '¿Quién fue el último emperador del Imperio Bizantino?', 125, 126, 127, 128, 12, 4, 1, 1),
+(33, '¿Cuál es la capital de Kazajistán?', 129, 130, 131, 132, 13, 3, 2, 1),
+(34, '¿Qué país posee la mayor parte de la selva amazónica?', 133, 134, 135, 136, 13, 4, 2, 1),
+(35, '¿En qué ciudad se celebraron los Juegos Olímpicos de 1992?', 137, 138, 139, 140, 10, 3, 3, 1),
+(36, '¿Qué tenista ganó más títulos de Roland Garros?', 141, 142, 143, 144, 10, 3, 3, 1),
+(37, '¿Quién pintó Las Meninas?', 145, 146, 147, 148, 12, 4, 4, 1),
+(38, '¿A qué movimiento pertenecía Salvador Dalí?', 149, 150, 151, 152, 11, 3, 4, 1),
+(39, '¿Qué científico propuso las leyes del movimiento planetario?', 153, 154, 155, 156, 10, 3, 5, 1),
+(40, '¿Cuál es el elemento químico con símbolo W?', 157, 158, 159, 160, 10, 3, 5, 1),
+(41, '¿Qué actor interpretó a Iron Man en el UCM?', 161, 162, 163, 164, 11, 3, 6, 1),
+(42, '¿Cuál fue la primera consola de Nintendo lanzada internacionalmente?', 165, 166, 167, 168, 10, 3, 6, 1),
+(50, '¿Quien era el capitán del barco Beagle?', 205, 206, 207, 208, 0, 0, 1, 2),
+(51, '¿Que EVA pilota Shinji Ikary en Evangelion?', 209, 210, 211, 212, 0, 0, 9, 2);
 
 -- --------------------------------------------------------
 
@@ -197,29 +236,6 @@ CREATE TABLE `preguntas_reportadas` (
 
 INSERT INTO `preguntas_reportadas` (`id`, `motivo`, `id_pregunta`, `mail_usuario`, `id_estado`) VALUES
 (7, '                Es malisima', 20, 'testy@mail.com', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `preguntas_sugeridas`
---
-
-CREATE TABLE `preguntas_sugeridas` (
-  `id` int(11) NOT NULL,
-  `pregunta` varchar(90) NOT NULL,
-  `respuestaCorrecta` varchar(90) NOT NULL,
-  `respuestaIncorrecta1` varchar(90) NOT NULL,
-  `respuestaIncorrecta2` varchar(90) NOT NULL,
-  `respuestaIncorrecta3` varchar(90) NOT NULL,
-  `id_tipo_pregunta` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `preguntas_sugeridas`
---
-
-INSERT INTO `preguntas_sugeridas` (`id`, `pregunta`, `respuestaCorrecta`, `respuestaIncorrecta1`, `respuestaIncorrecta2`, `respuestaIncorrecta3`, `id_tipo_pregunta`) VALUES
-(10, 'Mimama', 'si', 'no', 'para nada', 'terrible', 1);
 
 -- --------------------------------------------------------
 
@@ -410,10 +426,26 @@ INSERT INTO `respuestas` (`id`, `respuesta`, `es_correcta`) VALUES
 (182, '1', 0),
 (183, '2', 0),
 (184, '3', 0),
-(185, 'Si me mima', 1),
-(186, 'no me mima', 0),
-(187, 'me mima un poco', 0),
-(188, 'Soy homero chino', 0);
+(193, 'EVA-01', 1),
+(194, 'EVA-02', 0),
+(195, 'EVA-03', 0),
+(196, 'EVA-04', 0),
+(197, 'EVA-01', 1),
+(198, 'EVA-02', 0),
+(199, 'EVA-03', 0),
+(200, 'EVA-04', 0),
+(201, 'EVA-01', 1),
+(202, 'EVA-02', 0),
+(203, 'EVA-03', 0),
+(204, 'EVA-04', 0),
+(205, 'Robert FitzRoy', 1),
+(206, 'Charles Darwin', 0),
+(207, 'Cristobal Colon', 0),
+(208, 'Americo Vespucio', 0),
+(209, 'EVA-01', 1),
+(210, 'EVA-02', 0),
+(211, 'EVA-03', 0),
+(212, 'EVA-04', 0);
 
 -- --------------------------------------------------------
 
@@ -424,20 +456,22 @@ INSERT INTO `respuestas` (`id`, `respuesta`, `es_correcta`) VALUES
 CREATE TABLE `tipos_pregunta` (
   `id` int(11) NOT NULL,
   `tipo` varchar(60) NOT NULL,
-  `color` varchar(60) NOT NULL DEFAULT '#3B82F6'
+  `color` varchar(60) NOT NULL DEFAULT '#3B82F6',
+  `id_estado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipos_pregunta`
 --
 
-INSERT INTO `tipos_pregunta` (`id`, `tipo`, `color`) VALUES
-(1, 'Historia', '#3B82F6'),
-(2, 'Geografia', '#10B981'),
-(3, 'Deportes', '#8B5CF6'),
-(4, 'Arte', '#EF4444'),
-(5, 'Ciencia', '#F5C700'),
-(6, 'Entretenimiento', '#F57400');
+INSERT INTO `tipos_pregunta` (`id`, `tipo`, `color`, `id_estado`) VALUES
+(1, 'Historia', '#3B82F6', 1),
+(2, 'Geografia', '#10B981', 1),
+(3, 'Deportes', '#8B5CF6', 1),
+(4, 'Arte', '#EF4444', 1),
+(5, 'Ciencia', '#F5C700', 1),
+(6, 'Entretenimiento', '#F57400', 1),
+(9, 'Anime', '#dd55c4', 2);
 
 -- --------------------------------------------------------
 
@@ -512,7 +546,7 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `anio_nacimiento`, `sexo`, `
 (36, 'Mariana', 'Diaz', 1997, '', 'La Rioja', 'Argentina', 'mari@mail.com', 1, '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'mari_d', 'avatar20.jpg', '2026-06-25 13:00:00', 24, 60, 48, 2, 11),
 (37, 'Borrame', '123', 1234, 'M', 'Avellaneda', 'Argentina', 'fajifo7166@icotz.com', 0, '$2y$10$ZgBs/dTcbq96qrrD8bMo0.4zp5BCk6u9tiZMDS2IprUorwzKga9jS', '123', NULL, '2026-07-02 17:08:45', 0, 0, 0, 1, 0),
 (38, 'Ed', 'Itor', 9999, 'M', 'Tucuman', 'Argentina', 'editor@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'editor', NULL, '2026-07-02 17:45:34', 0, 0, 0, 2, 10),
-(39, 'Admini', 'Strador', 4331, 'F', 'Tucuman', 'Argentina', 'admin@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Admin', NULL, '2026-07-02 17:45:34', 2, 4, 3, 3, 10);
+(39, 'Admini', 'Strador', 4331, 'F', 'Tucuman', 'Argentina', 'admin@mail.com', 1, '$2y$10$2JGqVwzZZnMlxrl54zrHJ.AOTGLkzVRpOuePEYqmflVhiadxGh05q', 'Admin', NULL, '2026-07-02 17:45:34', 7, 57, 42, 3, 10);
 
 --
 -- Índices para tablas volcadas
@@ -526,9 +560,21 @@ ALTER TABLE `compras_simuladas`
   ADD KEY `user_email` (`user_email`);
 
 --
+-- Indices de la tabla `estados_preguntas`
+--
+ALTER TABLE `estados_preguntas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `estados_reporte`
 --
 ALTER TABLE `estados_reporte`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `estados_tipo_pregunta`
+--
+ALTER TABLE `estados_tipo_pregunta`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -540,7 +586,8 @@ ALTER TABLE `preguntas`
   ADD KEY `respuesta1` (`id_respuesta1`),
   ADD KEY `respuesta2` (`id_respuesta2`),
   ADD KEY `respuesta3` (`id_respuesta3`),
-  ADD KEY `respuesta4` (`id_respuesta4`);
+  ADD KEY `respuesta4` (`id_respuesta4`),
+  ADD KEY `fk_id_estado` (`id_estado`);
 
 --
 -- Indices de la tabla `preguntas_reportadas`
@@ -549,12 +596,6 @@ ALTER TABLE `preguntas_reportadas`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_id_pregunta` (`id_pregunta`),
   ADD KEY `estado_reporte_fk` (`id_estado`);
-
---
--- Indices de la tabla `preguntas_sugeridas`
---
-ALTER TABLE `preguntas_sugeridas`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `respuestas`
@@ -566,7 +607,8 @@ ALTER TABLE `respuestas`
 -- Indices de la tabla `tipos_pregunta`
 --
 ALTER TABLE `tipos_pregunta`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_estado_tipos_pregunta` (`id_estado`);
 
 --
 -- Indices de la tabla `tipos_usuario`
@@ -594,16 +636,28 @@ ALTER TABLE `compras_simuladas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
+-- AUTO_INCREMENT de la tabla `estados_preguntas`
+--
+ALTER TABLE `estados_preguntas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `estados_reporte`
 --
 ALTER TABLE `estados_reporte`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT de la tabla `estados_tipo_pregunta`
+--
+ALTER TABLE `estados_tipo_pregunta`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_reportadas`
@@ -612,22 +666,16 @@ ALTER TABLE `preguntas_reportadas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `preguntas_sugeridas`
---
-ALTER TABLE `preguntas_sugeridas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=189;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_pregunta`
 --
 ALTER TABLE `tipos_pregunta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_usuario`
@@ -649,6 +697,7 @@ ALTER TABLE `usuarios`
 -- Filtros para la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
+  ADD CONSTRAINT `fk_id_estado` FOREIGN KEY (`id_estado`) REFERENCES `estados_preguntas` (`id`),
   ADD CONSTRAINT `respuesta1` FOREIGN KEY (`id_respuesta1`) REFERENCES `respuestas` (`id`),
   ADD CONSTRAINT `respuesta2` FOREIGN KEY (`id_respuesta2`) REFERENCES `respuestas` (`id`),
   ADD CONSTRAINT `respuesta3` FOREIGN KEY (`id_respuesta3`) REFERENCES `respuestas` (`id`),
@@ -661,6 +710,12 @@ ALTER TABLE `preguntas`
 ALTER TABLE `preguntas_reportadas`
   ADD CONSTRAINT `estado_reporte_fk` FOREIGN KEY (`id_estado`) REFERENCES `estados_reporte` (`id`),
   ADD CONSTRAINT `fk_id_pregunta` FOREIGN KEY (`id_pregunta`) REFERENCES `preguntas` (`id`);
+
+--
+-- Filtros para la tabla `tipos_pregunta`
+--
+ALTER TABLE `tipos_pregunta`
+  ADD CONSTRAINT `fk_estado_tipos_pregunta` FOREIGN KEY (`id_estado`) REFERENCES `estados_tipo_pregunta` (`id`);
 
 --
 -- Filtros para la tabla `usuarios`

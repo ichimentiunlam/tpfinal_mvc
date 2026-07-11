@@ -1,29 +1,17 @@
 {{>header}}
 <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/ruleta.css">
 <main class="ruletaContainer">
-    <div class="card" data-id="1" style="--color:#3B82F6">
-        Historia
-    </div>
 
-    <div class="card" data-id="2" style="--color:#10B981">
-        Geografía
-    </div>
+{{#categorias}}
 
-    <div class="card" data-id="3" style="--color:#8B5CF6">
-        Deportes
-    </div>
+<div class="card" 
+     data-id="{{id}}" 
+     style="--color:{{color}}">
+    {{tipo}}
+</div>
 
-    <div class="card" data-id="4" style="--color:#EF4444">
-        Arte
-    </div>
+{{/categorias}}
 
-    <div class="card" data-id="5" style="--color:#F5C700">
-        Ciencia
-    </div>
-
-    <div class="card" data-id="6" style="--color:#F57400">
-        Entretenimiento
-    </div>
 </main>
 
 <script>

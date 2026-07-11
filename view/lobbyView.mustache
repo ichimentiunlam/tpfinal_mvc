@@ -1,5 +1,6 @@
 {{>header}}
 <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/lobby.css">
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/modalCrearPregunta.css">
 <main class="lobbyContainer">
         <div class="lobbyInfo">
                 <h2>{{user.usuario}}</h2>
@@ -54,7 +55,7 @@
                                         placeholder="Respuesta incorrecta">
 
                                         <p>Categoria</p>
-                                        <select name="id_tipo_pregunta" required>
+                                        <select name="id_tipo_pregunta" id="categoria" required>
                                                 <option value="">Seleccione una categoría</option>
 
                                                 {{#categorias}}
@@ -62,7 +63,24 @@
                                                         {{tipo}}
                                                         </option>
                                                 {{/categorias}}
+
+                                                <option value="nueva">Sugerir nueva categoría</option>
                                         </select>
+                                                
+
+                                        <div id="nuevaCategoria" style="display:none;">
+                                                <label>Nombre</label>
+                                                <input
+                                                type="text"
+                                                name="nombreCategoria">
+                                                <label>Color</label>
+                                                <input
+                                                type="color"
+                                                name="colorCategoria"
+                                                value="#7c4dff">
+                                        </div>
+
+                                        
                                         <div class="modal-actions">
                                                 <button
                                                         type="button"
@@ -85,38 +103,4 @@
 </main>
 
 {{>footer}}
-<script>
-const ModalBtn = document.getElementById("modalBtn");
-const crearModal = document.getElementById("crearModal");
-const closeModal = document.getElementById("closeModal");
-const cancelModal = document.getElementById("cancelModal");
-
-if (ModalBtn && crearModal) {
-    ModalBtn.addEventListener("click", () => {
-        crearModal.classList.add("active");
-    });
-}
-
-function cerrarModal(){
-    if (crearModal) {
-        crearModal.classList.remove("active");
-    }
-}
-
-if (closeModal) closeModal.addEventListener("click", cerrarModal);
-if (cancelModal) cancelModal.addEventListener("click", cerrarModal);
-
-if (crearModal) {
-    crearModal.addEventListener("click",(e)=>{
-        if(e.target === crearModal){
-            cerrarModal();
-        }
-    });
-}
-
-document.addEventListener("keydown",(e)=>{
-    if(e.key === "Escape"){
-        cerrarModal();
-    }
-});
-</script>
+<script src="/tpfinal_mvc/assets/js/lobby.js"></script>
