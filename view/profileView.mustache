@@ -7,7 +7,7 @@
     .profileContainer {
         display: flex;
         flex-wrap: wrap;
-        gap: 15px;
+        gap: 20px;
         position: relative;
         background: rgba(8, 8, 14, 0.96);
         border: 1px solid rgba(124, 77, 255, 0.32);
@@ -22,8 +22,11 @@
     .profileInfo {
         flex: 1 1 320px;
         min-width: 280px;
+        display: flex;
+        flex-direction: column;
     }
 
+    /* --- ESTILOS COLUMNA IZQUIERDA --- */
     .profileFoto {
         background: rgba(12, 12, 18, 0.92);
         border: 1px solid rgba(124, 77, 255, 0.34);
@@ -49,6 +52,7 @@
         border-radius: 24px;
         padding: 18px 16px;
         box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+        text-align: center;
     }
 
     .statNumber {
@@ -68,61 +72,18 @@
         text-transform: uppercase;
     }
 
-    .profileInfo {
-        background: rgba(10, 10, 16, 0.94);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 28px;
-        padding: 24px;
-        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.3);
-    }
-
-    .profileInfo p {
-        color: #f4f4f4;
-        line-height: 1.75;
-        margin-bottom: 12px;
-    }
-
-    .profileInfo strong {
-        color: #fff;
-    }
-
-    .purchase-coins {
-        margin-top: 26px;
-    }
-
-    .purchaseButton {
-        background: linear-gradient(135deg, #00e676 0%, #7c4dff 100%);
-        color: #111;
-        border: none;
-        border-radius: 25px;
-        padding: 12px 30px;
-        font-size: 1rem;
-        font-weight: 800;
-        letter-spacing: 0.6px;
-        box-shadow: 0 0 24px rgba(0, 230, 118, 0.45);
-        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-        cursor: pointer;
-    }
-    .purchaseButton:hover,
-    .purchaseButton:focus {
-        transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(0, 230, 118, 0.55);
-    }
-    .purchaseButton:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
+    /* MAPA EN LA IZQUIERDA */
     .locationMapBox {
-        margin-top: 20px;
-        padding: 14px 14px 14px 18px;
+        margin-top: 22px;
+        padding: 18px;
         border: 1px solid rgba(124, 77, 255, 0.24);
-        border-radius: 18px;
+        border-radius: 24px;
         background: rgba(255, 255, 255, 0.04);
         position: relative;
         overflow: hidden;
+        flex-grow: 1; /* Hace que ocupe el espacio restante hacia abajo */
+        display: flex;
+        flex-direction: column;
     }
 
     .locationMapBox::before {
@@ -136,12 +97,117 @@
         border-radius: 0 6px 6px 0;
     }
 
+    .locationMapBox strong {
+        color: #fff;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        display: block;
+    }
+
     .profileMap {
-        height: 220px;
+        flex-grow: 1;
+        min-height: 200px;
         border-radius: 14px;
-        overflow: hidden;
-        margin-top: 10px;
         border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* --- ESTILOS COLUMNA DERECHA --- */
+    .profileInfoContainer {
+        background: rgba(10, 10, 16, 0.94);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 28px;
+        padding: 24px;
+        box-shadow: 0 22px 44px rgba(0, 0, 0, 0.3);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .personalData p {
+        color: #f4f4f4;
+        line-height: 1.75;
+        margin-bottom: 12px;
+        background: rgba(255, 255, 255, 0.03); /* Para que coincida con tus inputs de la imagen */
+        padding: 10px 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .personalData strong {
+        color: #fff;
+    }
+
+    /* QR EN LA DERECHA */
+    .qrBoxProfile {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(124, 77, 255, 0.2);
+        border-radius: 24px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 22px;
+        flex-grow: 1; /* Rellena el espacio del centro */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .qrBoxProfile h3 {
+        margin-top: 0;
+        color: #fff;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .qrBoxProfile img {
+        background: #ffffff;
+        padding: 8px;
+        border-radius: 12px;
+        width: 140px;
+        height: 140px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .qrBoxProfile p {
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 15px;
+        margin-bottom: 0;
+    }
+
+    /* BOTON DE COMPRA */
+    .purchase-coins {
+        margin-top: 22px;
+    }
+
+    .purchaseButton {
+        background: linear-gradient(135deg, #00e676 0%, #7c4dff 100%);
+        color: #111;
+        border: none;
+        border-radius: 25px;
+        padding: 14px 30px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: 0.6px;
+        box-shadow: 0 0 24px rgba(0, 230, 118, 0.45);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        cursor: pointer;
+        width: 100%;
+    }
+    .purchaseButton:hover:not(:disabled) {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(0, 230, 118, 0.55);
+    }
+    .purchaseButton:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .purchaseHint {
+        text-align: center;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 10px;
     }
 </style>
 
@@ -149,15 +215,14 @@
 
     <div class="profileLeft">
         <div class="profileFoto">
-
-        {{^user.foto_perfil}}
-        <img src="/tpfinal_mvc/assets/Img/default.png" alt="Foto de perfil por defecto">
-        {{/user.foto_perfil}}
-        
-        {{#user.foto_perfil}}
-        <img src="tpfinal_mvc/{{user.foto_perfil}}" alt="Foto de perfil">
-        {{/user.foto_perfil}}
-            <h1>{{user.usuario}}</h1>
+            {{^user.foto_perfil}}
+            <img src="/tpfinal_mvc/assets/Img/default.png" alt="Foto de perfil por defecto" style="max-width: 120px; border-radius: 50%; border: 2px solid #7c4dff;">
+            {{/user.foto_perfil}}
+            
+            {{#user.foto_perfil}}
+            <img src="tpfinal_mvc/{{user.foto_perfil}}" alt="Foto de perfil" style="max-width: 120px; border-radius: 50%; border: 2px solid #7c4dff;">
+            {{/user.foto_perfil}}
+            <h1 style="color: #fff; margin-top: 15px; font-size: 1.5rem;">{{user.usuario}}</h1>
         </div>
 
         <div class="stats">
@@ -165,53 +230,55 @@
                 <span class="statNumber">{{user.puntaje_max}}</span>
                 <span class="statLabel">Puntaje</span>
             </div>
-
             <div class="statCard">
                 <span class="statNumber">{{user.preguntas_respondidas}}</span>
                 <span class="statLabel">Respondidas</span>
             </div>
-
             <div class="statCard">
                 <span class="statNumber">{{user.preguntas_correctas}}</span>
                 <span class="statLabel">Correctas</span>
             </div>
-
-            <div class="statCard">
+            <div class="statCard" style="flex: 1 1 100%;">
                 <span class="statNumber">{{user.coins}}</span>
                 <span class="statLabel">Monedas</span>
             </div>
         </div>
+
+        <div class="locationMapBox">
+            <strong>Ubicación</strong>
+            <div id="profileMap" class="profileMap" data-city="{{user.ciudad}}" data-country="{{user.pais}}"></div>
+        </div>
     </div>
 
-<div class="perfil-qr-section" style="margin: 30px auto; padding: 20px; text-align: center; border: 1px solid #eee; border-radius: 15px; max-width: 300px;">
-    <h3 style="margin-bottom: 15px; font-size: 1.2rem; color: #333;">Comparte mi perfil</h3>
-    
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://preguntados.rf.gd/tpfinal_mvc/User/verPerfil?id={{id}}" 
-         alt="QR Perfil" 
-         style="border: 2px solid #ddd; padding: 5px; border-radius: 8px;">
-    
-    <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">Escanea para ver mi perfil</p>
-</div>
-
     <div class="profileInfo">
-        <p><strong>Nombre:</strong> {{user.nombre}} {{user.apellido}}</p>
-        <p><strong>Correo:</strong> {{user.email}}</p>
-        <p><strong>Ciudad:</strong> {{user.ciudad}}</p>
-        <p><strong>País:</strong> {{user.pais}}</p>
-        <p><strong>Año de nacimiento:</strong> {{user.anio_nacimiento}}</p>
-        <div class="locationMapBox">
-            <strong>Ubicacion</strong>
-            <div id="profileMap" class="profileMap" data-city="{{user.ciudad}}" data-country="{{user.pais}}"></div>
-	    </div>
-        {{^readonly}}
-        <div class="purchase-coins">
-            <button id="buyCoinsButton" class="purchaseButton">Comprar 10 Coins ($1 USD)</button>
-            <p class="purchaseHint">Compra virtual simulada con seguimiento administrativo.</p>
+        <div class="profileInfoContainer">
+            
+            <div class="personalData">
+                <p><strong>Nombre:</strong> {{user.nombre}} {{user.apellido}}</p>
+                <p><strong>Correo:</strong> {{user.email}}</p>
+                <p><strong>Ciudad:</strong> {{user.ciudad}}</p>
+                <p><strong>País:</strong> {{user.pais}}</p>
+                <p><strong>Año de nacimiento:</strong> {{user.anio_nacimiento}}</p>
+            </div>
+            
+            <div class="qrBoxProfile">
+                <h3>Comparte mi perfil</h3>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://preguntados.rf.gd/tpfinal_mvc/User/verPerfil?id={{id}}" alt="QR Perfil">
+                <p>Escanea para ver mi perfil</p>
+            </div>
+
+            {{^readonly}}
+            <div class="purchase-coins">
+                <button id="buyCoinsButton" class="purchaseButton">Comprar 10 Coins ($1 USD)</button>
+                <p class="purchaseHint">Compra virtual simulada con seguimiento administrativo.</p>
+            </div>
+            {{/readonly}}
+            
         </div>
-        {{/readonly}}
     </div>
 
 </section>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const buyButton = document.getElementById('buyCoinsButton');
@@ -236,7 +303,7 @@
             } else {
                 alert(result.error || 'No se pudo completar la compra.');
                 buyButton.disabled = false;
-                buyButton.textContent = 'Comprar 10 Trampitas ($1 USD)';
+                buyButton.textContent = 'Comprar 10 Coins ($1 USD)';
             }
         });
     });
@@ -275,3 +342,4 @@
         }
     });
 </script>
+{{>footer}}
