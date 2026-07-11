@@ -1,5 +1,8 @@
 <?php
-
+/*id_estado 1 es pregunta aceptada
+id_estado 2 es pregunta sugerida
+Lo mismo con las categorias
+*/
 class GameModel
 {
     private $database;
@@ -160,7 +163,7 @@ class GameModel
 
     public function getTipoPregunta()
     {
-        $sql = "SELECT id, tipo FROM tipos_pregunta";
+        $sql = "SELECT id, tipo, color FROM tipos_pregunta WHERE id_estado = 1";
 
         return $this->database->query($sql);
     }
@@ -181,7 +184,7 @@ class GameModel
         $sql = "SELECT id as id_tipo,
         tipo as tipo_pregunta,
         color
-        FROM tipos_pregunta
+        FROM tipos_pregunta WHERE id_estado = 1
         ORDER BY RAND() LIMIT 1";
 
         $row = $this->database->query($sql)[0] ?? null;
@@ -215,7 +218,9 @@ class GameModel
                 JOIN respuestas r2 ON p.id_respuesta2 = r2.id
                 JOIN respuestas r3 ON p.id_respuesta3 = r3.id
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
-               	WHERE id_tipo_pregunta = ? AND $dificultadSql BETWEEN ? AND ?
+               	WHERE id_tipo_pregunta = ? 
+                AND p.id_estado = 1
+                AND $dificultadSql BETWEEN ? AND ?
                 ORDER BY RAND() LIMIT 1";
             $params = [$idTipo, $dificultadMin, $dificultadMax];
         } else {
@@ -234,7 +239,9 @@ class GameModel
                 JOIN respuestas r2 ON p.id_respuesta2 = r2.id
                 JOIN respuestas r3 ON p.id_respuesta3 = r3.id
                 JOIN respuestas r4 ON p.id_respuesta4 = r4.id
-               	WHERE id_tipo_pregunta = ?  AND p.id NOT IN ($respondidas) AND $dificultadSql BETWEEN ? AND ?
+               	WHERE id_tipo_pregunta = ?
+                AND p.id_estado = 1 
+                AND p.id NOT IN ($respondidas) AND $dificultadSql BETWEEN ? AND ?
                 ORDER BY RAND() LIMIT 1";
 
             $params = array_merge([$idTipo], $preguntasRespondidas, [$dificultadMin], [$dificultadMax]);
@@ -367,32 +374,69 @@ class GameModel
 
         $this->database->execute($sql, [$mensaje, $id_pregunta, $email, 1]);
     }
+    //Crear categoria si no existe, si existe devuelve la existente
+    public function createCategoriaSugerida($nombre, $color){
+        $sql = "SELECT id FROM tipos_pregunta WHERE LOWER(tipo) = LOWER(?)";
+        $resultado = $this->database->query($sql, [$nombre]);
 
-    public function createPreguntaSugerida($pregunta, $respuestaCorrecta, $respuestaIncorrecta1, $respuestaIncorrecta2, $respuestaIncorrecta3, $id_tipo_pregunta)
-    {
-        $sql = "INSERT INTO preguntas_sugeridas (pregunta, respuestaCorrecta, respuestaIncorrecta1, respuestaIncorrecta2, respuestaIncorrecta3, id_tipo_pregunta) 
-        VALUES (? , ? , ? , ?, ?, ?)";
+        if (!empty($resultado)) {
+            return $resultado[0]['id'];
+        }
 
-        $this->database->execute($sql, [$pregunta, $respuestaCorrecta, $respuestaIncorrecta1, $respuestaIncorrecta2, $respuestaIncorrecta3, $id_tipo_pregunta]);
+        
+        $sql = "INSERT INTO tipos_pregunta (tipo, color, id_estado)
+                VALUES (?, ?, 2)";
+
+        $this->database->execute($sql, [$nombre, $color]);
+
+        return $this->database->getLastInsertId();
     }
 
+        public function createPreguntaSugerida($datos){
+        $idRespuesta1 = $this->crearRespuesta($datos['respuestaCorrecta'], 1);
 
+        $idRespuesta2 = $this->crearRespuesta($datos['respuestaIncorrecta1'], 0);
 
+        $idRespuesta3 = $this->crearRespuesta($datos['respuestaIncorrecta2'], 0);
+
+        $idRespuesta4 = $this->crearRespuesta($datos['respuestaIncorrecta3'], 0);
+        
+        $sql = "INSERT INTO preguntas (pregunta, id_respuesta1, id_respuesta2, id_respuesta3, id_respuesta4, id_tipo_pregunta, id_estado)
+        VALUES (?, ?, ?, ?, ?, ?, 2)";
+
+        $this->database->execute($sql, [
+        $datos['pregunta'],
+        $idRespuesta1,
+        $idRespuesta2,
+        $idRespuesta3,
+        $idRespuesta4,
+        $datos['id_tipo_pregunta']
+        ]);
+    }
 
 /* Usuario Editor */
     public function getPreguntasSugeridas(){
-        $sql = "SELECT ps.*, tp.tipo AS categoria, tp.id AS id_tipo
-        FROM preguntas_sugeridas ps
-        JOIN tipos_pregunta tp
-        ON ps.id_tipo_pregunta = tp.id"; 
+        $sql = "SELECT ps.*, 
+        r1.respuesta AS respuestaCorrecta,
+        r2.respuesta AS respuestaIncorrecta1,
+        r3.respuesta AS respuestaIncorrecta2,
+        r4.respuesta AS respuestaIncorrecta3,
+         tp.tipo AS categoria, tp.id AS id_tipo
+        FROM preguntas ps
+        JOIN tipos_pregunta tp ON ps.id_tipo_pregunta = tp.id
+        JOIN respuestas r1 ON ps.id_respuesta1 = r1.id
+        JOIN respuestas r2 ON ps.id_respuesta2 = r2.id
+        JOIN respuestas r3 ON ps.id_respuesta3 = r3.id
+        JOIN respuestas r4 ON ps.id_respuesta4 = r4.id
+        WHERE ps.id_estado = 2"; 
 
         return $this->database->query($sql);
 
     }
 
     public function deletePreguntaSugerida($id){
-         $sql = "DELETE FROM preguntas_sugeridas
-                WHERE id = ?";
+         $sql = "DELETE FROM preguntas
+                WHERE id = ? AND id_estado = 2";
 
         $this->database->execute($sql, [$id]);
     }
@@ -405,9 +449,11 @@ class GameModel
         $idRespuesta3 = $this->crearRespuesta($datos['respuestaIncorrecta2'], 0);
 
         $idRespuesta4 = $this->crearRespuesta($datos['respuestaIncorrecta3'], 0);
-          
-        $sql = "INSERT INTO preguntas (pregunta, id_respuesta1, id_respuesta2, id_respuesta3, id_respuesta4, id_tipo_pregunta)
-        VALUES (?, ?, ?, ?, ?, ?)";
+
+        $this->habilitarCategoria($datos['id_tipo_pregunta']);
+        
+        $sql = "INSERT INTO preguntas (pregunta, id_respuesta1, id_respuesta2, id_respuesta3, id_respuesta4, id_tipo_pregunta, id_estado)
+        VALUES (?, ?, ?, ?, ?, ?, 1)";
 
         $this->database->execute($sql, [
         $datos['pregunta'],
@@ -417,6 +463,12 @@ class GameModel
         $idRespuesta4,
         $datos['id_tipo_pregunta']
         ]);
+    }
+
+    private function habilitarCategoria($id){
+        $sql = "UPDATE tipos_pregunta SET id_estado = 1 WHERE id = ?";
+
+        $this->database->execute($sql, [$id]);
     }
 
     private function crearRespuesta($texto, $esCorrecta)
