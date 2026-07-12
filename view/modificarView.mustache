@@ -1,13 +1,159 @@
 {{>header}}
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/modalCrearPregunta.css">
 <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/modificar.css">
 
 <main class="modificarContainer">
-
-   <!--  <div class="buscador">
+    <div class="buscador">
         <input type="text" placeholder="Buscar pregunta...">
-    </div> -->
+        <button id="modalBtn" class="report-btn" type="button">
+                <i class="bi bi-file-plus"></i>
+        </button>
+    </div>
 
-    <section class="tablaPreguntas">
+    <div class="tabs">
+        <button id="btnPreguntas" class="active">
+                Preguntas
+        </button>
+
+        <button id="btnCategorias">
+                Categorías
+        </button>
+    </div>
+
+    
+     <div id="crearModal" class="modal">
+                        <div class="modal-box">
+                                <button class="close-modal" id="closeModal">
+                                        <i class="bi bi-x-lg"></i>
+                                </button>
+                                <h3>Crear pregunta</h3>
+                                <form action="/tpfinal_mvc/Editor/crearPregunta" method="POST">
+                                        <input
+                                        type="text"
+                                        name="nuevaPregunta"
+                                        class="inputPregunta"
+                                        placeholder="Escribí tu pregunta">
+                                        
+                                        <p>Opcion correcta</p>
+
+                                        <input
+                                        type="text"
+                                        name="respuestaCorrecta"
+                                        placeholder="Respuesta correcta">
+
+                                        <p>Opciones Incorrectas</p>
+                                        
+                                        <input
+                                        type="text"
+                                        name="incorrecta1"
+                                        placeholder="Respuesta incorrecta">
+                                        
+                                        <input
+                                        type="text"
+                                        name="incorrecta2"
+                                        placeholder="Respuesta incorrecta">
+                                        
+                                        <input
+                                        type="text"
+                                        name="incorrecta3"
+                                        placeholder="Respuesta incorrecta">
+
+                                        <p>Categoria</p>
+                                        <select name="id_tipo_pregunta" id="categoria" required>
+                                                <option value="">Seleccione una categoría</option>
+
+                                                {{#categorias}}
+                                                        <option value="{{id}}">
+                                                        {{tipo}}
+                                                        </option>
+                                                {{/categorias}}
+
+                                                <option value="nueva">Crear nueva categoría</option>
+                                        </select>
+                                                
+
+                                        <div id="nuevaCategoria" style="display:none;">
+                                                <label>Nombre</label>
+                                                <input
+                                                type="text"
+                                                name="nombreCategoria">
+                                                <label>Color</label>
+                                                <input
+                                                type="color"
+                                                name="colorCategoria"
+                                                value="#7c4dff">
+                                        </div>
+
+                                        
+                                        <div class="modal-actions">
+                                                <button
+                                                        type="button"
+                                                        id="cancelModal"
+                                                        class="btn-report secondary">
+                                                        Cancelar
+                                                </button>
+                                                <button
+                                                        type="submit"
+                                                        class="btn-report primary">
+                                                        Crear
+                                                </button>
+                                        </div>
+                                </form>
+                        </div>
+                </div>
+
+
+        <section id="listaCategorias" class="tablaCategorias" hidden>
+                <div class="categoriasGrid head">
+                        <div>Categoría</div>
+                        <div>Preguntas Asociadas</div>
+                        <div>Color</div>
+                        <div>Estado</div>
+                </div>
+
+                {{#categorias}}
+                <div class="categoriasGrid fila">
+                        <div>{{tipo}}</div>
+                        <div>{{cantidad_preguntas}}</div>
+                        <div class="categoriaColor" style="background-color: {{color}}"></div>
+                        <div>{{estado}}</div>
+                        
+                        
+
+                        <button
+                        type="button"
+                        class="btnModificarCategoria btn primary"
+                        data-id="{{id}}"
+                        data-nombre="{{tipo}}"
+                        data-color="{{color}}">
+                        Modificar
+                        </button>
+
+                        <form action="/tpfinal_mvc/Editor/eliminarCategoria" method="POST">
+                                <input type="hidden" name="id" value="{{id}}">
+                                <button type="submit" class="btn secondary" style="background:none;border:none;">Eliminar</button>
+                        </form>
+                </div>
+                {{/categorias}}
+
+                {{#categoriasSugeridas}}
+                <div class="categoriasGrid fila">
+                        <div>{{tipo}}</div>
+                        <div>{{cantidad_preguntas}}</div>
+                        <div>{{estado}}</div>
+                        <button type="submit">Modificar</button>
+                        <form action="/tpfinal_mvc/Editor/eliminarCategoria" method="POST">
+                                <input type="hidden" name="id" value="{{id}}">
+                                <button type="submit">Eliminar</button>
+                        </form>
+                </div>
+                {{/categoriasSugeridas}}
+
+        </section>
+
+
+
+    <section id="listaPreguntas" class="tablaPreguntas">
 
         <div class="preguntasGrid head">
             <div>N°</div>
@@ -34,6 +180,74 @@
         </a>
         {{/preguntas}}
     </section>
+
+<div id="modalCategoria" class="modal">
+
+    <div class="modal-box">
+
+        <button type="button" class="close-modal" id="cerrarCategoria">
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+        <h3>Modificar categoría</h3>
+
+        <form action="/tpfinal_mvc/Editor/modificarCategoria" method="POST">
+
+            <input
+                type="hidden"
+                id="categoriaId"
+                name="id">
+
+            <label>Nombre</label>
+
+            <input
+                type="text"
+                id="categoriaNombre"
+                name="nombreCategoria">
+
+            <label>Color</label>
+
+            <div class="colorPreview">
+
+                <span
+                    id="previewColor"
+                    class="colorCircle">
+                </span>
+
+                <input
+                    type="color"
+                    id="categoriaColor"
+                    name="colorCategoria">
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    id="cancelarCategoria"
+                    class="btn-report secondary">
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-report primary">
+                    Guardar
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+
 </main>
 
 {{>footer}}
+<script src="/tpfinal_mvc/assets/js/modificar.js"></script>

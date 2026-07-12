@@ -23,5 +23,15 @@
 .lobbyInfo a{
     margin-bottom: 1rem;
 }
+.colorPreview{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin:15px 0;
+}
 
-
+.colorCircle{
+    width:35px;
+    height:35px;
+    border-radius:100%;
+}

@@ -44,3 +44,10 @@ select.addEventListener("change", () => {
     }
 
 });
+const inputColor = document.getElementById("categoriaColor");
+const preview = document.getElementById("previewColor");
+inputColor.addEventListener("input",()=>{
+
+    preview.style.backgroundColor = inputColor.value;
+
+});

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3307
--- Tiempo de generación: 11-07-2026 a las 03:26:06
+-- Tiempo de generación: 12-07-2026 a las 03:33:53
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -146,7 +146,8 @@ CREATE TABLE `estados_tipo_pregunta` (
 
 INSERT INTO `estados_tipo_pregunta` (`id`, `estado`) VALUES
 (1, 'aceptada'),
-(2, 'sugerida');
+(2, 'sugerida'),
+(3, 'eliminada');
 
 -- --------------------------------------------------------
 
@@ -651,13 +652,13 @@ ALTER TABLE `estados_reporte`
 -- AUTO_INCREMENT de la tabla `estados_tipo_pregunta`
 --
 ALTER TABLE `estados_tipo_pregunta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas`
 --
 ALTER TABLE `preguntas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT de la tabla `preguntas_reportadas`
@@ -669,13 +670,13 @@ ALTER TABLE `preguntas_reportadas`
 -- AUTO_INCREMENT de la tabla `respuestas`
 --
 ALTER TABLE `respuestas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=237;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_pregunta`
 --
 ALTER TABLE `tipos_pregunta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tipos_usuario`

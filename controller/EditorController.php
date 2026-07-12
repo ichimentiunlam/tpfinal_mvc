@@ -79,14 +79,17 @@ class EditorController extends BaseController
         }
 
         $this->necesitaEditor();
-        
-        $preguntas = $this->model->getTodasLasPreguntas();
+        $categorias = $this->model->getTipoPregunta();
+        $categoriasSugeridas = $this->model->getTipoPreguntaSugeridas();
+        $preguntas = $this->model->getTodasLasPreguntasAceptadas();
 
         foreach ($preguntas as $i => &$pregunta) {
         $pregunta['numero'] = $i + 1;
         }
 
-        $this->render('modificarView',[ 'preguntas' => $preguntas 
+        $this->render('modificarView',[ 'preguntas' => $preguntas,
+        'categorias' => $categorias,
+        'categoriasSugeridas' => $categoriasSugeridas
         ]);
     }
 
@@ -145,6 +148,71 @@ class EditorController extends BaseController
 
 
         $this->model->updatePregunta($datos);
+        Redirect::to('/tpfinal_mvc/Editor/modificar');
+        return;
+    }
+
+    public function crearPregunta(){
+        $this->ensureSession();
+
+        $datos = [
+        "pregunta" => $this->request->post('nuevaPregunta'),
+        "respuestaCorrecta" => $this->request->post('respuestaCorrecta'),
+        "respuestaIncorrecta1" => $this->request->post('incorrecta1'),
+        "respuestaIncorrecta2" => $this->request->post('incorrecta2'),
+        "respuestaIncorrecta3" => $this->request->post('incorrecta3'),
+        "id_tipo_pregunta"=> $this->request->post('id_tipo_pregunta')
+        ];
+
+        $nombreCategoria = $this->request->post('nombreCategoria');
+        $colorCategoria = $this->request->post('colorCategoria');
+        
+        if($datos['pregunta'] == null || $datos['respuestaCorrecta'] == null || 
+        $datos['respuestaIncorrecta1'] == null || 
+        $datos['respuestaIncorrecta2'] == null || 
+        $datos['respuestaIncorrecta3'] == null || 
+        $datos['id_tipo_pregunta'] == null){
+            $_SESSION['partida']['mensaje'] = "Se deben llenar todos los campos";
+            Redirect::to('/tpfinal_mvc/Game/lobby');
+            return;
+        }
+
+        if($datos['id_tipo_pregunta'] == null && $nombreCategoria == null){
+            $_SESSION['partida']['mensaje'] = "Se deben elegir categoria";
+            Redirect::to('/tpfinal_mvc/Game/lobby');
+            return;
+        }
+        //El value de la option "nueva categoria" es nueva
+        if($datos['id_tipo_pregunta'] == 'nueva'){
+            $datos['id_tipo_pregunta'] = $this->model->createCategoria($nombreCategoria, $colorCategoria);
+        }
+
+        $this->model->createPregunta($datos);
+
+        $_SESSION['partida']['mensaje'] = "¡Gracias! Tu pregunta fue sugerida correctamente.";
+
+        Redirect::to('/tpfinal_mvc/Editor/modificar');
+    
+    }
+
+    public function eliminarCategoria(){
+        $this->ensureSession();
+        $id = $this->request->post('id');
+        $this->model->deleteCategoria($id);
+        Redirect::to('/tpfinal_mvc/Editor/modificar');
+        return;
+    }
+
+    public function modificarCategoria(){
+        $this->ensureSession();
+
+        $datos = [
+        "id" => $this->request->post('id'),
+        "nombreCategoria" => $this->request->post('nombreCategoria'),
+        "colorCategoria" => $this->request->post('colorCategoria')
+        ];
+
+        $this->model->updateCategoria($datos);
         Redirect::to('/tpfinal_mvc/Editor/modificar');
         return;
     }
