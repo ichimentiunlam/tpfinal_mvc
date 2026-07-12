@@ -1,8 +1,7 @@
 {{>header}}
 
-<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/correo.css">
-<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/lobby.css">
-<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/modificar.css">
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/modalCrearPregunta.css">
+<link rel="stylesheet" href="/tpfinal_mvc/assets/Css/detallePregunta.css">
 
 
 <main class="detalleContainer">
@@ -28,7 +27,10 @@
 
                 <form action="/tpfinal_mvc/Editor/eliminarPregunta" method="POST">
                 <input type="hidden" name="id" value="{{id}}">
-                <button type="button"  style="background:none;border:none;padding:0;" ><span class="btn secondary" style="backgroud: none;">Eliminar</span></button>
+                <button type="submit" style="background:none;border:none;">
+                <span class="btn secondary">Eliminar</span>
+                </button>
+                
                 </form>
                 <a class="btn" style="color: white" href="/tpfinal_mvc/Editor/modificar">Volver</a>
             </div>

@@ -1,7 +1,9 @@
 <?php
-/*id_estado 1 es pregunta aceptada
-id_estado 2 es pregunta sugerida
-Lo mismo con las categorias
+/*
+id_estado 1 es aceptada
+id_estado 2 es sugerida
+id_estado 3 es eliminada
+Eso vale para las categorias(tipo_pregunta) como a las preguntas
 */
 class GameModel
 {
@@ -163,7 +165,24 @@ class GameModel
 
     public function getTipoPregunta()
     {
-        $sql = "SELECT id, tipo, color FROM tipos_pregunta WHERE id_estado = 1";
+        $sql = "SELECT tp.id, tp.tipo, tp.color, etp.estado, COUNT(p.id) AS cantidad_preguntas 
+        FROM tipos_pregunta tp 
+        JOIN estados_tipo_pregunta etp ON tp.id_estado = etp.id 
+        LEFT JOIN preguntas p ON p.id_tipo_pregunta = tp.id AND p.id_estado = 1
+        WHERE tp.id_estado = 1
+        GROUP BY tp.id, tp.tipo, tp.color, etp.estado";
+
+        return $this->database->query($sql);
+    }
+
+    public function getTipoPreguntaSugeridas()
+    {
+        $sql = "SELECT tp.id, tp.tipo, tp.color, etp.estado, COUNT(p.id) AS cantidad_preguntas 
+        FROM tipos_pregunta tp 
+        JOIN estados_tipo_pregunta etp ON tp.id_estado = etp.id 
+        LEFT JOIN preguntas p ON p.id_tipo_pregunta = tp.id
+        WHERE tp.id_estado = 2
+        GROUP BY tp.id, tp.tipo, tp.color, etp.estado";
 
         return $this->database->query($sql);
     }
@@ -375,7 +394,8 @@ class GameModel
         $this->database->execute($sql, [$mensaje, $id_pregunta, $email, 1]);
     }
     //Crear categoria si no existe, si existe devuelve la existente
-    public function createCategoriaSugerida($nombre, $color){
+    public function createCategoriaSugerida($nombre, $color)
+    {
         $sql = "SELECT id FROM tipos_pregunta WHERE LOWER(tipo) = LOWER(?)";
         $resultado = $this->database->query($sql, [$nombre]);
 
@@ -383,7 +403,7 @@ class GameModel
             return $resultado[0]['id'];
         }
 
-        
+
         $sql = "INSERT INTO tipos_pregunta (tipo, color, id_estado)
                 VALUES (?, ?, 2)";
 
@@ -392,7 +412,26 @@ class GameModel
         return $this->database->getLastInsertId();
     }
 
-        public function createPreguntaSugerida($datos){
+    public function createCategoria($nombre, $color)
+    {
+        $sql = "SELECT id FROM tipos_pregunta WHERE LOWER(tipo) = LOWER(?)";
+        $resultado = $this->database->query($sql, [$nombre]);
+
+        if (!empty($resultado)) {
+            return $resultado[0]['id'];
+        }
+
+
+        $sql = "INSERT INTO tipos_pregunta (tipo, color, id_estado)
+                VALUES (?, ?, 2)";
+
+        $this->database->execute($sql, [$nombre, $color]);
+
+        return $this->database->getLastInsertId();
+    }
+
+    public function createPreguntaSugerida($datos)
+    {
         $idRespuesta1 = $this->crearRespuesta($datos['respuestaCorrecta'], 1);
 
         $idRespuesta2 = $this->crearRespuesta($datos['respuestaIncorrecta1'], 0);
@@ -400,22 +439,23 @@ class GameModel
         $idRespuesta3 = $this->crearRespuesta($datos['respuestaIncorrecta2'], 0);
 
         $idRespuesta4 = $this->crearRespuesta($datos['respuestaIncorrecta3'], 0);
-        
+
         $sql = "INSERT INTO preguntas (pregunta, id_respuesta1, id_respuesta2, id_respuesta3, id_respuesta4, id_tipo_pregunta, id_estado)
         VALUES (?, ?, ?, ?, ?, ?, 2)";
 
         $this->database->execute($sql, [
-        $datos['pregunta'],
-        $idRespuesta1,
-        $idRespuesta2,
-        $idRespuesta3,
-        $idRespuesta4,
-        $datos['id_tipo_pregunta']
+            $datos['pregunta'],
+            $idRespuesta1,
+            $idRespuesta2,
+            $idRespuesta3,
+            $idRespuesta4,
+            $datos['id_tipo_pregunta']
         ]);
     }
 
-/* Usuario Editor */
-    public function getPreguntasSugeridas(){
+    /* Usuario Editor */
+    public function getPreguntasSugeridas()
+    {
         $sql = "SELECT ps.*, 
         r1.respuesta AS respuestaCorrecta,
         r2.respuesta AS respuestaIncorrecta1,
@@ -428,20 +468,21 @@ class GameModel
         JOIN respuestas r2 ON ps.id_respuesta2 = r2.id
         JOIN respuestas r3 ON ps.id_respuesta3 = r3.id
         JOIN respuestas r4 ON ps.id_respuesta4 = r4.id
-        WHERE ps.id_estado = 2"; 
+        WHERE ps.id_estado = 2";
 
         return $this->database->query($sql);
-
     }
 
-    public function deletePreguntaSugerida($id){
-         $sql = "DELETE FROM preguntas
+    public function deletePreguntaSugerida($id)
+    {
+        $sql = "DELETE FROM preguntas
                 WHERE id = ? AND id_estado = 2";
 
         $this->database->execute($sql, [$id]);
     }
 
-    public function createPregunta($datos){
+    public function createPregunta($datos)
+    {
         $idRespuesta1 = $this->crearRespuesta($datos['respuestaCorrecta'], 1);
 
         $idRespuesta2 = $this->crearRespuesta($datos['respuestaIncorrecta1'], 0);
@@ -451,74 +492,80 @@ class GameModel
         $idRespuesta4 = $this->crearRespuesta($datos['respuestaIncorrecta3'], 0);
 
         $this->habilitarCategoria($datos['id_tipo_pregunta']);
-        
+
         $sql = "INSERT INTO preguntas (pregunta, id_respuesta1, id_respuesta2, id_respuesta3, id_respuesta4, id_tipo_pregunta, id_estado)
         VALUES (?, ?, ?, ?, ?, ?, 1)";
 
         $this->database->execute($sql, [
-        $datos['pregunta'],
-        $idRespuesta1,
-        $idRespuesta2,
-        $idRespuesta3,
-        $idRespuesta4,
-        $datos['id_tipo_pregunta']
+            $datos['pregunta'],
+            $idRespuesta1,
+            $idRespuesta2,
+            $idRespuesta3,
+            $idRespuesta4,
+            $datos['id_tipo_pregunta']
         ]);
     }
 
-    private function habilitarCategoria($id){
+    private function habilitarCategoria($id)
+    {
         $sql = "UPDATE tipos_pregunta SET id_estado = 1 WHERE id = ?";
 
         $this->database->execute($sql, [$id]);
     }
 
     private function crearRespuesta($texto, $esCorrecta)
-{
-    $sql = "INSERT INTO respuestas (respuesta, es_correcta)
+    {
+        $sql = "INSERT INTO respuestas (respuesta, es_correcta)
             VALUES (?, ?)";
 
-    $this->database->execute($sql, [$texto, $esCorrecta]);
+        $this->database->execute($sql, [$texto, $esCorrecta]);
 
-    return $this->database->getLastInsertId();
-}
+        return $this->database->getLastInsertId();
+    }
 
-    public function getPreguntasReportadasNoVistas(){
+    public function getPreguntasReportadasNoVistas()
+    {
         $sql = "SELECT pr.*, p.pregunta, p.id as id_pregunta, er.estado
         FROM preguntas_reportadas pr
         JOIN preguntas p
         ON p.id = pr.id_pregunta
         JOIN estados_reporte er
         ON pr.id_estado = er.id
-        WHERE pr.id_estado = 1"; 
+        WHERE pr.id_estado = 1";
 
         return $this->database->query($sql);
     }
 
-    public function marcarReporteComoVisto($id){
+    public function marcarReporteComoVisto($id)
+    {
         $sql = "UPDATE preguntas_reportadas SET id_estado = 2 WHERE id = ?";
 
         $this->database->execute($sql, [$id]);
     }
 
-    public function getTodasLasPreguntas(){
+    public function getTodasLasPreguntasAceptadas()
+    {
         $dificultadSql = "CASE
             WHEN p.veces_respondida = 0 THEN 1
             ELSE ROUND((p.veces_respondida_correctamente / p.veces_respondida) * 100, 2)
         END";
 
         $sql = "SELECT p.*, tp.tipo, $dificultadSql AS porcentaje FROM preguntas p
-        JOIN tipos_pregunta tp ON p.id_tipo_pregunta = tp.id"; 
+        JOIN tipos_pregunta tp ON p.id_tipo_pregunta = tp.id WHERE p.id_estado = 1";
 
         return $this->database->query($sql);
     }
 
-     public function deletePregunta($id){
-         $sql = "DELETE FROM preguntas
+    public function deletePregunta($id)
+    {
+        $sql = "DELETE FROM preguntas
                 WHERE id = ?";
 
         $this->database->execute($sql, [$id]);
     }
 
-    public function updatePregunta($datos){
+    public function updatePregunta($datos)
+    {
         $this->updateRespuesta($datos['respuestaCorrecta'], $datos['id_respuestaCorrecta']);
 
         $this->updateRespuesta($datos['incorrecta1'], $datos['id_incorrecta1']);
@@ -526,18 +573,38 @@ class GameModel
         $this->updateRespuesta($datos['incorrecta2'], $datos['id_incorrecta2']);
 
         $this->updateRespuesta($datos['incorrecta3'], $datos['id_incorrecta3']);
-          
+
         $sql = "UPDATE preguntas SET pregunta = ?, id_tipo_pregunta = ? WHERE id = ?";
 
-        $this->database->execute($sql, [$datos['nuevaPregunta'], $datos['id_tipo_pregunta'], $datos['id']
+        $this->database->execute($sql, [
+            $datos['nuevaPregunta'],
+            $datos['id_tipo_pregunta'],
+            $datos['id']
         ]);
     }
 
     private function updateRespuesta($texto, $id)
-{
-    $sql = "UPDATE respuestas SET respuesta = ?
+    {
+        $sql = "UPDATE respuestas SET respuesta = ?
             WHERE id = ?";
 
-    $this->database->execute($sql, [$texto, $id]);
-}
+        $this->database->execute($sql, [$texto, $id]);
+    }
+
+    public function deleteCategoria($id)
+    {
+        $sql = "UPDATE tipos_pregunta SET id_estado = 3
+            WHERE id = ?";
+
+        $this->database->execute($sql, [$id]);
+    }
+
+    public function updateCategoria($datos) {
+        $sql = "UPDATE tipos_pregunta SET tipo = ?, color = ?
+            WHERE id = ?";
+
+        $this->database->execute($sql, [$datos['nombreCategoria'],
+        $datos['colorCategoria'],
+        $datos['id']]);
+    }
 }
