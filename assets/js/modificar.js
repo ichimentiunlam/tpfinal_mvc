@@ -1,3 +1,29 @@
+/* Buscador */
+const buscador = document.getElementById("buscador");
+
+buscador.addEventListener("input", () => {
+
+    const texto = normalizar(buscador.value);
+
+    document.querySelectorAll(".preguntasGrid.fila").forEach(fila => {
+
+        const pregunta = normalizar(fila.children[1].textContent);
+
+        fila.style.display = pregunta.includes(texto)
+            ? "grid"
+            : "none";
+
+    });
+
+});
+
+function normalizar(texto) {
+    return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\p{L}\p{N}\s]/gu, "");
+}
 /* Modal Modificar categoria */
 const modalCategoria = document.getElementById("modalCategoria");
 

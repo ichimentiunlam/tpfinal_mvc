@@ -109,10 +109,10 @@
 
 .categoriasGrid{
     display:grid;
-    grid-template-columns:1fr 0.5fr 0.5fr 1fr 0.5fr 0.5fr;
+    grid-template-columns:12rem 0.5fr 0.5fr 0.5fr 0.3fr 0.3fr;
     gap:15px;
     align-items:center;
-    padding:18px 20px;
+    padding:8px 10px;
 
 }
 
@@ -144,4 +144,74 @@
     width:35px;
     height:35px;
     border-radius:100%;
+}
+@media (max-width: 850px){
+    .categoriasGrid{
+    grid-template-columns:12rem 0.5fr 0.5fr 0.5fr;
+
+    }
+
+    .categoriaCantidad{
+        display: none;
+    }
+    .categoriaColor{
+
+    }
+
+    .categoriaEstado{
+        display: none;
+    }
+}
+
+@media (max-width: 600px){
+    .categoriasGrid{
+        grid-template-columns:1fr 0.5fr 0.5fr;
+
+    }
+
+    .categoriaCantidad{
+        display: none;
+    }
+    .categoriaColor{
+        display: none;
+    }
+
+    .categoriaEstado{
+        display: none;
+    }
+}
+
+@media (max-width: 570px){
+    .preguntasGrid{
+    grid-template-columns:70px 3fr 1.5fr;
+    }
+
+    .preguntasRespondida{
+        display: none;
+    }
+
+    .preguntasAcierto{
+        display: none;
+    }
+}
+
+@media (max-width: 470px){
+    .tablaCategorias{
+        margin: 0px 5px;
+    }
+    .categoriasGrid{
+        grid-template-columns:1fr 1fr 1fr;
+    }
+
+    .categoriaCantidad{
+        display: none;
+    }
+    .categoriaColor{
+        display: none;
+    }
+
+    .categoriaEstado{
+        display: none;
+    }
+
 }

@@ -136,3 +136,9 @@
 .acciones form:last-child button:hover{
     background:#50506a;
 }
+
+@media (max-width: 840px) {
+ .correoContainer{
+    grid-template-columns:1fr;
+}
+}
