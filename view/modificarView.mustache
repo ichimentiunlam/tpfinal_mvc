@@ -4,7 +4,7 @@
 
 <main class="modificarContainer">
     <div class="buscador">
-        <input type="text" placeholder="Buscar pregunta...">
+        <input type="text" id="buscador" placeholder="Buscar pregunta...">
         <button id="modalBtn" class="report-btn" type="button">
                 <i class="bi bi-file-plus"></i>
         </button>
@@ -106,17 +106,17 @@
         <section id="listaCategorias" class="tablaCategorias" hidden>
                 <div class="categoriasGrid head">
                         <div>Categoría</div>
-                        <div>Preguntas Asociadas</div>
-                        <div>Color</div>
-                        <div>Estado</div>
+                        <div class="categoriaCantidad">Nro preguntas</div>
+                        <div class="categoriaColor">Color</div>
+                        <div class="categoriaEstado">Estado</div>
                 </div>
 
                 {{#categorias}}
                 <div class="categoriasGrid fila">
                         <div>{{tipo}}</div>
-                        <div>{{cantidad_preguntas}}</div>
+                        <div class="categoriaCantidad">{{cantidad_preguntas}}</div>
                         <div class="categoriaColor" style="background-color: {{color}}"></div>
-                        <div>{{estado}}</div>
+                        <div class="categoriaEstado">{{estado}}</div>
                         
                         
 
@@ -139,12 +139,22 @@
                 {{#categoriasSugeridas}}
                 <div class="categoriasGrid fila">
                         <div>{{tipo}}</div>
-                        <div>{{cantidad_preguntas}}</div>
-                        <div>{{estado}}</div>
-                        <button type="submit">Modificar</button>
+                        <div class="categoriaCantidad">{{cantidad_preguntas}}</div>
+                        <div class="categoriaColor" style="background-color: {{color}}"></div>
+                        <div class="categoriaEstado">{{estado}}</div>
+
+                        <button
+                        type="button"
+                        class="btnModificarCategoria btn primary"
+                        data-id="{{id}}"
+                        data-nombre="{{tipo}}"
+                        data-color="{{color}}">
+                        Modificar
+                        </button>
+
                         <form action="/tpfinal_mvc/Editor/eliminarCategoria" method="POST">
                                 <input type="hidden" name="id" value="{{id}}">
-                                <button type="submit">Eliminar</button>
+                                <button type="submit" class="btn secondary" style="background:none;border:none;">Eliminar</button>
                         </form>
                 </div>
                 {{/categoriasSugeridas}}
@@ -159,8 +169,8 @@
             <div>N°</div>
             <div>Pregunta</div>
             <div>Categoría</div>
-            <div>Respondida</div>
-            <div>% Acierto</div>
+            <div class="preguntasRespondida">Respondida</div>
+            <div class="preguntasAcierto">% Acierto</div>
         </div>
 
         {{#preguntas}}
@@ -173,9 +183,9 @@
 
             <div>{{tipo}}</div>
 
-            <div>{{veces_respondida}}</div>
+            <div class="preguntasRespondida">{{veces_respondida}}</div>
 
-            <div>{{porcentaje}}%</div>
+            <div class="preguntasAcierto">{{porcentaje}}%</div>
 
         </a>
         {{/preguntas}}

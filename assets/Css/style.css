@@ -355,5 +355,34 @@ header {
   .hero-image img {
     max-height: 300px;
   }
+
+  .user-badge{
+    display: none;
+  }
+}
+
+@media (max-width: 750px) {
+  .logo{
+    display: none;
+  }
+
+  header {
+  padding: 5px 8%;
+  height: 100px;
+  }
+  
+  .nav_links{
+    list-style:none;
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+  }
+
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+  }
 }
 
