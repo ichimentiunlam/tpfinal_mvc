@@ -12,36 +12,70 @@ class UserController extends BaseController
         return str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
     }
 
-    private function enviarCodigoValidacion(string $email, string $codigo): bool
+    private function generarTokenValidacion(): string
+    {
+        return bin2hex(random_bytes(32));
+    }
+
+    private function construirUrlValidacion(string $email, string $token): string
     {
         $config = parse_ini_file(__DIR__ . '/../config/config.ini');
-        $asunto = 'Código de validación de tu cuenta';
-        $mensaje = "Hola,\n\nGracias por registrarte en Arcade de Desafíos.\nTu código de validación es: $codigo\n\nIngresa este código en la pantalla de verificación para activar tu cuenta.\n\nSi no solicitaste este registro, puedes ignorar este mensaje.\n";
+        $baseUrl = rtrim($config['app_base_url'] ?? 'http://localhost/tpfinal_mvc', '/');
+        $query = http_build_query([
+            'controller' => 'User',
+            'method' => 'validarCorreo',
+            'email' => $email,
+            'token' => $token,
+        ]);
+
+        return $baseUrl . '/index.php?' . $query;
+    }
+
+    private function enviarCodigoValidacion(string $email, string $codigo, string $token, string $nombre = ''): bool
+    {
+        $config = parse_ini_file(__DIR__ . '/../config/config.ini');
+        $asunto = 'Activa tu cuenta en Arcade de Desafíos';
+        $urlValidacion = $this->construirUrlValidacion($email, $token);
+        $nombre = trim($nombre);
+        $saludo = $nombre !== '' ? 'Hola ' . htmlspecialchars($nombre, ENT_QUOTES, 'UTF-8') . ',' : 'Hola,';
+        $mensajeHtml = "<p>$saludo</p>"
+            . "<p>Gracias por registrarte en <strong>Arcade de Desafíos</strong>.</p>"
+            . "<p>Tu código de validación es: <strong>$codigo</strong></p>"
+            . "<p>O bien, activa tu cuenta haciendo clic en el siguiente enlace:</p>"
+            . "<p><a href=\"$urlValidacion\">Activar mi cuenta</a></p>"
+            . "<p>Si no solicitaste este registro, puedes ignorar este mensaje.</p>";
+        $mensajeTexto = "$saludo\n\nGracias por registrarte en Arcade de Desafíos.\nTu código de validación es: $codigo\n\nO bien, activa tu cuenta haciendo clic en este enlace:\n$urlValidacion\n\nSi no solicitaste este registro, puedes ignorar este mensaje.\n";
 
         try {
             require_once __DIR__ . '/../vendor/autoload.php';
             $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = $config['smtp_host'] ?? 'localhost';
-            $mail->Port = (int) ($config['smtp_port'] ?? 1025);
-            $mail->CharSet = 'UTF-8';
 
-            if (!empty($config['smtp_username']) && !empty($config['smtp_password'])) {
-                $mail->SMTPAuth = true;
-                $mail->Username = $config['smtp_username'];
-                $mail->Password = $config['smtp_password'];
-                $mail->SMTPSecure = $config['smtp_encryption'] ?? 'tls';
+            if (!empty($config['smtp_host'])) {
+                $mail->isSMTP();
+                $mail->Host = $config['smtp_host'];
+                $mail->Port = (int) ($config['smtp_port'] ?? 587);
+                $mail->CharSet = 'UTF-8';
+
+                if (!empty($config['smtp_username']) && !empty($config['smtp_password'])) {
+                    $mail->SMTPAuth = true;
+                    $mail->Username = $config['smtp_username'];
+                    $mail->Password = $config['smtp_password'];
+                    $mail->SMTPSecure = $config['smtp_encryption'] ?? 'tls';
+                } else {
+                    $mail->SMTPAuth = false;
+                    $mail->SMTPSecure = '';
+                }
             } else {
-                $mail->SMTPAuth = false;
-                $mail->SMTPSecure = '';
+                $mail->isMail();
             }
 
             $mail->setFrom($config['mail_from'] ?? 'no-reply@arcade.local', $config['mail_from_name'] ?? 'Arcade de Desafíos');
             $mail->addAddress($email);
             $mail->addReplyTo($config['mail_from'] ?? 'no-reply@arcade.local', $config['mail_from_name'] ?? 'Arcade de Desafíos');
             $mail->Subject = $asunto;
-            $mail->Body = $mensaje;
-            $mail->AltBody = strip_tags($mensaje);
+            $mail->Body = $mensajeHtml;
+            $mail->AltBody = $mensajeTexto;
+            $mail->isHTML(true);
 
             $mail->send();
             Log::info("Correo de validación enviado a $email");
@@ -328,11 +362,13 @@ class UserController extends BaseController
         }
 
         $codigo = $this->generarCodigoValidacion();
-        $correoEnviado = $this->enviarCodigoValidacion($email, $codigo);
+        $token = $this->generarTokenValidacion();
+        $correoEnviado = $this->enviarCodigoValidacion($email, $codigo, $token, $nombre);
 
         $_SESSION['temp_validation'] = [
             'email' => $email,
             'code' => $codigo,
+            'token' => $token,
             'timestamp' => time(),
         ];
 
@@ -340,10 +376,12 @@ class UserController extends BaseController
         $this->render('validateEmailView', [
             'email' => $email,
             'code' => $codigo,
+            'token' => $token,
+            'verificationLink' => $this->construirUrlValidacion($email, $token),
             'mailSent' => $correoEnviado,
             'message' => $correoEnviado
-                ? 'Se ha enviado un correo con el código de verificación.'
-                : 'No se pudo enviar el correo desde este entorno. Usa el código que aparece a continuación.',
+                ? 'Se ha enviado un correo con el código de verificación y un enlace de activación.'
+                : 'No se pudo enviar el correo desde este entorno. Usa el código que aparece a continuación o el enlace de activación mostrado aquí.',
         ]);
     }
 
@@ -353,22 +391,36 @@ class UserController extends BaseController
 
         $email = trim($this->request->post('email', $this->request->get('email')));
         $code = trim((string) $this->request->post('code', $this->request->get('code')));
+        $token = trim((string) $this->request->post('token', $this->request->get('token')));
+        $sesionValidacion = $_SESSION['temp_validation'] ?? null;
 
         if (
-            !$email || !$code || !isset($_SESSION['temp_validation'])
-            || $_SESSION['temp_validation']['email'] !== $email
+            !$email || (!$code && !$token) || !$sesionValidacion
+            || ($sesionValidacion['email'] ?? '') !== $email
         ) {
             $this->render('messageView', [
                 'title' => 'Validación fallida',
-                'message' => 'No encontramos el registro de ese correo o el código es inválido.',
+                'message' => 'No encontramos el registro de ese correo o el enlace/código es inválido.',
             ]);
             return;
         }
 
-        if ($_SESSION['temp_validation']['code'] !== $code) {
+        if (!empty($sesionValidacion['timestamp']) && $sesionValidacion['timestamp'] + 1800 < time()) {
+            unset($_SESSION['temp_validation']);
             $this->render('messageView', [
-                'title' => 'Código incorrecto',
-                'message' => 'El código no coincide. Revisa el correo enviado o vuelve a registrarte si lo necesitas.',
+                'title' => 'Enlace expirado',
+                'message' => 'El enlace de validación ha caducado. Vuelve a registrarte para recibir uno nuevo.',
+            ]);
+            return;
+        }
+
+        $codigoValido = !empty($code) && !empty($sesionValidacion['code']) && hash_equals((string) $sesionValidacion['code'], $code);
+        $tokenValido = !empty($token) && !empty($sesionValidacion['token']) && hash_equals((string) $sesionValidacion['token'], $token);
+
+        if (!$codigoValido && !$tokenValido) {
+            $this->render('messageView', [
+                'title' => 'Código o enlace incorrecto',
+                'message' => 'El código o el enlace no coinciden. Revisa el correo enviado o vuelve a registrarte si lo necesitas.',
             ]);
             return;
         }

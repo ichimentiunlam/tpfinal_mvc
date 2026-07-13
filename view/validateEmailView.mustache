@@ -8,6 +8,7 @@
 
         <form action="/tpfinal_mvc/User/validarCorreo" method="POST" class="registerForm">
             <input type="hidden" name="email" value="{{email}}">
+            <input type="hidden" name="token" value="{{token}}">
             <label for="code">Código de verificación</label>
             <input type="text" id="code" name="code" maxlength="6" placeholder="Ej: 123456" required>
             <button type="submit" class="btn primary">Validar correo</button>
