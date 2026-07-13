@@ -423,6 +423,13 @@ public function jugar()
             $this->model->actualizarPreguntasRespondidasDelUsuario($preguntasRespondidas, $userMail);
             $this->model->actualizarVecesRespondidaDeLaPregunta($id_pregunta, $esCorrecta);
             $respuestaCorrecta = $this->model->getRespuestaCorrecta($id_pregunta);
+
+            //Registra la partida jugada
+            $usuario = $this->model->obtenerUsuarioPorEmail($userMail);
+            if ($usuario) {
+                $this->model->registrarPartida($usuario['id'], $preguntasRespondidas, $puntajeFinal, $puntajeFinal);
+            }
+
             unset($_SESSION['partida']); 
             $this->render('resultadoView', [
                 'puntaje' => $puntajeFinal,
@@ -445,6 +452,12 @@ public function jugar()
             $this->model->actualizarPreguntasRespondidasDelUsuario($preguntasRespondidas, $userMail);
             if ($idPregunta) {
                 $this->model->actualizarVecesRespondidaDeLaPregunta($idPregunta, false);
+            }
+
+            //Registra la partida jugada
+            $usuario = $this->model->obtenerUsuarioPorEmail($userMail);
+            if ($usuario) {
+                $this->model->registrarPartida($usuario['id'], $preguntasRespondidas, $puntajeFinal, $puntajeFinal);
             }
         }
 

@@ -21,10 +21,17 @@ class AdminController extends BaseController
             return;
         }
         $this->necesitaAdmin();
-        $data = "hola";
 
-        $this->render('estadisticasView', [$data]
-        );
+        $periodosValidos = ['dia', 'semana', 'mes', 'anio', 'todo'];
+        $periodo = $_GET['periodo'] ?? 'todo';
+        if (!in_array($periodo, $periodosValidos, true)) {
+            $periodo = 'todo';
+        }
+
+        $stats = $this->model->getEstadisticas($periodo);
+        $stats['user'] = $user;
+
+        $this->render('estadisticasView', $stats);
     }
 
 }

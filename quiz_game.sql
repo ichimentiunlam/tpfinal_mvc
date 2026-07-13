@@ -728,3 +728,20 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- Se agrega la fecha de creación para las Preguntas.
+ALTER TABLE `preguntas`
+  ADD COLUMN `fecha_creacion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `id_estado`;
+
+-- Tabla de Partidas
+CREATE TABLE `partidas` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` INT(11) NOT NULL,
+  `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `preguntas_respondidas` INT(11) NOT NULL DEFAULT 0,
+  `preguntas_correctas` INT(11) NOT NULL DEFAULT 0,
+  `puntaje` INT(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `fk_partida_usuario` (`id_usuario`),
+  CONSTRAINT `fk_partida_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

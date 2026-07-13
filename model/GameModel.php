@@ -358,6 +358,14 @@ class GameModel
         }
     }
 
+    public function registrarPartida($idUsuario, $preguntasRespondidas, $preguntasCorrectas, $puntaje)
+    {
+        $sql = "INSERT INTO partidas (id_usuario, preguntas_respondidas, preguntas_correctas, puntaje, fecha)
+                VALUES (?, ?, ?, ?, NOW())";
+        Log::info("SQL: Registrar partida [usuario:$idUsuario, puntaje:$puntaje]");
+        return $this->database->execute($sql, [$idUsuario, $preguntasRespondidas, $preguntasCorrectas, $puntaje]);
+    }
+
     public function obtenerMonedasUsuarioPorEmail($email)
     {
         $sql = "SELECT coins FROM usuarios WHERE email = ?";
@@ -606,5 +614,129 @@ class GameModel
         $this->database->execute($sql, [$datos['nombreCategoria'],
         $datos['colorCategoria'],
         $datos['id']]);
+    }
+
+    //Estadisticas
+    private function condicionFecha($columna, $periodo)
+    {
+        switch ($periodo) {
+            case 'dia':
+                return "DATE($columna) = CURDATE()";
+            case 'semana':
+                return "YEARWEEK($columna, 1) = YEARWEEK(CURDATE(), 1)";
+            case 'mes':
+                return "YEAR($columna) = YEAR(CURDATE()) AND MONTH($columna) = MONTH(CURDATE())";
+            case 'anio':
+                return "YEAR($columna) = YEAR(CURDATE())";
+            default:
+                return "1=1";
+        }
+    }
+
+    public function getCantidadJugadores()
+    {
+        $sql = "SELECT COUNT(*) AS cantidad FROM usuarios";
+        $r = $this->database->query($sql)[0] ?? null;
+        return $r ? (int)$r['cantidad'] : 0;
+    }
+
+    public function getCantidadPartidas($periodo)
+    {
+        $cond = $this->condicionFecha('fecha', $periodo);
+        $sql = "SELECT COUNT(*) AS cantidad FROM partidas WHERE $cond";
+        $r = $this->database->query($sql)[0] ?? null;
+        return $r ? (int)$r['cantidad'] : 0;
+    }
+
+    public function getCantidadPreguntas()
+    {
+        $sql = "SELECT COUNT(*) AS cantidad FROM preguntas WHERE id_estado = 1";
+        $r = $this->database->query($sql)[0] ?? null;
+        return $r ? (int)$r['cantidad'] : 0;
+    }
+
+    public function getCantidadPreguntasCreadas($periodo)
+    {
+        $cond = $this->condicionFecha('fecha_creacion', $periodo);
+        $sql = "SELECT COUNT(*) AS cantidad FROM preguntas WHERE id_estado = 2 AND $cond";
+        $r = $this->database->query($sql)[0] ?? null;
+        return $r ? (int)$r['cantidad'] : 0;
+    }
+
+    public function getCantidadUsuariosNuevos($periodo)
+    {
+        $cond = $this->condicionFecha('fecha_registro', $periodo);
+        $sql = "SELECT COUNT(*) AS cantidad FROM usuarios WHERE $cond";
+        $r = $this->database->query($sql)[0] ?? null;
+        return $r ? (int)$r['cantidad'] : 0;
+    }
+
+    public function getPorcentajeAciertosPorUsuario()
+    {
+        $sql = "SELECT COALESCE(usuario, nombre) AS usuario,
+                preguntas_respondidas, preguntas_correctas,
+                CASE WHEN preguntas_respondidas = 0 THEN 0
+                     ELSE ROUND((preguntas_correctas / preguntas_respondidas) * 100, 2)
+                END AS porcentaje
+                FROM usuarios
+                ORDER BY porcentaje DESC";
+        return $this->database->query($sql);
+    }
+
+    public function getUsuariosPorPais($periodo)
+    {
+        $cond = $this->condicionFecha('fecha_registro', $periodo);
+        $sql = "SELECT pais, COUNT(*) AS cantidad FROM usuarios WHERE $cond GROUP BY pais ORDER BY cantidad DESC";
+        return $this->database->query($sql);
+    }
+
+    public function getUsuariosPorSexo($periodo)
+    {
+        $cond = $this->condicionFecha('fecha_registro', $periodo);
+        $sql = "SELECT CASE
+                    WHEN sexo = 'M' THEN 'Masculino'
+                    WHEN sexo = 'F' THEN 'Femenino'
+                    WHEN sexo = 'O' THEN 'Prefiero no cargarlo'
+                    ELSE 'No especificado'
+                END AS sexo, COUNT(*) AS cantidad
+                FROM usuarios WHERE $cond
+                GROUP BY sexo";
+        return $this->database->query($sql);
+    }
+
+    public function getUsuariosPorGrupoEdad($periodo)
+    {
+        $cond = $this->condicionFecha('fecha_registro', $periodo);
+        $sql = "SELECT
+                    CASE
+                        WHEN (YEAR(CURDATE()) - anio_nacimiento) < 18 THEN 'Menores'
+                        WHEN (YEAR(CURDATE()) - anio_nacimiento) >= 65 THEN 'Jubilados'
+                        ELSE 'Medio'
+                    END AS grupo,
+                    COUNT(*) AS cantidad
+                FROM usuarios WHERE $cond
+                GROUP BY grupo";
+        return $this->database->query($sql);
+    }
+
+    public function getEstadisticas($periodo)
+    {
+        return [
+            'periodo' => $periodo,
+            'es_dia' => $periodo === 'dia',
+            'es_semana' => $periodo === 'semana',
+            'es_mes' => $periodo === 'mes',
+            'es_anio' => $periodo === 'anio',
+            'es_todo' => $periodo === 'todo',
+            'cantidad_jugadores' => $this->getCantidadJugadores(),
+            'cantidad_partidas' => $this->getCantidadPartidas($periodo),
+            'cantidad_preguntas' => $this->getCantidadPreguntas(),
+            'cantidad_preguntas_creadas' => $this->getCantidadPreguntasCreadas($periodo),
+            'cantidad_usuarios_nuevos' => $this->getCantidadUsuariosNuevos($periodo),
+            'aciertos_por_usuario' => $this->getPorcentajeAciertosPorUsuario(),
+            'usuarios_por_pais' => $this->getUsuariosPorPais($periodo),
+            'usuarios_por_sexo' => $this->getUsuariosPorSexo($periodo),
+            'usuarios_por_edad' => $this->getUsuariosPorGrupoEdad($periodo),
+        ];
     }
 }

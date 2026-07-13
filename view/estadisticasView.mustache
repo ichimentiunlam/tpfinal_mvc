@@ -1,5 +1,66 @@
 {{>header}}
 <link rel="stylesheet" href="/tpfinal_mvc/assets/Css/estadisticasView.css">
 <main>
+  <div class="stats-container">
+    <div class="stats-header no-print">
+      <h1>Estadísticas</h1>
+      <div class="filtros">
+        <a href="?periodo=dia" class="{{#es_dia}}activo{{/es_dia}}">Día</a>
+        <a href="?periodo=semana" class="{{#es_semana}}activo{{/es_semana}}">Semana</a>
+        <a href="?periodo=mes" class="{{#es_mes}}activo{{/es_mes}}">Mes</a>
+        <a href="?periodo=anio" class="{{#es_anio}}activo{{/es_anio}}">Año</a>
+        <a href="?periodo=todo" class="{{#es_todo}}activo{{/es_todo}}">Todo</a>
+        <button class="btn-imprimir" onclick="window.print()">Imprimir</button>
+      </div>
+    </div>
+
+    <div class="stats-kpis">
+      <div class="kpi"><span>{{cantidad_jugadores}}</span><label>Jugadores totales</label></div>
+      <div class="kpi"><span>{{cantidad_partidas}}</span><label>Partidas jugadas</label></div>
+      <div class="kpi"><span>{{cantidad_preguntas}}</span><label>Preguntas en el juego</label></div>
+      <div class="kpi"><span>{{cantidad_preguntas_creadas}}</span><label>Preguntas sugeridas</label></div>
+      <div class="kpi"><span>{{cantidad_usuarios_nuevos}}</span><label>Usuarios nuevos</label></div>
+    </div>
+
+    <table class="stats-table">
+      <caption>% de aciertos por usuario</caption>
+      <thead><tr><th>Usuario</th><th>Respondidas</th><th>Correctas</th><th>%</th></tr></thead>
+      <tbody>
+        {{#aciertos_por_usuario}}
+        <tr><td>{{usuario}}</td><td>{{preguntas_respondidas}}</td><td>{{preguntas_correctas}}</td><td>{{porcentaje}}%</td></tr>
+        {{/aciertos_por_usuario}}
+      </tbody>
+    </table>
+
+    <table class="stats-table">
+      <caption>Usuarios por país</caption>
+      <thead><tr><th>País</th><th>Cantidad</th></tr></thead>
+      <tbody>
+        {{#usuarios_por_pais}}
+        <tr><td>{{pais}}</td><td>{{cantidad}}</td></tr>
+        {{/usuarios_por_pais}}
+      </tbody>
+    </table>
+
+    <table class="stats-table">
+      <caption>Usuarios por sexo</caption>
+      <thead><tr><th>Sexo</th><th>Cantidad</th></tr></thead>
+      <tbody>
+        {{#usuarios_por_sexo}}
+        <tr><td>{{sexo}}</td><td>{{cantidad}}</td></tr>
+        {{/usuarios_por_sexo}}
+      </tbody>
+    </table>
+
+    <table class="stats-table">
+      <caption>Usuarios por grupo de edad</caption>
+      <thead><tr><th>Grupo</th><th>Cantidad</th></tr></thead>
+      <tbody>
+        {{#usuarios_por_edad}}
+        <tr><td>{{grupo}}</td><td>{{cantidad}}</td></tr>
+        {{/usuarios_por_edad}}
+      </tbody>
+    </table>
+  </div>
 </main>
 {{>footer}}
