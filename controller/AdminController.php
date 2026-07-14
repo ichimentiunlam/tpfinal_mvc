@@ -47,7 +47,7 @@ class AdminController extends BaseController
         $labelsPais = [];
         $valoresPais = [];
         foreach ($stats['usuarios_por_pais'] as $fila) {
-            $labelsPias[] = $fila['pais'];
+            $labelsPais[] = $fila['pais'];
             $valoresPais[] = (float) $fila['cantidad'];
         }
         $stats['grafico_pais'] = $this->generarGraficoTorta($valoresPais, $labelsPais, 'Usuarios por país');
