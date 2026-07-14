@@ -53,10 +53,44 @@
     color:black;
     font-weight:600;
     transition:.25s;
+    text-decoration: none;
+}
+
+.statsActions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+button.btn-report,
+a.btn-report {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: none;
+    font: inherit;
+    line-height: normal;
 }
 
 .statsTop .btn-report.primary:hover{
     transform:translateY(-2px);
+}
+
+.statsChart {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.statsChart img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
 /* ===== KPIs ===== */
