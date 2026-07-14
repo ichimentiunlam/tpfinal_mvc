@@ -13,7 +13,10 @@
             <a href="?periodo=todo" class="{{#es_todo}}active{{/es_todo}}">Todo</a>
         </div>
 
-        <button class="btn-report primary" onclick="window.print()">Imprimir</button>
+        <div class="statsActions">
+            <button class="btn-report primary" onclick="window.print()">Imprimir</button>
+            <a class="btn-report primary" href="/tpfinal_mvc/Admin/estadisticasPdf?periodo={{periodo}}" target="_blank">Generar PDF</a>
+        </div>
     </div>
 
     <div class="kpisGrid">
