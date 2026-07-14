@@ -77,6 +77,22 @@ a.btn-report {
     transform:translateY(-2px);
 }
 
+.statsChart {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+}
+
+.statsChart img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
 /* ===== KPIs ===== */
 .kpisGrid{
     display:grid;

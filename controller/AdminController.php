@@ -31,6 +31,43 @@ class AdminController extends BaseController
         $stats = $this->model->getEstadisticas($periodo);
         $stats['user'] = $user;
 
+        //Generar los gráficos con jpGraph
+        require_once __DIR__ . '/../libs/jpgraph/src/jpgraph.php';
+        require_once __DIR__ . '/../libs/jpgraph/src/jpgraph_bar.php';
+        require_once __DIR__ . '/../libs/jpgraph/src/jpgraph_pie.php';
+
+        $labels = [];
+        $valores = [];
+        foreach ($stats['aciertos_por_usuario'] as $fila) {
+            $labels[] = $fila['usuario'];
+            $valores[] = (float) $fila['porcentaje'];
+        }
+        $stats['grafico_aciertos'] = $this->generarGraficoBarras($valores, $labels, '% de aciertos por usuario');
+
+        $labelsPais = [];
+        $valoresPais = [];
+        foreach ($stats['usuarios_por_pais'] as $fila) {
+            $labelsPias[] = $fila['pais'];
+            $valoresPais[] = (float) $fila['cantidad'];
+        }
+        $stats['grafico_pais'] = $this->generarGraficoTorta($valoresPais, $labelsPais, 'Usuarios por país');
+
+        $valoresSexo = [];
+        $labelsSexo = [];
+        foreach ($stats['usuarios_por_sexo'] as $fila) {
+            $labelsSexo[] = $fila['sexo'];
+            $valoresSexo[] = (float) $fila['cantidad'];
+        }
+        $stats['grafico_sexo'] = $this->generarGraficoTorta($valoresSexo, $labelsSexo, 'Usuarios por sexo');
+
+        $valoresEdad = [];
+        $labelsEdad = [];
+        foreach ($stats['usuarios_por_edad'] as $fila) {
+            $labelsEdad[] = $fila['grupo'];
+            $valoresEdad[] = (float) $fila['cantidad'];
+        }
+        $stats['grafico_edad'] = $this->generarGraficoTorta($valoresEdad, $labelsEdad, 'Usuarios por grupo de edad');
+
         $this->render('estadisticasView', $stats);
     }
 
@@ -67,6 +104,15 @@ class AdminController extends BaseController
         }
         $graficoAciertos = $this->generarGraficoBarras($valores, $labels, '% de aciertos por usuario');
 
+        //Gráfico de torta: usuarios por pais
+        $labelsPais = [];
+        $valoresPais = [];
+        foreach ($stats['usuarios_por_pais'] as $fila) {
+            $labelsPais[] = $fila['pais'];
+            $valoresPais[] = (float) $fila['cantidad'];
+        }
+        $graficoPais = $this->generarGraficoTorta($valoresPais, $labelsPais, 'Usuarios por país');
+
         //Gráfico de torta: usuarios por sexo
         $valoresSexo = [];
         $labelsSexo = [];
@@ -85,7 +131,7 @@ class AdminController extends BaseController
         }
         $graficoEdad = $this->generarGraficoTorta($valoresEdad, $labelsEdad, 'Usuarios por grupo de edad');
 
-        $html = $this->armarHtmlPdf($stats, $periodo, $graficoAciertos, $graficoSexo, $graficoEdad);
+        $html = $this->armarHtmlPdf($stats, $periodo, $graficoAciertos, $graficoPais, $graficoSexo, $graficoEdad);
 
         $options = new \Dompdf\Options();
         $options->set('isRemoteEnabled', true);
@@ -147,7 +193,7 @@ class AdminController extends BaseController
         return 'data:image/png;base64,' . base64_encode($data);
     }
 
-    private function armarHtmlPdf(array $stats, string $periodo, string $graficoAciertos, string $graficoSexo, string $graficoEdad): string {
+    private function armarHtmlPdf(array $stats, string $periodo, string $graficoAciertos, string $graficoPais, string $graficoSexo, string $graficoEdad): string {
         ob_start();
         ?>
         <html>
@@ -187,14 +233,27 @@ class AdminController extends BaseController
                 </tr>
                 <?php endforeach; ?>
             </table>
-
-            <img src="<?= $graficoSexo ?>">
-            <img src="<?= $graficoEdad ?>">
-
+            <img src="<?= $graficoPais ?>">
             <table>
                 <tr><th>País</th><th>Cantidad</th></tr>
                 <?php foreach ($stats['usuarios_por_pais'] as $fila): ?>
                 <tr><td><?= htmlspecialchars($fila['pais']) ?></td><td><?= $fila['cantidad'] ?></td></tr>
+                <?php endforeach; ?>
+            </table>
+
+            <img src="<?= $graficoSexo ?>">
+            <table>
+                <tr><th>Género</th><th>Cantidad</th></tr>
+                <?php foreach ($stats['usuarios_por_sexo'] as $fila): ?>
+                <tr><td><?= htmlspecialchars($fila['sexo']) ?></td><td><?= $fila['cantidad'] ?></td></tr>
+                <?php endforeach; ?>
+            </table>
+
+            <img src="<?= $graficoEdad ?>">
+            <table>
+                <tr><th>Grupo Etario</th><th>Cantidad</th></tr>
+                <?php foreach ($stats['usuarios_por_edad'] as $fila): ?>
+                <tr><td><?= htmlspecialchars($fila['grupo']) ?></td><td><?= $fila['cantidad'] ?></td></tr>
                 <?php endforeach; ?>
             </table>
         </body>
